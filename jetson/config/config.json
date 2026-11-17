@@ -1,0 +1,27 @@
+{
+  "_leia_me": "Ajustes da equipe. Valores padrao e explicacao de cada parametro: robocar/configuracao.py (PADRAO). Chaves desconhecidas geram erro. Ver efetivo: python3 seguir_linha.py --mostrar-config",
+  "camera": {
+    "captura_largura": 1280,
+    "captura_altura": 720,
+    "fps": 60,
+    "flip_method": 0
+  },
+  "visao": {
+    "inicio_roi": 0.45,
+    "limiar_modo": "adaptativo",
+    "preferencia_bifurcacao": "reto"
+  },
+  "controle": {
+    "kp": 0.6,
+    "kd": 0.05,
+    "k_frente": 0.3,
+    "v_max": 0.35,
+    "v_min": 0.2
+  },
+  "parada": {
+    "usar_marca": false
+  },
+  "esp32": {
+    "porta": null
+  }
+}

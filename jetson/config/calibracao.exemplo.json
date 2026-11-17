@@ -1,0 +1,9 @@
+{
+  "_leia_me": "Exemplo. O arquivo real (calibracao.json) e gerado por calibrar.py, depende do local/iluminacao e nao vai para o git.",
+  "branco": 200.0,
+  "preto": 40.0,
+  "limiar": 120.0,
+  "razao": 0.6,
+  "data": "2026-11-09 00:00:00",
+  "regiao": "inferior"
+}

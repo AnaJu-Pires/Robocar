@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "robocar") (type "KiCad") (uri "${KIPRJMOD}/lib/robocar.kicad_sym") (options "") (descr "Pecas do Robocar Blitz sem simbolo nativo"))
+)

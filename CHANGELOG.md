@@ -1,0 +1,37 @@
+# Histórico de versões
+
+Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
+
+## [Não lançado]
+### Adicionado
+- `hardware/placa_esp32/`: esquemático KiCad 10 da placa da ESP32, numa folha só com blocos ligados por fios, e **placa (PCB) de face simples** de 130 × 105 mm com plano de GND e 15 jumpers (D-014). ERC 0 violações; DRC 0 violações, 0 ligações faltando, paridade com o esquemático OK.
+- `hardware/placa_esp32/fabricacao/`: arte do cobre 1:1 para transferência térmica, folha de montagem com jumpers, furação e mapa de brocas.
+- Ponte espelhada nos DRV8833 (D-013), canais do CD4050B escolhidos pela posição na placa e TO-92 de pernas largas.
+- Encoders em 5 V (78L05) com conversão para 3,3 V por CD4050B; pull-down no nSLEEP dos drivers; buzzer por transistor (D-011).
+- `hardware/placa_esp32/lib/`: símbolo, footprint e 3D simplificado da ESP32 DevKit V1 (30 pinos) e do módulo DRV8833, a partir de medidas com fonte (D-012).
+### Alterado
+- `docs/03_hardware.md`: ESP32 identificada como DevKit V1 de 30 pinos; encoders via CD4050B.
+- `docs/06_testes.md`: teste T06 refeito para a placa com CD4050B.
+- `config.h`: só comentários (encoders e ponte espelhada); nenhum pino mudou.
+
+## [0.2.0] — 2026-11-09
+### Reestruturado
+- Código da Jetson virou a biblioteca `jetson/robocar/` + programas finos (`seguir_linha.py`, `calibrar.py`; `peb.py` renomeado para `calibrar.py`).
+- Parâmetros com fonte única (`PADRAO`) e validação de chaves; `config/` separado do código; calibração fora do git.
+- Testes migrados para `unittest` (35 testes), com link serial testado contra uma porta falsa.
+- `Makefile` como ponto de entrada; documentação dividida em `docs/01…07` + `docs/decisoes.md`; `CONTRIBUTING.md`.
+- Firmware movido para `firmware/`, com pinos em `config.h`.
+### Alterado
+- Firmware: máquina de estados (SEM_JETSON/PRONTO/ARMADO/FALHA_BATERIA); arma só com a Jetson ativa; watchdog em dois níveis (freia em 250 ms, desarma em 1 s); botão de largada no GPIO23; pinagem alinhada à planilha da equipe (GPIO13 em vez de 14).
+- Protocolo v1: telemetria com `estado` e `flags`; comando `V` (versão) com checagem na Jetson.
+- `--armar` aguarda a ESP32 ficar PRONTO.
+- Compras: fonte 5 V removida (há fonte de bancada no laboratório); cabinho 0,75 mm² acrescentado; plug P4 ×3; frete Smart Kits simulado para o CEP; câmera IMX219-160 e Jetson 4 GB registradas.
+
+## [0.1.0] — 2026-11-09
+### Adicionado
+- Pipeline de câmera de baixa latência, detecção por faixas, limiar adaptativo, controle PD com antecipação, parada por linha perdida e por marca.
+- Calibração salva em arquivo, protocolo serial com checksum, primeira versão do firmware.
+- Planilha de compras com 3 cotações, fretes e orçamento.
+
+## [0.0.1] — anterior a 2026-11-09
+- `peb.py` e `seguir_linha.py` originais (preservados em `legado/`).
