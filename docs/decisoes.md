@@ -84,7 +84,7 @@ Formato curto (inspirado em ADR): contexto → decisão → consequências. Deci
 **Consequências:** pela tabela-verdade do DRV8833 (TI), trocar entradas e saídas juntas é só renomear a ponte: o sentido de giro continua o mesmo. O ajuste fino do sentido continua sendo `INVERTER_E/INVERTER_D` no teste T05.
 
 ### D-014 — Placa de face simples com plano de GND e jumpers
-*14/11/2026 · aceita*
+*14/11/2026 · substituída por D-015*
 **Contexto:** a equipe corrói a placa em casa, face simples, PTH. Em modo paralelo, as ilhas do DRV8833 alternam de rede, o que impede ligar tudo numa camada só.
 **Decisão:**
 * placa de 130 × 105 mm com cobre embaixo e plano de GND;
@@ -93,3 +93,15 @@ Formato curto (inspirado em ADR): contexto → decisão → consequências. Deci
 * entrada sem uso do CD4050B no +3V3 em vez do GND, e 78L05/BC337 em TO-92 de pernas a 2,54 mm.
 O roteamento foi automático e conferido pelo DRC do KiCad (com paridade com o esquemático).
 **Consequências:** o DRC deu 0 violações, mas a placa não foi fabricada. Os jumpers do +6V_MOT usam cabinho de 0,75 mm². Uma revisão humana do traçado antes de corroer é recomendada.
+
+### D-015 — Placa v0.4 para corrosão manual: trilha mínima de 1 mm e ilhas grandes
+*17/11/2026 · aceita*
+**Contexto:** a placa vai ser corroída à mão (transferência térmica), em face simples. Trilhas de 0,7 mm com folga de 0,4 mm e ilhas da biblioteca padrão são arriscadas nesse processo, e 15 jumpers dão trabalho.
+**Decisão:** refazer o traçado com trilha mínima de 1,0 mm (motores 1,5 mm, bateria 2,5 mm), folga de 0,5 mm, pegadas `_SoldaManual` (ilha maior, mesmo furo e passo), TO-92 triangular e só curvas de 45°. O traçado usa o cobre por baixo dos módulos (ESP32 e DRV8833 ficam elevados nos soquetes) e por dentro do soquete do CD4050, e resistores como ponte. J2 (4 pontos do XL4016 #2) virou J2 (entrada) + J4 (saída de 6 V, entre os DRV8833).
+**Consequências:** placa de 103 × 95 mm (era 130 × 105) e 11 jumpers (eram 15; só um de cabinho). DRC sem erros de cobre e paridade esquema × placa conferida pino a pino; ERC a rodar no KiCad 10. Não fabricada. Detalhes em [hardware/placa_esp32/](../hardware/placa_esp32/).
+
+### D-016 — Encoder esquerdo: A no GPIO33, B no GPIO32
+*17/11/2026 · aceita*
+**Contexto:** na face simples, com a ordem dos pinos do conector do motor e do CD4050, o par A/B do encoder esquerdo chegaria à ESP32 cruzado.
+**Decisão:** trocar os dois GPIOs no `config.h` (`PIN_ENC_E_A = 33`, `PIN_ENC_E_B = 32`) em vez de gastar um jumper.
+**Consequências:** comportamento igual (o firmware lê A e B pelos nomes). Quem usar a placa v0.3 precisa voltar aos valores antigos.

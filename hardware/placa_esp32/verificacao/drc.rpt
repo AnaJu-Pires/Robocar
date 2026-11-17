@@ -1,0 +1,22 @@
+** Drc report for placa_esp32.kicad_pcb **
+** Created on 2026-11-17 03:11:36 **
+
+** Found 4 DRC violations **
+[lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
+    Local override; Severity: warning
+    @(100.5000 mm, 60.5000 mm): Footprint H1
+[lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
+    Local override; Severity: warning
+    @(196.5000 mm, 148.5000 mm): Footprint H4
+[lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
+    Local override; Severity: warning
+    @(196.5000 mm, 60.5000 mm): Footprint H2
+[lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
+    Local override; Severity: warning
+    @(109.5000 mm, 123.0000 mm): Footprint H3
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

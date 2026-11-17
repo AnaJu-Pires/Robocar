@@ -19,8 +19,8 @@ const int PIN_ME_IN2 = 26;   // motor esquerdo: IN1+IN3
 const int PIN_MD_IN1 = 27;   // motor direito:  IN2+IN4 do modulo direito (U5)
 const int PIN_MD_IN2 = 13;   // motor direito:  IN1+IN3
 const int PIN_SLEEP  = 18;   // nSLEEP das duas placas (HIGH = ligado). Nunca ligar ao VM!
-const int PIN_ENC_E_A = 32;  // encoder esquerdo (na placa, vem do CD4050B: 0/3,3 V push-pull)
-const int PIN_ENC_E_B = 33;
+const int PIN_ENC_E_A = 33;  // encoder esquerdo (na placa, vem do CD4050B: 0/3,3 V push-pull)
+const int PIN_ENC_E_B = 32;  //   placa v0.4: A no GPIO33 e B no GPIO32 (trocados para a face simples, D-016)
 const int PIN_ENC_D_A = 34;  // encoder direito: GPIO34/35 sao SO entrada e SEM pull-up interno;
 const int PIN_ENC_D_B = 35;  //   o CD4050B da placa ja entrega 0/3,3 V. Nunca ligar o encoder (5 V) direto aqui
 const int PIN_VBAT   = 36;   // ADC1: divisor 150k (topo) / 33k (baixo) + 100 nF ao GND

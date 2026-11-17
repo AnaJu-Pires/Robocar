@@ -1,0 +1,1 @@
+trechos de trilha: 235; fora de 0/45/90 graus: 0; curvas fechadas (<135) ou encontros agudos (<90): 0; derivacoes em T a 90 graus: 15; trilha mais fina: 1.00 mm

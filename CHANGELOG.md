@@ -3,6 +3,9 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (placa v0.4, 17/11/2026)
+- `hardware/placa_esp32/`: placa refeita para corrosão manual (D-015): face simples, trilha mínima de 1 mm, folga 0,5 mm, ilhas grandes (`lib/robocar_sm.pretty`), 103 × 95 mm e 11 jumpers. J2 dividido em J2 (entrada do XL4016 #2) e J4 (saída de 6 V). DRC sem erros de cobre; paridade esquema × placa OK; ERC a rodar no KiCad 10.
+- `config.h`: encoder esquerdo com A no GPIO33 e B no GPIO32 (D-016); `docs/03_hardware.md` atualizado.
 ### Adicionado
 - `hardware/placa_esp32/`: esquemático KiCad 10 da placa da ESP32, numa folha só com blocos ligados por fios, e **placa (PCB) de face simples** de 130 × 105 mm com plano de GND e 15 jumpers (D-014). ERC 0 violações; DRC 0 violações, 0 ligações faltando, paridade com o esquemático OK.
 - `hardware/placa_esp32/fabricacao/`: arte do cobre 1:1 para transferência térmica, folha de montagem com jumpers, furação e mapa de brocas.

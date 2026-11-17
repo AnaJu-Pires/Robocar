@@ -1,4 +1,4 @@
 (fp_lib_table
-	(version 7)
-	(lib (name "robocar") (type "KiCad") (uri "${KIPRJMOD}/lib/robocar.pretty") (options "") (descr "Footprints do Robocar Blitz sem equivalente nativo"))
+  (version 7)
+  (lib (name "robocar_sm")(type "KiCad")(uri "${KIPRJMOD}/lib/robocar_sm.pretty")(options "")(descr "Pegadas da placa v0.4: ilhas grandes para solda manual e corrosao caseira"))
 )

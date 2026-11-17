@@ -91,7 +91,7 @@ Consequências:
 | Motor direito IN1 | 27 | 27 | |
 | Motor direito IN2 | **13** | 14 | o GPIO14 emite PWM no boot e poderia mexer o motor |
 | nSLEEP das duas placas | 18 | 18 | 3,3 V liga; nunca ligar ao VM |
-| Encoder esquerdo A/B | 32 / 33 | 32 / 33 | via CD4050B (5 V → 3,3 V), saída push-pull |
+| Encoder esquerdo A/B | **33 / 32** | 32 / 33 | via CD4050B (5 V → 3,3 V), saída push-pull; trocados na placa v0.4 para não cruzar trilhas ([D-016](decisoes.md)) |
 | Encoder direito A/B | 34 / 35 | 34 / 35 | só entrada e sem pull-up interno; via CD4050B, que já entrega 0/3,3 V push-pull |
 | Bateria (ADC1) | 36 | 36 | divisor 150 k / 33 k + 100 nF |
 | Botão de largada | 23 | 23 | para o GND (INPUT_PULLUP) |

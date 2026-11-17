@@ -12,7 +12,7 @@ Inspeção e treino em **04/12/2026**; torneio em **05/12/2026** (SENAC Santo Am
 | Software da Jetson | Implementado; **35 testes automáticos passando no PC**; integração com ESP32 **simulada** OK. Não testado na câmera real |
 | Firmware da ESP32 | Implementado; **só checagem de sintaxe**, falta compilar e gravar |
 | Hardware | Compras definidas (R$ 694,02 com fretes, dentro dos R$ 800); **pedidos a fazer** |
-| Placa da ESP32 | Esquemático e PCB de face simples prontos no KiCad (ERC e DRC sem violações); **medir as peças, fabricar e testar** |
+| Placa da ESP32 | **v0.4** para corrosão manual: face simples, trilha ≥ 1 mm, 103 × 95 mm, 11 jumpers; DRC sem erros e paridade esquema × placa OK (ERC a rodar no KiCad 10); **comprar as peças da placa, medir, fabricar e testar** |
 | Mecânica | Chassi a projetar (CAD) e imprimir |
 
 Próximos passos e cronograma: [docs/07_plano.md](docs/07_plano.md).
