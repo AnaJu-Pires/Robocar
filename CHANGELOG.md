@@ -3,6 +3,11 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (placa v0.5, 18/11/2026)
+- `hardware/placa_esp32/`: placa refeita **enxuta, para ficar embaixo da Jetson** (D-017): 80 × 67 mm, face simples, trilha ≥ 1 mm, **2 jumpers** (eram 11). Na placa ficam só a ESP32, os 2 DRV8833 com 470 µF, os pontos de solda dos fios, o divisor da bateria e os pull-downs do nSLEEP; fusível, chave e XT60 vão para o chicote. Esquemático novo gerado da mesma tabela de ligações da placa; DRC sem erros de cobre; paridade esquema × placa OK.
+- Encoders em 3,3 V direto na ESP32, sem CD4050B e 78L05 (D-018, substitui D-011).
+- Motores em 7,2 V (D-019); `docs/03_hardware.md` (energia, cálculos, velocidade, pinagem) e `docs/06_testes.md` (T03, T06, T09) atualizados.
+- `config.h`: pinagem nova (motores 16/17 e 19/21, nSLEEP 4 e 18, encoders 32/33 e 25/26); `PIN_BUZZER = -1`. Firmware: um nSLEEP por driver (D-020), buzzer opcional, encoder direito com INPUT_PULLUP. Checagem de sintaxe OK.
 ### Alterado (placa v0.4, 17/11/2026)
 - `hardware/placa_esp32/`: placa refeita para corrosão manual (D-015): face simples, trilha mínima de 1 mm, folga 0,5 mm, ilhas grandes (`lib/robocar_sm.pretty`), 103 × 95 mm e 11 jumpers. J2 dividido em J2 (entrada do XL4016 #2) e J4 (saída de 6 V). DRC sem erros de cobre; paridade esquema × placa OK; ERC a rodar no KiCad 10.
 - `config.h`: encoder esquerdo com A no GPIO33 e B no GPIO32 (D-016); `docs/03_hardware.md` atualizado.

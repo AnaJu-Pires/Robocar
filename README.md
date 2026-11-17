@@ -3,7 +3,7 @@
 Carrinho autônomo seguidor de linha para a **RoboCar Race 2026, categoria Micro**. A pista tem linha preta de 20 mm sobre tapete claro, cruzamentos, interseções e bifurcações, e curvas de raio mínimo de 100 mm. Ao fim da volta, o robô tem de parar sozinho no box.
 Inspeção e treino em **04/12/2026**; torneio em **05/12/2026** (SENAC Santo Amaro, São Paulo).
 
-**Arquitetura:** câmera IMX219-160 → **Jetson Nano 4 GB** (visão + controle, Python) → USB serial → **ESP32** (PWM, encoders, bateria, largada, watchdog) → 2× DRV8833 → 2× N20 6 V. Detalhes em [docs/02_arquitetura.md](docs/02_arquitetura.md).
+**Arquitetura:** câmera IMX219-160 → **Jetson Nano 4 GB** (visão + controle, Python) → USB serial → **ESP32** (PWM, encoders, bateria, largada, watchdog) → 2× DRV8833 → 2× N20 6 V (em 7,2 V). Detalhes em [docs/02_arquitetura.md](docs/02_arquitetura.md).
 
 ## Estado (09/11/2026)
 
@@ -12,7 +12,7 @@ Inspeção e treino em **04/12/2026**; torneio em **05/12/2026** (SENAC Santo Am
 | Software da Jetson | Implementado; **35 testes automáticos passando no PC**; integração com ESP32 **simulada** OK. Não testado na câmera real |
 | Firmware da ESP32 | Implementado; **só checagem de sintaxe**, falta compilar e gravar |
 | Hardware | Compras definidas (R$ 694,02 com fretes, dentro dos R$ 800); **pedidos a fazer** |
-| Placa da ESP32 | **v0.4** para corrosão manual: face simples, trilha ≥ 1 mm, 103 × 95 mm, 11 jumpers; DRC sem erros e paridade esquema × placa OK (ERC a rodar no KiCad 10); **comprar as peças da placa, medir, fabricar e testar** |
+| Placa da ESP32 | **v0.5** enxuta, embaixo da Jetson: 80 × 67 mm, face simples, trilha ≥ 1 mm, **2 jumpers**, só peças já compradas; DRC sem erros e paridade esquema × placa OK; **testar o encoder em 3,3 V quando os motores chegarem, medir as peças, corroer e montar** ([hardware/placa_esp32/](hardware/placa_esp32/)) |
 | Mecânica | Chassi a projetar (CAD) e imprimir |
 
 Próximos passos e cronograma: [docs/07_plano.md](docs/07_plano.md).

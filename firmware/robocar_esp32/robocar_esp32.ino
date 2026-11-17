@@ -83,11 +83,16 @@ static int rampa(int atual, int alvo, int passo) {
   return alvo;
 }
 
+static void escreverSleep(int nivel) {   // EEP (nSLEEP) dos dois DRV8833
+  digitalWrite(PIN_SLEEP_E, nivel);
+  digitalWrite(PIN_SLEEP_D, nivel);
+}
+
 static void mudarEstado(Estado novo) {
   if (novo == estado) return;
   estado = novo;
   alvoE = alvoD = atualE = atualD = 0;
-  digitalWrite(PIN_SLEEP, novo == ARMADO ? HIGH : LOW);
+  escreverSleep(novo == ARMADO ? HIGH : LOW);
 }
 
 static bool linkRecente(uint32_t limite_ms) {
@@ -206,9 +211,9 @@ static void verificarWatchdog() {
 void setup() {
   Serial.begin(115200);
   pinMode(PIN_LED, OUTPUT);
-  pinMode(PIN_BUZZER, OUTPUT);
-  pinMode(PIN_SLEEP, OUTPUT);
-  digitalWrite(PIN_SLEEP, LOW);
+  if (PIN_BUZZER >= 0) pinMode(PIN_BUZZER, OUTPUT);
+  pinMode(PIN_SLEEP_E, OUTPUT); pinMode(PIN_SLEEP_D, OUTPUT);
+  escreverSleep(LOW);
   pinMode(PIN_BOTAO, INPUT_PULLUP);
 
   pwmIniciar(PIN_ME_IN1, 0); pwmIniciar(PIN_ME_IN2, 1);
@@ -217,7 +222,7 @@ void setup() {
   aplicarMotor(PIN_MD_IN1, 2, PIN_MD_IN2, 3, 0, INVERTER_D);
 
   pinMode(PIN_ENC_E_A, INPUT_PULLUP); pinMode(PIN_ENC_E_B, INPUT_PULLUP);
-  pinMode(PIN_ENC_D_A, INPUT);        pinMode(PIN_ENC_D_B, INPUT);   // GPIO34/35: sem pull-up
+  pinMode(PIN_ENC_D_A, INPUT_PULLUP); pinMode(PIN_ENC_D_B, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(PIN_ENC_E_A), isrEncE, CHANGE);
   attachInterrupt(digitalPinToInterrupt(PIN_ENC_E_B), isrEncE, CHANGE);
   attachInterrupt(digitalPinToInterrupt(PIN_ENC_D_A), isrEncD, CHANGE);
@@ -249,7 +254,8 @@ void loop() {
     snprintf(corpo, sizeof(corpo), "T,%lu,%ld,%ld,%d,%d,%d", (unsigned long)agora,
              (long)encE, (long)encD, vbat_mV, (int)estado, flags);
     enviar(corpo);
-    digitalWrite(PIN_BUZZER, ((flags & FLAG_BATERIA_BAIXA) && (agora / 250) % 2) ? HIGH : LOW);
+    if (PIN_BUZZER >= 0)
+      digitalWrite(PIN_BUZZER, ((flags & FLAG_BATERIA_BAIXA) && (agora / 250) % 2) ? HIGH : LOW);
     // LED: aceso = armado | piscando lento = pronto | piscando rapido = falha | apagado = sem Jetson
     bool led = estado == ARMADO || (estado == PRONTO && (agora / 500) % 2) ||
                (estado == FALHA_BATERIA && (agora / 100) % 2);

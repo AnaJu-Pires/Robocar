@@ -1,19 +1,37 @@
 ** Drc report for placa_esp32.kicad_pcb **
-** Created on 2026-11-17 03:11:36 **
+** Created on 2026-11-17 20:40:40 **
 
-** Found 4 DRC violations **
+** Found 10 DRC violations **
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(124.0800 mm, 133.5000 mm): PCB Text 'M-' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(161.4700 mm, 111.6000 mm): PCB Text 'JP2' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(134.3800 mm, 133.5000 mm): PCB Text 'M+' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(128.4500 mm, 111.6000 mm): PCB Text 'JP1' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(157.1000 mm, 133.5000 mm): PCB Text 'M-' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(167.4000 mm, 133.5000 mm): PCB Text 'M+' on F.Silkscreen
 [lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
     Local override; Severity: warning
-    @(100.5000 mm, 60.5000 mm): Footprint H1
+    @(112.0000 mm, 108.0000 mm): Footprint H4
 [lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
     Local override; Severity: warning
-    @(196.5000 mm, 148.5000 mm): Footprint H4
+    @(185.0000 mm, 98.5000 mm): Footprint H3
 [lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
     Local override; Severity: warning
-    @(196.5000 mm, 60.5000 mm): Footprint H2
+    @(112.0000 mm, 135.0000 mm): Footprint H1
 [lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
     Local override; Severity: warning
-    @(109.5000 mm, 123.0000 mm): Footprint H3
+    @(185.0000 mm, 135.0000 mm): Footprint H2
 
 ** Found 0 unconnected pads **
 

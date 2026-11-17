@@ -27,13 +27,13 @@ Em cada ensaio, medir tensão, corrente e temperatura. Não ligar o robô comple
 | T00 | Compra | Conferir estoque dos itens 01–20 e o frete no carrinho | Pedidos feitos; prazos anotados em `compras/README.md` | Não trocar modelo sem atualizar a planilha |
 | T01 | Jetson | Fonte de bancada 5,1–5,2 V (≥ 4 A) → P4 → J25 com J48 fechado; `make testes` e `make visao` | Boot sem reinícios; câmera abre; anotar fps e tempo de processamento | Conferir a polaridade do P4 (centro +) |
 | T02 | Bateria | Carga no B3 pelo conector de balanceamento | 12,3–12,6 V e células equilibradas | Fora do robô, no Lipo Sack, supervisionada |
-| T03 | Conversores | Ajustar os XL4016 (5,2 V e 6,0 V) com carga resistiva | Tensões estáveis sob carga | **Sem** Jetson e sem motores ligados |
+| T03 | Conversores | Ajustar os XL4016 (5,2 V e 7,2 V) com carga resistiva | Tensões estáveis sob carga | **Sem** Jetson e sem motores ligados |
 | T04 | Alimentação | Jetson pelo XL4016 #1 com visão rodando | ≥ 4,75 V no jack; plug P4 sem aquecer | Senão: pinos 5 V do J41 ([03](03_hardware.md)) |
 | T05 | Motores | `make bancada`, PWM baixo, uma placa DRV8833 em paralelo por motor | Rodas giram no sentido certo (`INVERTER_*`); driver sem aquecer | **Rodas suspensas** |
-| T06 | Encoders | Placa montada, **ESP32 fora do soquete**, 3,3 V da fonte de bancada no furo 3V3 do soquete (pino 30) e bateria ligada: medir +5V_ENC (≈5 V), A/B no conector do motor (0/5 V girando a roda) e cada furo de GPIO 32/33/34/35 no soquete (0/3,3 V) | Furos de GPIO entre 0 e 3,3 V | Nada acima de 3,3 V em GPIO |
+| T06 | Encoders | **Assim que os motores chegarem, antes de corroer a placa:** ligar o + e o − do encoder (preto e azul) em 3,3 V da fonte de bancada (ou do pino 3V3 da DevKit) e medir A e B (amarelo e verde) girando a roda à mão; depois, na placa montada, medir os furos dos GPIO 32/33/25/26 no soquete | A e B alternam entre ~0 e ~3,3 V | Nada acima de 3,3 V em GPIO; se não funcionar em 3,3 V, ver o plano B da D-018 |
 | T07 | Encoders | Girar a roda 10 voltas e ler `enc_e`/`enc_d` no log | Pulsos/volta medidos e sinal coerente com o sentido | — |
 | T08 | Segurança | Matar o programa da Jetson com o robô armado (rodas suspensas) | Freia em < 250 ms; desarma em 1 s; LED apagado | — |
-| T09 | Carga | 50 acelerações e frenagens com a visão rodando | Jetson sem reinício; 6 V estáveis; temperatura aceitável | Medir consumo |
+| T09 | Carga | 50 acelerações e frenagens com a visão rodando | Jetson sem reinício; 7,2 V estáveis; DRV8833 e motores sem esquentar demais | Medir consumo |
 | T10 | Mecânica | Chassi montado | Dentro de 250 × 150 mm; nada raspa; centro de massa entre as rodas | — |
 | T11 | Visão | Calibrar na pista de teste; variar a iluminação; comparar modos da câmera | ≥ 30 fps reais; linha estável; anotar a **latência medida** | — |
 | T12 | Controle | Pista com R100, cruzamento de 90°, X e bifurcação, em velocidade crescente | Não perde a linha; anotar velocidade máxima e μ estimado | — |

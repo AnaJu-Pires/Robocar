@@ -5,7 +5,7 @@
 ```
                 Jetson Nano 4 GB (Python, ~60 Hz = taxa da câmera)                 ESP32 (C++, tempo real)
  IMX219-160 ─► camera ─► visao ─► controle ──► esp32 ═══ USB serial ═══► protocolo ─► rampa ─► PWM ─► 2× DRV8833 ─► N20
-   (CSI)       320×180   faixas    PD +          $M,seq,esq,dir  (~60/s)          estados    1 kHz   20 kHz      (6 V)
+   (CSI)       320×180   faixas    PD +          $M,seq,esq,dir  (~60/s)          estados    1 kHz   20 kHz    (7,2 V)
                cinza     erros     velocidade   ◄── $T,... (50 Hz) ───────────── encoders, bateria (ADC), botão
 ```
 

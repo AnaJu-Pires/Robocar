@@ -11,9 +11,9 @@ Também usamos dados da planilha de especificações da equipe (abas LIGACOES EL
 | Câmera | **IMX219-160** (lente ~160°) | possuímos | CSI; Jetson + câmera = **149 g (medido pela equipe)** [V] |
 | Microcontrolador | ESP32 DevKit V1, 30 pinos, USB-C, CP2102 | possuímos | identificado por foto (13/11/2026) |
 | Motores | N20 6 V 750 rpm com encoder (RoboCore) ×2 | comprar | 120 mA vazio; **stall 1,6 A**; 1,7 kgf·cm; eixo D 3 mm; 20 g; ~140 pulsos/volta (medido pela loja) [V] |
-| Drivers | DRV8833 ×3 (2 em uso + 1 reserva) | comprar | VM 2,7–10,8 V; 1,2 A/canal, **2,4 A em paralelo** [V] |
+| Drivers | DRV8833 ×3 (2 em uso + 1 reserva) | comprar | VM 2,7–10,8 V; 1,2 A/canal, **2,4 A em paralelo** [V]; um módulo por motor, VM em 7,2 V ([D-019](decisoes.md)) |
 | Bateria | LiPo 3S 1100 mAh 20C (RoboCore) | comprar | XT60 + JST-XH; **70 g** [V] |
-| Conversores | XL4016 ×2 | comprar | entrada 8–40 V; tensão e corrente ajustáveis; 65 × 46 × 24 mm [V] |
+| Conversores | XL4016 ×2 | comprar | entrada 8–40 V; tensão e corrente ajustáveis; 65 × 46 × 24 mm [V]; #1 = 5,2 V (Jetson), #2 = 7,2 V (motores) |
 | Rodas | 42 × 19 mm borracha, eixo D 3 mm ×4 (2 reservas) | comprar | 19 g cada [V] |
 | Apoio | esfera deslizante 3/8" | comprar | regra não cita apoio passivo ([01](01_regulamento.md), pergunta 3) |
 | Carga | carregador B3 2S/3S + Lipo Sack | comprar | o laboratório não tem carregador LiPo |
@@ -22,11 +22,13 @@ Também usamos dados da planilha de especificações da equipe (abas LIGACOES EL
 ## 2. Alimentação
 
 ```
+               ┌──────────── chicote de energia (plaquinha perfurada perto da bateria) ────────────┐
 LiPo 3S 11,1 V ─XT60─► fusível 7 A ─► chave ─┬─► XL4016 #1 → 5,2 V (limite ~5 A) ─► plug P4 ─► Jetson J25 (J48 fechado)
-  (9,9–12,6 V)                               ├─► XL4016 #2 → 6,0 V (limite ~3,5 A) ─► VM das 2 placas DRV8833 (+470 µF cada)
-                                             ├─► 78L05 → 5 V (encoders e buzzer, na placa da ESP32)
-                                             └─► divisor 150 k / 33 k (+100 nF) ─► GPIO36 (ADC) da ESP32
-Jetson USB-A ─► ESP32 (dados + 5 V)      GND comum ligado em estrela; a potência não retorna pelo cabo USB
+  (9,9–12,6 V)                               ├─► XL4016 #2 → 7,2 V (limite ~4 A) ─┬─► J2 da placa (DRV8833 esquerdo, 470 µF)
+                                             │                                     └─► J3 da placa (DRV8833 direito, 470 µF)
+                                             └─► fio fino ─► J1 da placa ─► divisor 150 k / 33 k ─► GPIO36 (ADC)
+Jetson USB-A ─► ESP32 (dados + 5 V) ─► 3V3 da DevKit ─► encoders (J12, J13)
+GND comum: a corrente dos motores volta pelos fios pretos de J2/J3 até o XL4016 #2, não pelo cabo USB.
 ```
 
 **Por que assim** ([decisoes.md](decisoes.md) D-002): o DRV8833 aceita no máximo 10,8 V e a regra limita o motor a 12 V. Com a 3S cheia (12,6 V), os motores precisam de trilho regulado. O UBEC previsto no CSV (R$ 199,90) estava fora de estoque. Dois XL4016 iguais custam R$ 59,80 e um serve de reserva para o outro.
@@ -38,13 +40,14 @@ Jetson USB-A ─► ESP32 (dados + 5 V)      GND comum ligado em estrela; a pot�
 | Grandeza | Cálculo | Resultado |
 |---|---|---|
 | Jetson em 10 W | ≈ 12 W com periféricos; η ≈ 0,9; 11,1 V | ≈ 1,2 A na bateria [E] |
-| Motores rodando | 2 × (0,2–0,5 A) × 6 V / 0,9 / 11,1 V | ≈ 0,25–0,6 A [E, medir] |
-| Pico | 2 motores travados (2 × 1,6 A × 6 V) + Jetson a 20 W, bateria em 10 V | ≈ 4,3 A [E] |
+| Motores rodando | 2 × (0,25–0,6 A) × 7,2 V / 0,9 / 11,1 V | ≈ 0,35–0,9 A [E, medir] |
+| Pico | 2 motores travados (2 × 1,9 A × 7,2 V) + Jetson a 20 W, bateria em 10 V | ≈ 5,3 A [E] (fusível de 7 A ok) |
 | Bateria 20C | 1,1 Ah × 20 = 22 A contínuos | folga ≫ 4,3 A |
 | Autonomia | 0,88 Ah úteis (80 %) ÷ 1,2–1,7 A | **≈ 30–45 min** [E]; uma volta < 1 min |
 | Fusível | entre o pico (4,3 A) e o limite do fio | **7 A**; cabinho 0,75 mm² (~18 AWG) |
-| DRV8833 em paralelo | 2,4 A > 1,6 A de stall | margem de 50 % [V] |
-| Divisor da bateria | 12,6 V × 33 / 183 | 2,27 V no ADC; consome 69 µA → **desconectar a bateria ao guardar** |
+| Stall em 7,2 V | 1,6 A × 7,2 / 6 (corrente proporcional à tensão no motor travado) | ≈ 1,9 A [E] |
+| DRV8833 em paralelo | 2,4 A > 1,9 A de stall | margem de 25 % [V] |
+| Divisor da bateria | 12,6 V × 33 / 183 | 2,27 V no ADC; consome 69 µA (depois da chave: zero com a chave desligada) |
 
 ## 4. Massa
 
@@ -74,6 +77,8 @@ Fórmulas da aba CALCULOS da planilha da equipe.
 | Velocidade estimada em carga (520 rpm) | π · 0,042 · 520 / 60 | 1,14 m/s [E] |
 | Limite de aderência em R = 100 mm (μ = 0,8, hipótese) | √(μ · g · R) | 0,89 m/s [E] |
 | Limite diferencial em R = 100 mm (bitola 110 mm) | v_roda_externa / (1 + b/2R) = 1,14 / 1,55 | **0,74 m/s** [E] |
+| Em 7,2 V ([D-019](decisoes.md)): vazio / em carga | rpm proporcional à tensão: 900 / 624 rpm | 1,98 / **1,37 m/s** [E] |
+| Limite diferencial em 7,2 V, R = 100 mm, bitola 104 mm | 1,37 / (1 + 104/200) | **0,90 m/s** ≈ limite de aderência [E] |
 
 Consequências:
 * nas curvas fechadas, o limite vem da mecânica e não do sensor;
@@ -86,22 +91,25 @@ Consequências:
 
 | Função | GPIO | Planilha da equipe | Observação |
 |---|---|---|---|
-| Motor esquerdo IN1 | 25 | 25 | DRV8833 em modo paralelo; na placa vai em IN2+IN4 do módulo (ponte espelhada, mesmo comportamento: [D-013](decisoes.md)) |
-| Motor esquerdo IN2 | 26 | 26 | na placa: IN1+IN3 |
-| Motor direito IN1 | 27 | 27 | |
-| Motor direito IN2 | **13** | 14 | o GPIO14 emite PWM no boot e poderia mexer o motor |
-| nSLEEP das duas placas | 18 | 18 | 3,3 V liga; nunca ligar ao VM |
-| Encoder esquerdo A/B | **33 / 32** | 32 / 33 | via CD4050B (5 V → 3,3 V), saída push-pull; trocados na placa v0.4 para não cruzar trilhas ([D-016](decisoes.md)) |
-| Encoder direito A/B | 34 / 35 | 34 / 35 | só entrada e sem pull-up interno; via CD4050B, que já entrega 0/3,3 V push-pull |
-| Bateria (ADC1) | 36 | 36 | divisor 150 k / 33 k + 100 nF |
-| Botão de largada | 23 | 23 | para o GND (INPUT_PULLUP) |
-| Buzzer (opcional) | 4 | — | aviso de bateria baixa |
-| LED | 2 | — | aceso = armado; pisca devagar = pronto; pisca rápido = falha |
+| Motor esquerdo IN1 | **16** | 25 | DRV8833 em modo paralelo; na placa vai em IN2+IN4 do módulo (ponte espelhada: [D-013](decisoes.md)) |
+| Motor esquerdo IN2 | **17** | 26 | na placa: IN1+IN3 |
+| Motor direito IN1 | **19** | 27 | |
+| Motor direito IN2 | **21** | 14 | |
+| nSLEEP driver esquerdo / direito | **4 / 18** | 18 | um GPIO por driver, pull-down de 10k em cada ([D-020](decisoes.md)); 3,3 V liga |
+| Encoder esquerdo A/B | **32 / 33** | 32 / 33 | encoder em 3,3 V, saída direto no GPIO ([D-018](decisoes.md)); INPUT_PULLUP |
+| Encoder direito A/B | **25 / 26** | 34 / 35 | idem |
+| Bateria (ADC1) | 36 | 36 | divisor 150 k / 33 k |
+| Largada | 23 | 23 | jumper (ou botão) para o GND (INPUT_PULLUP) |
+| Buzzer | — | — | saiu da placa v0.5 (`PIN_BUZZER = -1`); o aviso de bateria baixa vai na telemetria |
+| LED | 2 | — | LED da própria DevKit: aceso = armado; pisca devagar = pronto; pisca rápido = falha |
+
+Por que a pinagem mudou na v0.5 ([D-017](decisoes.md)): ela saiu do traçado da placa de face simples, para nenhuma trilha
+cruzar. Pinos evitados: 0, 2, 5, 12, 15 (strapping), 1 e 3 (USB serial), 14 (PWM no boot) e 39.
 
 ## 7. Regras de ligação (resumo da aba LIGACOES ELETRICAS da equipe)
 
-* Ajustar cada XL4016 **sem carga** e medir com multímetro: 5,2 V e 6,0 V. Só então conectar a Jetson e os drivers.
-* Nunca ligar a 3S direto no VM do DRV8833. Nunca aplicar mais de 3,3 V em GPIO da ESP32: os encoders são alimentados em 5 V e passam pelo conversor CD4050B da placa ([hardware/placa_esp32/](../hardware/placa_esp32/)); não ligar encoder direto num GPIO.
+* Ajustar cada XL4016 **sem carga** e medir com multímetro: 5,2 V e 7,2 V. Só então conectar a Jetson e os drivers.
+* Nunca ligar a 3S direto no VM do DRV8833. Nunca aplicar mais de 3,3 V em GPIO da ESP32: os encoders são alimentados pelo 3V3 da DevKit (J12, J13); **nunca ligar o + do encoder em 5 V ou no VM**.
 * Não usar protoboard nem fio Dupont na potência. Fios de potência curtos e soldados, com termorretrátil.
 * Não alimentar a ESP32 pelo pino 5 V e pelo USB ao mesmo tempo.
 * Não conectar nem desconectar o cabo CSI com a Jetson energizada.

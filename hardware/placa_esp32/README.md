@@ -1,225 +1,224 @@
-# Robocar Blitz — placa da ESP32, v0.4 (face simples, corrosão caseira)
+# Robocar Blitz — placa da ESP32, v0.5 (enxuta, embaixo da Jetson)
 
-Placa-base do carrinho da RoboCar Race 2026 (categoria Micro), refeita para **corrosão manual**: um lado de cobre,
-**trilha mínima de 1,0 mm**, folga mínima de 0,5 mm e ilhas grandes para soldar à mão. Mesmo circuito da v0.3
-(bateria → fusível → chave → XL4016; dois DRV8833 em paralelo; encoders em 5 V com CD4050B; botão de largada e
-buzzer), mesma ESP32 DevKit V1 de 30 pinos, só com peças PTH.
+Placa pequena que fica no **1º andar do carro, embaixo da Jetson**. Só tem o que precisa estar junto da ESP32:
+os dois DRV8833 (um por motor, em paralelo), os pontos de solda dos fios dos motores e dos encoders, o divisor da
+bateria e a largada. Fusível, chave, XT60 e os dois XL4016 ficam **fora**, no chicote de energia (ver "Fora da placa").
 
-| v0.3 (anterior) | **v0.4 (esta)** |
+* **80 × 67 mm**, face simples, PTH, para **corrosão manual**: trilha mínima de **1,0 mm**, folga de 0,5 mm, ilhas grandes.
+* **2 jumpers** de fio, ambos escondidos embaixo dos DRV8833 (são inevitáveis no modo paralelo, ver "Jumpers").
+* Só peças que já temos (lista de compras + laboratório). **Nada novo para comprar.**
+* Motores em **7,2 V** (XL4016 #2) e encoders em **3,3 V** direto na ESP32.
+
+| v0.4 (anterior) | **v0.5 (esta)** |
 |---|---|
-| 130 × 105 mm | **103 × 95 mm** |
-| trilha de sinal 0,7 mm | **1,0 mm** (motores 1,5 mm, bateria 2,5 mm) |
-| ilhas da biblioteca padrão | **ilhas ampliadas**, mesmos furos e passos |
-| 15 jumpers | **11 jumpers** (só 1 de cabinho) |
+| 103 × 95 mm, tudo na placa (fusível, chave, conversores, CD4050, 78L05, buzzer) | **80 × 67 mm**, só ESP32 + drivers + pontos de fio |
+| 11 jumpers | **2 jumpers** (ambos embaixo dos módulos) |
+| encoders em 5 V com CD4050B e 78L05 | encoders em **3,3 V** direto ([D-018](../../docs/decisoes.md)) |
+| motores em 6,0 V | motores em **7,2 V** ([D-019](../../docs/decisoes.md)) |
+| um GPIO no nSLEEP dos dois drivers | um GPIO por driver, com pull-down de 10k ([D-020](../../docs/decisoes.md)) |
 
-![Cobre visto de cima (azul = cobre, vermelho = jumper do lado dos componentes)](imagens/cobre_vista_de_cima.png)
+![Cobre visto de cima (azul = cobre embaixo; branco = sem cobre)](imagens/cobre_vista_de_cima.png)
 
 ## O que tem aqui
 
 | Arquivo | Conteúdo |
 |---|---|
-| `placa_esp32.kicad_pro` / `.kicad_sch` / `.kicad_pcb` | Projeto KiCad (abrir no KiCad 10; ver "Como abrir") |
+| `placa_esp32.kicad_pro` / `.kicad_sch` / `.kicad_pcb` | Projeto KiCad (abre no KiCad 10; os arquivos estão no formato do KiCad 7, o KiCad 10 converte ao salvar) |
 | `placa_esp32.pdf` | Esquemático em PDF |
-| `fabricacao/1_cobre_transferencia_1x1.pdf` | **Arte do cobre**, 1:1, preto = cobre, com marca de centro nas ilhas |
-| `fabricacao/2_montagem_e_jumpers.pdf` | Lado dos componentes: peças, referências e jumpers (vermelho) |
+| `fabricacao/1_cobre_transferencia_1x1.pdf` | **Arte do cobre**, 1:1 numa folha A4, preto = cobre, com marca de centro nas ilhas |
+| `fabricacao/2_montagem_e_jumpers.pdf` | Lado dos componentes: peças, referências e os 2 jumpers (vermelho) |
 | `fabricacao/placa_esp32-PTH.drl`, `-NPTH.drl` e `*-drl_map.pdf` | Furação (Excellon) e mapa de brocas |
-| `fabricacao/BOM.csv` | Lista de peças da placa |
+| `fabricacao/BOM.csv` | Peças da placa, com posição e origem |
 | `imagens/` | Cobre visto de cima, lado do cobre (como fica na placa) e folha de montagem |
-| `verificacao/` | Relatório do DRC, conferência esquema × placa, ângulos/larguras e lista dos jumpers |
+| `verificacao/` | DRC, conferência esquema × placa, ângulos/larguras e lista dos jumpers |
 | `lib/robocar_sm.pretty` | Pegadas `_SoldaManual` (ilha maior, furo e passo originais) |
-| `lib/robocar.kicad_sym`, `lib/robocar.3dshapes` | Símbolos e 3D da ESP32 DevKit V1 e do DRV8833 (os mesmos da v0.3) |
+| `lib/robocar.kicad_sym`, `lib/robocar.3dshapes` | Símbolos e 3D da ESP32 DevKit V1 e do DRV8833 |
+
+## O que fica na placa e o que fica fora
+
+A regra foi: **na placa, só o que liga na ESP32 ou nos drivers.** O resto é fio.
+
+| Na placa | No chicote (fora da placa) |
+|---|---|
+| ESP32 DevKit V1 em barras fêmea (alimentada pelo **USB da Jetson**) | XT60 → **fusível 7 A** → **chave** → XL4016 #1 (5,2 V, Jetson) e XL4016 #2 (7,2 V, motores) |
+| 2 DRV8833 em barras fêmea, com 470 µF cada | Os 2 clips de porta-fusível 5×20 comprados vão numa **plaquinha perfurada** (laboratório) junto da chave e do XT60 |
+| Pontos de solda: VM (2 pares), motores, encoders, VBAT, largada | O fio do VBAT sai **depois da chave** e vem até o J1 |
+| Divisor 150k/33k da bateria, pull-downs de 10k do nSLEEP | |
+
+Por que assim: os XL4016 (65 × 46 mm cada) e a bateria ficam perto do eixo traseiro (ver o layout do carro); a placa da
+ESP32 fica embaixo da Jetson. Levar a bateria até esta placa só para voltar aos conversores era fio e trilha larga à toa.
 
 ## Ideia do desenho
 
-Mesma lógica de arrumação do Projeto-PCB: **a energia entra por cima, a ESP32 fica à direita com o USB para fora da
-borda de baixo, os motores ficam à esquerda e o CD4050 no meio, entre os encoders e a ESP32.**
+![Folha de montagem](imagens/montagem_e_jumpers.png)
 
-| Faixa | O que tem | Regra |
+* **ESP32 girada com o USB para a borda esquerda** (o cabo vai para a Jetson) e a antena para a direita.
+  * A **fileira de baixo** da ESP32 (GPIO23 … 3V3) desce direto para os DRV8833: cada GPIO cai em cima do pino que ele aciona.
+  * A **fileira de cima** (GPIO36, 32, 33, 25, 26) passa **por baixo da ESP32**, entre as barras fêmea (ela fica elevada), e sai
+    pela direita, no bloco dos encoders e do divisor. O 3V3 também passa por esse corredor, por baixo dos outros, e por isso
+    chega nos dois conectores de encoder sem cruzar nada.
+* **Drivers embaixo**, lado a lado, com as entradas para cima (perto da ESP32) e as saídas para baixo (perto dos motores, que
+  ficam no eixo traseiro). O VM e o GND de cada driver saem **por dentro do módulo** (entre as fileiras) até o 470 µF e os fios
+  do XL4016 dele (J2 e J3).
+* **Motores na borda de baixo** (J10, J11), **encoders no canto de cima à direita** (J12, J13, mesma ordem nos dois: A, B, +, −).
+* **Plano de GND** em todo o cobre livre (folga 0,6 mm, alívio térmico com raios de 1 mm). Nenhuma ilha de GND solta.
+
+### Pinagem da ESP32 (igual ao [config.h](../../firmware/robocar_esp32/config.h))
+
+| GPIO | Pino da DevKit | Função | Vai para |
+|---|---|---|---|
+| 16 (RX2) | 25 | motor esquerdo IN1 | IN2+IN4 do U2 (ponte espelhada, [D-013](../../docs/decisoes.md)) |
+| 17 (TX2) | 24 | motor esquerdo IN2 | IN1+IN3 do U2 (IN3 pelo JP1) |
+| 19 | 21 | motor direito IN1 | IN2+IN4 do U3 |
+| 21 | 20 | motor direito IN2 | IN1+IN3 do U3 (IN3 pelo JP2) |
+| 4 | 26 | nSLEEP do driver esquerdo | EEP do U2; R3 10k para o GND |
+| 18 | 22 | nSLEEP do driver direito | EEP do U3; R4 10k para o GND |
+| 32 / 33 | 6 / 7 | encoder esquerdo A / B | J12 |
+| 25 / 26 | 8 / 9 | encoder direito A / B | J13 |
+| 36 (VP) | 2 | bateria (ADC1) | divisor R1 150k / R2 33k |
+| 23 | 16 | largada | J14 (jumper para o GND) |
+| 2 | 27 | LED | LED da própria DevKit (sem trilha) |
+| 3V3 / GND | 30 / 14 e 29 | alimentação dos encoders / plano de GND | J12, J13 |
+
+Pinos evitados de propósito: 0, 2, 5, 12 e 15 (strapping do boot), 1 e 3 (USB serial), 14 (PWM no boot), 39 (falsas
+interrupções quando o ADC é usado). Os drivers dormem (EEP em nível baixo pelo pull-down) até o firmware armar, então
+o boot da ESP32 não mexe os motores.
+
+## Ligações (fios)
+
+| Ponto | Fio | De onde |
 |---|---|---|
-| Borda de cima | Bateria (J1) → fusível (F1) → chave (SW1) → entradas dos dois XL4016 (J3, J2) | "Linha de montagem" da esquerda para a direita; a trilha da bateria é de 2,5 mm e fica reta |
-| Canto de cima à direita | 78L05 (U3), divisor da bateria (R1, R2, C1), buzzer (BZ1, Q1, D1, R8, R9) | Cada peça perto de quem ela alimenta |
-| Esquerda | Conectores dos motores na borda (J10 em cima, J11 embaixo), DRV8833 ao lado de cada um | Um "canal" por motor: conector → driver → ESP32, sem cruzar o outro motor |
-| Entre os dois DRV8833 | C2 (do U4), C3 (do U5) e os fios da saída de 6 V (J4) | O capacitor fica colado no VCC/GND do seu driver |
-| Meio, em cima | CD4050 (U2) e os pull-ups dos encoders (R4–R7) | Entradas de 5 V chegam pela esquerda, saídas de 3,3 V saem pela direita |
-| Direita | ESP32 (U1), botão de largada (SW2) e R3 | A fileira esquerda da ESP32 atende motores e encoders; a direita, botão, buzzer, SLEEP e 3V3 |
+| J2 `+ −` | cabinho 0,75 mm² vermelho/preto | saída do **XL4016 #2 (7,2 V)** — 1º par |
+| J3 `+ −` | cabinho 0,75 mm² vermelho/preto | saída do XL4016 #2 — 2º par (os dois pares no mesmo borne) |
+| J10 `M+ M−` | vermelho (M+), branco (M−) | motor esquerdo |
+| J11 `M+ M−` | vermelho (M+), branco (M−) | motor direito |
+| J12 `A B + −` | amarelo, verde, preto, azul | encoder do motor esquerdo |
+| J13 `A B + −` | amarelo, verde, preto, azul | encoder do motor direito |
+| J1 `VBAT` | fio fino | + da bateria **depois da chave** |
+| J14 | 2 pinos macho + jumper (ou um botão em 2 fios) | colocar o jumper = apertar o botão de largada |
+| USB da ESP32 | cabo de dados | Jetson (alimenta a ESP32) |
 
-**Como a face simples foi resolvida sem passar trilha entre pinos de 2,54 mm** (não cabe trilha de 1 mm):
-* **Por baixo dos módulos.** A ESP32 e os DRV8833 ficam elevados nas barras fêmea, então o cobre entre as duas
-  fileiras de cada um é usado como corredor: o SLEEP atravessa os dois DRV8833 por dentro; o 3V3 e o BUZZER sobem por
-  dentro da ESP32; o +6V e o GND de cada driver saem por dentro do módulo até o capacitor dele.
-* **Por dentro do soquete do CD4050.** As entradas do encoder do motor direito descem entre as fileiras do soquete e
-  as saídas do encoder esquerdo saem por baixo dele, em três faixas de 1 mm.
-* **Resistor como ponte.** O R1 (150k) passa por cima das trilhas de +5V e 3V3, e os pull-ups R4 e R6 passam por cima
-  de outras linhas de encoder (como o R20/R22 no Projeto-PCB).
-* **Encoder do motor direito pela borda.** As linhas A/B do J11 sobem pela borda esquerda, por fora de tudo.
-* **Plano de GND** em todo o cobre livre (folga 0,6 mm, alívio térmico com raios de 1 mm). Onde o plano ficou
-  fechado entre trilhas, um jumper de fio religa (JP5–JP11).
-
-## Mudanças em relação à v0.3 (decisões)
-
-1. **[D-015](../../docs/decisoes.md) — Placa refeita para corrosão manual (face simples, trilha ≥ 1 mm, ilhas grandes).** 103 × 95 mm,
-   11 jumpers. O roteamento foi desenhado faixa por faixa (corredores por baixo dos módulos e do CD4050) para cortar
-   jumpers, e conferido no DRC.
-2. **[D-016](../../docs/decisoes.md) — Encoder esquerdo: GPIO32 ↔ GPIO33.** Na v0.4 o canal A do encoder esquerdo entra no **GPIO33** e o B no
-   **GPIO32** (era o contrário). Com a ordem dos pinos do conector e do CD4050, essa troca evita um cruzamento (um
-   jumper a mais). Não muda o comportamento, só a definição em `config.h` — **atualizar o firmware**:
-   ```c
-   const int PIN_ENC_E_A = 33;  // v0.4: era 32
-   const int PIN_ENC_E_B = 32;  // v0.4: era 33
-   ```
-   Já aplicado em [config.h](../../firmware/robocar_esp32/config.h) e na tabela de
-   [docs/03_hardware.md](../../docs/03_hardware.md#6-pinagem-da-esp32). Nenhum outro pino mudou.
-3. **J2 (4 pontos) virou J2 + J4.** Os mesmos 4 fios do XL4016 #2, agora em dois lugares: a **entrada** (J2: VBAT e
-   GND) fica na faixa de energia de cima e a **saída de 6 V** (J4: +6V e GND) fica entre os dois DRV8833, colada nos
-   capacitores. Assim o +6V não precisa atravessar a placa.
-4. **Pegadas `_SoldaManual`.** Ilhas maiores, **mesmo furo e mesmo passo** da peça (tabela abaixo). Não use
-   "Atualizar pegadas a partir da biblioteca" com a biblioteca padrão: as ilhas voltariam ao tamanho original.
-5. **TO-92 triangular** (78L05 e BC337): pernas das pontas a 5,08 mm e a do meio deslocada 2,54 mm, como no
-   Projeto-PCB. As pernas do TO-92 abrem sem esforço para esse formato.
-6. Ligações, valores e peças: **iguais à v0.3** (paridade conferida pino a pino, ver "Verificações").
+Cores do cabo da RoboCore (pinagem da loja): 1 vermelho M+, 2 branco M−, 3 amarelo A, 4 verde B, 5 preto + do encoder,
+6 azul − do encoder. **Confira com o multímetro** antes de soldar (o sentido de giro se acerta depois em `INVERTER_E/D`).
+Se o cabo vier com conector na ponta, corte o conector e solde os fios nos pontos.
 
 ## Regras usadas
 
 | Item | Valor |
 |---|---|
 | Trilha de sinal (mínima) | **1,0 mm** |
-| Motores (M+/M−), +6V e GND entre os módulos | 1,5 mm |
-| Bateria (VBAT_IN, VBAT_FUS, VBAT_SW) | 2,5 mm (IPC-2221, 35 µm, +10 °C: ~4,3 A — o pico estimado do robô) |
-| Folga cobre–cobre (trilha, ilha, via) | 0,5 mm |
-| Folga do plano de GND | 0,6 mm; alívio térmico com raios de 1,0 mm; largura mínima do plano 1,0 mm |
+| Motores, VM e GND dos drivers | 1,5 mm (≈ 3,2 A em 35 µm com +10 °C pela IPC-2221; o pico é ≈ 1,9 A por motor) |
+| Folga cobre–cobre | 0,5 mm |
+| Folga do plano de GND | 0,6 mm; alívio térmico com raios de 1,0 mm |
 | Cobre até a borda | 0,6 mm |
-| Ângulos | só trechos a 0°, 45° e 90°; **nenhuma curva fechada** (toda curva é de 45°) e nenhum encontro agudo; 15 derivações em T a 90° |
+| Ângulos | só 0°, 45° e 90°; toda curva é chanfrada a 45°; nenhum encontro agudo |
 
-**Ilhas (furo → ilha)** — o furo e o passo não mudaram:
+**Ilhas (furo → ilha)** — o furo e o passo da peça não mudaram:
 
 | Peça | Furo | Ilha |
 |---|---|---|
-| Resistores, cerâmicos, 1N4148, eletrolíticos 470 µF | 0,8 mm | 2,4 mm |
-| TO-92 (78L05, BC337) | 0,8 mm | 2,1 mm (triangular, ~3,6 mm entre pernas) |
-| Soquete DIP-16 (CD4050) | 0,8 mm | 2,4 × 1,9 mm (oval) |
+| Resistores, eletrolíticos 470 µF | 0,8 mm | 2,4 mm |
 | Barras fêmea da ESP32 e dos DRV8833 | 1,0 mm | 2,6 × 1,9 mm (oval, quadrada no pino 1) |
-| KF2510 dos motores | 1,19 mm | 1,9 × 3,0 mm |
-| Clips do fusível / buzzer / botão | 1,05 / 1,0 / 1,1 mm | 3,0 / 3,0 / 2,8 mm |
-| Pontos de solda dos fios 0,75 mm² | 1,55 mm | 3,6 mm |
-| Furos dos jumpers | 0,8 mm (JP5: 1,2 mm) | 2,2 mm (JP5: 2,6 mm) |
+| Fios dos encoders e largada (J12, J13, J14) | 1,0 mm | 3,0 × 1,9 mm |
+| Fios 0,75 mm² e dos motores (J1, J2, J3, J10, J11) | 1,55 mm | 3,6 mm |
+| Furos dos jumpers JP1, JP2 | 0,8 mm | 2,2 mm |
 
-**Polaridade:** ilha **quadrada = pino 1** (+ dos eletrolíticos e do buzzer, catodo do 1N4148, pino 1 do CD4050, pino
-1 da ESP32 = EN, EEP dos DRV8833, M+ dos conectores dos motores, + da bateria em J1).
+**Polaridade:** ilha **quadrada = pino 1**: + do eletrolítico, EN da ESP32 (canto de cima à direita), EEP dos DRV8833
+(canto de baixo à esquerda de cada módulo), M+ dos motores, + do VM, A dos encoders.
 
-## Jumpers (11)
+## Jumpers (2)
 
-Cada jumper é um **fio do lado dos componentes**, soldado em dois furos. Coordenadas em mm a partir do **canto
-superior esquerdo da placa, vista de cima** (a mesma vista da folha de montagem). No KiCad aparecem como trilha
-vermelha (camada F.Cu).
+No modo paralelo é preciso ligar IN1 com IN3 e IN2 com IN4. Na fileira do módulo a ordem é IN4, IN3, GND, VCC, IN2, IN1:
+os dois pares se intercalam e o GND e o VCC ficam no meio, então **um dos pares sempre precisa de um jumper** (o outro
+passa por fora, pela trilha em U em cima do módulo). O jumper fica **embaixo do módulo**, que encaixa por cima.
 
-| # | Rede | De | Até | Compr. | Para quê | Fio |
-|---|---|---|---|---|---|---|
-| JP1 | ME_IN2 | (32,3; 45,5) | (32,3; 54,4) | 9 mm | liga IN1+IN3 do DRV8833 esquerdo (por baixo do módulo) | rígido 0,5–0,6 mm |
-| JP2 | MD_IN2 | (32,3; 80,5) | (32,3; 89,4) | 9 mm | o mesmo no DRV8833 direito | rígido |
-| JP3 | +3V3 | (40,0; 21,3) | (53,0; 21,3) | 13 mm | alimentação do CD4050 | rígido, **isolado** |
-| JP4 | +5V_ENC | (39,0; 17,7) | (53,0; 17,7) | 14 mm | 5 V dos encoders e pull-ups | rígido, **isolado** |
-| JP5 | GND | (38,0; 65,0) | (38,0; 71,3) | 6 mm | retorno do DRV8833 esquerdo até o J4 | **cabinho 0,75 mm²** |
-| JP6 | GND | (16,5; 21,0) | (16,5; 9,5) | 12 mm | GND do encoder esquerdo → GND da bateria | rígido |
-| JP7 | GND | (41,0; 71,3) | (41,0; 47,0) | 24 mm | VSS do CD4050 → GND entre os módulos | rígido, **isolado** |
-| JP8 | GND | (48,6; 44,6) | (41,0; 44,6) | 8 mm | entrada sem uso do CD4050 (pino 9) → VSS | rígido |
-| JP9 | GND | (47,0; 72,8) | (47,0; 87,0) | 14 mm | GND entre os módulos → GND da ESP32 | rígido, **isolado** |
-| JP10 | GND | (70,5; 33,5) | (70,5; 23,0) | 11 mm | GND de baixo da ESP32 → GND de cima | rígido |
-| JP11 | GND | (22,4; 57,4) | (26,7; 57,4) | 4 mm | GND do encoder direito (J11) → GND entre os módulos | rígido |
+Coordenadas em mm a partir do **canto superior esquerdo da placa, vista de cima** (a folha de montagem):
 
-JP1 e JP2 ficam entre as fileiras dos DRV8833 (o módulo encaixa por cima). Solde **todos os jumpers primeiro**,
-antes de qualquer peça. A corrente dos motores volta pelo fio do J4 até o XL4016; o JP5 é de cabinho porque também
-leva parte dessa corrente.
+| # | Rede | De | Até | Compr. | Fio |
+|---|---|---|---|---|---|
+| JP1 | ME_IN2 (IN1+IN3 do driver esquerdo) | (15,5; 41,7) | (24,4; 41,7) | 9 mm | rígido 0,5–0,6 mm, deitado na placa |
+| JP2 | MD_IN2 (IN1+IN3 do driver direito) | (48,5; 41,7) | (57,4; 41,7) | 9 mm | idem |
+
+Solde os jumpers **antes** das barras fêmea.
 
 ## Fabricação caseira (transferência térmica)
 
-1. **Imprimir** `fabricacao/1_cobre_transferencia_1x1.pdf` em impressora **laser**, escala **100 %** (sem "ajustar
-   à página"). A placa está no centro da folha A4. Conferir com régua: **103 × 95 mm**.
-2. **Conferir a orientação.** Na folha, o texto "LADO DO COBRE v0.4" (embaixo, à direita) aparece **espelhado**.
-   Depois de transferido ele fica **legível** olhando o lado do cobre (`imagens/lado_do_cobre.png` mostra como deve
-   ficar). Se não ficar legível, a placa saiu espelhada.
+1. **Imprimir** `fabricacao/1_cobre_transferencia_1x1.pdf` em impressora **laser**, escala **100 %** (sem "ajustar à
+   página"). Conferir com régua: a placa tem **80 × 67 mm**.
+2. **Conferir a orientação.** Na folha, o texto "BLITZ v0.5" aparece **espelhado**. Depois de transferido, ele fica
+   **legível** olhando o lado do cobre (`imagens/lado_do_cobre.png`). Se não ficar legível, a placa saiu espelhada e a
+   ESP32 entraria invertida.
 3. **Transferir, corroer e limpar.** As marquinhas no centro das ilhas guiam a broca.
 4. **Furar** (mapa: `placa_esp32-PTH-drl_map.pdf`):
 
 | Broca | Onde |
 |---|---|
-| 0,8 mm | resistores, capacitores, 1N4148, TO-92, soquete DIP, furos dos jumpers (exceto JP5) |
-| 1,0 mm | barras fêmea da ESP32 e dos DRV8833, buzzer, clips do fusível (1,05), KF2510 (o arquivo pede 1,19; os pinos são de 0,64 mm, 1,0 mm deixa mais cobre) |
-| 1,1–1,2 mm | botão de largada; JP5 (cabinho) |
-| 1,5–1,6 mm | pontos de solda dos fios de 0,75 mm² (J1, SW1, J2, J3, J4) |
+| 0,8 mm | resistores, eletrolíticos, furos dos jumpers |
+| 1,0 mm | barras fêmea, J12, J13, J14 |
+| 1,5–1,6 mm | pontos dos fios grossos (J1, J2, J3, J10, J11) |
 | 3,2 mm | 4 furos de fixação M3 |
 
-5. **Montar em ordem de altura:** jumpers → resistores → 1N4148 → cerâmicos → soquete DIP → TO-92 → botão → barras
-   fêmea → KF2510 → eletrolíticos → clips do fusível → buzzer. Por último os fios de potência (bateria, chave, XL4016).
-6. **Antes de encaixar a ESP32, os DRV8833 e o CD4050:**
-   - procurar curto entre VBAT_SW, +6V_MOT, +5V_ENC, +3V3 e GND (multímetro em continuidade);
-   - alimentar pela fonte de bancada com limite de corrente baixo;
-   - medir **6,0 V** entre os pinos VCC e GND dos soquetes dos DRV8833 e **5 V** na saída do 78L05;
-   - seguir o teste T06 de [docs/06_testes.md](../../docs/06_testes.md).
+5. **Montar:** JP1 e JP2 → resistores → barras fêmea (2 × 1x15 para a ESP32, 4 × 1x6 para os DRV8833) → 470 µF (atenção
+   ao +) → pinos do J14 → fios.
+6. **Antes de encaixar a ESP32 e os módulos:**
+   - procurar curto entre +3V3, VM_E, VM_D e GND (multímetro em continuidade);
+   - ligar só o XL4016 #2 (já ajustado em 7,2 V sem carga) e medir 7,2 V entre os furos VCC e GND de cada soquete de DRV8833;
+   - com a bateria ligada, medir no furo do GPIO36 (pino 2 do soquete da ESP32): ≈ VBAT × 0,18 (2,27 V com 12,6 V);
+   - seguir os testes T05–T07 de [docs/06_testes.md](../../docs/06_testes.md).
 
-## O que falta comprar (fora da planilha de compras)
+## Peças
 
-A planilha ([compras/robocar_compras_2026.xlsx](../../compras/)) já tem: DRV8833 ×3, XL4016 ×2, fusível 7 A e porta-fusível 5×20,
-chave gangorra, 470 µF ×4, cabinho 0,75 mm², XT60. O laboratório tem os resistores 150k/33k/10k, multímetro, ferro de
-solda e espaçadores M3. **Para esta placa ainda faltam:**
+Tudo já comprado ou do laboratório (`fabricacao/BOM.csv` tem a lista com posições):
 
-| Item | Qtd | Observação |
+| Peça | Qtd | Origem |
 |---|---|---|
-| CD4050B (DIP-16) | 1 (+1 reserva) | conversor 5 V → 3,3 V dos encoders |
-| Soquete DIP-16 | 1 | |
-| 78L05 (TO-92) | 1 | 5 V dos encoders |
-| BC337 (TO-92) | 1 | aciona o buzzer |
-| 1N4148 | 1 | |
-| Buzzer **ativo** 5 V, 12 mm, PTH (passo 7,6 mm) | 1 | opcional; conferir se o do laboratório (item L14) é ativo |
-| Chave táctil 6 × 6 mm, 4 terminais, PTH | 1 | botão de largada |
-| Conector KF2510 6 vias: macho de placa 180° + fêmea + terminais de crimpar | 2 jogos | um por motor; ver "Medir antes" |
-| Barra de pinos fêmea 1 × 15, 2,54 mm | 2 | ESP32 |
-| Barra de pinos fêmea 1 × 6, 2,54 mm (ou 1 × 40 cortada) | 4 | dois DRV8833 |
-| Resistores 1/4 W: 100k ×1, 1k ×1 | 2 | 150k, 33k e 10k ×5 o laboratório fornece |
-| Capacitores cerâmicos: 100 nF ×3, 330 nF ×1 | 4 | |
-| Placa de fenolite (ou fibra) **face simples**, mín. 110 × 100 mm | 1 (+1 para errar) | |
-| Percloreto de ferro (ou persulfato de sódio), papel para transferência | 1 | se o laboratório não tiver |
-| Brocas 0,8 / 1,0 / 1,2 / 1,5 / 3,2 mm | 1 de cada | se o laboratório não tiver |
-| Fio rígido 0,5–0,6 mm (ex.: um pedaço de cabo de rede) | ~30 cm | jumpers |
-| Termorretrátil fino ou espaguete | ~20 cm | isolar JP3, JP4, JP7 e JP9 |
+| ESP32 DevKit V1 (30 pinos) | 1 | já temos |
+| Módulo DRV8833 | 2 (+1 reserva) | Smart Kits |
+| Eletrolítico 470 µF 16 V (8 mm, passo 3,5) | 2 (+2 reserva) | Smart Kits |
+| Resistores 1/4 W: 150k, 33k, 10k ×2 | 4 | laboratório |
+| Barra fêmea 2,54 mm: 1x15 ×2 e 1x6 ×4 (cortar de 1x40) | — | já temos |
+| Barra de pinos macho 1x2 + jumper | 1 | um dos jumpers do pacote do J48 da Jetson serve |
+| Cabinho 0,75 mm² vermelho e preto | ~40 cm | Smart Kits |
+| Fio rígido 0,5–0,6 mm | ~2 cm | JP1 e JP2 (pode ser perna cortada de resistor) |
+| Espaçadores e parafusos M3 | 4 | laboratório |
+| Placa de fenolite (ou fibra) **face simples**, ≥ 85 × 70 mm, percloreto e papel de transferência | 1 | laboratório (se não tiver, é a única compra) |
 
-Preços não cotados.
+Sobram da lista da v0.4 (não usados aqui): CD4050B, soquete DIP-16, 78L05, BC337, 1N4148, buzzer, chave táctil, KF2510.
+A chave táctil pode ir em 2 fios no J14, no lugar do jumper.
 
 ## Medir antes de fabricar
 
 | Item | O que medir | Valor usado |
 |---|---|---|
-| ESP32 DevKit V1 | distância entre as fileiras (centro a centro) | 25,40 mm (desenho DOIT) |
-| Módulo DRV8833 | distância entre as fileiras e a ordem dos pinos na serigrafia | 15,24 mm **estimado**; pino 1 = EEP |
-| Módulo DRV8833 | continuidade EEP–VCC (jumper J2 do módulo) | tem de estar **aberto** (senão o GPIO18 recebe 6 V) |
-| Clips do porta-fusível comprados | se cada clip tem 2 pernas a 5 mm e os clips ficam a 20 mm | Littelfuse 111 |
-| Cabo do motor | conector da ponta e ordem 1 M+, 2 M−, 3 A, 4 B, 5 Vcc, 6 GND | KF2510 de 6 vias |
+| ESP32 DevKit V1 | distância entre as fileiras (centro a centro) e os nomes na serigrafia (EN no canto, 3V3 do outro lado) | 25,40 mm (desenho DOIT) |
+| Módulo DRV8833 | distância entre as fileiras e a ordem dos pinos | 15,24 mm **estimado**; EEP, OUT1–4, ULT / IN4, IN3, GND, VCC, IN2, IN1 |
+| Módulo DRV8833 | resistência entre EEP e VCC (jumper de solda ou resistor de pull-up do módulo) | **sem ligação direta**. Se o módulo tiver um pull-up de 47k para o VCC, o pull-down de 10k da placa segura o EEP em ≈ 1,3 V no boot (seguro para a ESP32); se der ~0 Ω (jumper de solda fechado), abrir o jumper |
 | 470 µF | diâmetro e passo | 8 mm, 3,5 mm |
+| Encoder (quando os motores chegarem) | ligar em 3,3 V e girar a roda à mão: A e B têm de ir de 0 a 3,3 V | ver T06 |
 
 Se algo mudar, edite a pegada em `lib/robocar_sm.pretty`, atualize a placa a partir do esquemático e refaça só as
 trilhas daquela peça, rodando o DRC de novo.
 
 ## Verificações
 
-| Verificação | Resultado |
-|---|---|
-| DRC (KiCad 7.0.11), todas as severidades | **0 erros de cobre, 0 ligações faltando**; sobram só 4 avisos "biblioteca MountingHole não configurada" (é a tabela de bibliotecas desta máquina; some no KiCad 10) — `verificacao/drc.rpt` |
-| Esquema × placa (netlist exportada do esquemático pelo `kicad-cli`, comparada pino a pino com as ilhas) | **32 peças, 29 redes, 0 diferenças**, inclusive pegadas — `verificacao/paridade_esquema_placa.txt` |
-| Ângulos e larguras (lidos do arquivo da placa) | 235 trechos, 0 fora de 0/45/90°, 0 curvas fechadas, 0 encontros agudos; trilha mais fina 1,00 mm — `verificacao/angulos_e_larguras.txt` |
-| ERC do esquemático | **não rodado aqui** (o esquemático é do KiCad 10 e esta máquina só tem o KiCad 7). As mudanças no esquema são pequenas (J2/J4 e os rótulos do GPIO32/33); **rode o ERC no KiCad 10** antes de fabricar |
-| Fabricada, montada ou testada | **não** |
+| O quê | Resultado | Arquivo |
+|---|---|---|
+| DRC (KiCad) | 0 violações de cobre, 0 ligações faltando; só avisos de serigrafia cortada pela máscara e da biblioteca MountingHole (nativa do KiCad) | `verificacao/drc.rpt` |
+| Esquema × placa | mesmas 17 peças, mesmas pegadas e mesmas ligações em todos os pinos (21 redes) | `verificacao/paridade_esquema_placa.txt` |
+| Ângulos e larguras | 117 trechos, todos a 0/45/90°; nenhuma curva fechada; trilha mais fina 1,00 mm | `verificacao/angulos_e_larguras.txt` |
+| Firmware | `config.h` com esta pinagem; checagem de sintaxe C++ OK (falta compilar no Arduino IDE e gravar) | [firmware/](../../firmware/) |
 
-## Como abrir
+O ERC do esquemático deve ser rodado no KiCad 10 (o kicad-cli usado aqui, versão 7, não tem ERC).
 
-Abra `placa_esp32.kicad_pro` no **KiCad 10**. A placa foi gerada no formato do KiCad 7: o KiCad 10 abre e pede para
-atualizar o arquivo ao salvar (pode aceitar). As tabelas `fp-lib-table` e `sym-lib-table` da pasta já apontam para
-`lib/`. A v0.3 (130 × 105 mm, trilha de 0,7 mm, 15 jumpers) continua no histórico do git.
+## Fontes
 
-## Limitações e pendências
-
-* Nada foi fabricado nem testado.
-* O plano de GND tem trechos ligados só por jumper (JP6–JP11): se esquecer um, parte da placa fica sem GND. Depois
-  de soldar, conferir continuidade de GND entre J1 (BAT−), J4 (6V−), o pino GND da ESP32 e o pino 8 do CD4050.
-* As faixas por dentro do soquete do CD4050 têm 0,5 mm de folga para as ilhas (o mínimo da regra): capriche na
-  transferência nessa região.
-* Vista 3D não foi gerada aqui (o KiCad 7 de linha de comando não renderiza); o KiCad 10 mostra a placa em 3D com os
-  modelos de `lib/robocar.3dshapes` e da biblioteca padrão.
+* TI, DRV8833 (datasheet): VM 2,7–10,8 V; modo paralelo ligando AIN1/BIN1, AIN2/BIN2, AOUT1/BOUT1 e AOUT2/BOUT2;
+  nSLEEP com pull-down interno. <https://www.ti.com/lit/ds/symlink/drv8833.pdf>
+* Pinagem e esquema do módulo DRV8833: Components101 <https://components101.com/modules/drv8833-dual-h-bridge-motor-driver-module>
+  e CircuitDigest <https://circuitdigest.com/microcontroller-projects/interface-drv8833-dual-motor-driver-module-with-arduino>;
+  medidas do módulo: Smart Kits <https://www.smartkits.com.br/modulo-ponte-h-dupla-drv8833-2a>.
+* Motor N20 6 V 750 rpm com encoder (pinagem do cabo, corrente de stall 1,6 A em 6 V):
+  RoboCore <https://www.robocore.net/motor-caixas-de-reducao/micro-motor-caixa-de-reducao-6v-750rpm-com-encoder>.
+* ESP32: pinos de strapping e GPIOs só de entrada — Espressif, *ESP32 Series Datasheet* e guia de GPIO do ESP-IDF
+  <https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/peripherals/gpio.html>.
+* Largura de trilha × corrente: IPC-2221 (calculadora de qualquer fabricante de PCB).

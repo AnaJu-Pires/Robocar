@@ -1,2 +1,2 @@
 PARIDADE OK: mesmas pecas, mesmas pegadas e mesmas ligacoes em todos os pinos
-32 componentes; 29 redes
+17 componentes; 21 redes
