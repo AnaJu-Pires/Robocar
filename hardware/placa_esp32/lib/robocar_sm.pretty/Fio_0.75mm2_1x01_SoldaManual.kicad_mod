@@ -2,7 +2,7 @@
   (layer "F.Cu")
   (descr "1 ponto de solda para fio | ilhas ampliadas para solda manual e corrosao caseira; furo e passo originais")
   (tags "connector wire 0.75sqmm")
-  (attr exclude_from_pos_files exclude_from_bom)
+  (attr through_hole)
   (fp_text reference "REF**" (at 0 -2.47) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15)))
     (tstamp 44824d58-0be8-4abf-a4a0-61faf9db7a82)

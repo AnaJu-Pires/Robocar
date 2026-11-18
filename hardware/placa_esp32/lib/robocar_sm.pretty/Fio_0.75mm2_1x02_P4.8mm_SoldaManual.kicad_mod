@@ -2,7 +2,7 @@
   (layer "F.Cu")
   (descr "2 pontos de solda para cabinho 0,75 mm2; quadrado = pino 1 | ilhas ampliadas para solda manual e corrosao caseira; furo e passo originais")
   (tags "connector wire 0.75sqmm")
-  (attr exclude_from_pos_files exclude_from_bom)
+  (attr through_hole)
   (fp_text reference "REF**" (at 2.4 -2.47) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15)))
     (tstamp 63507f09-ad69-4cd5-9bb6-fe74b8aca138)

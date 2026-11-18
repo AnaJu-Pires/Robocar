@@ -222,7 +222,7 @@ trilhas daquela peça, rodando o DRC de novo.
 |---|---|---|
 | DRC (KiCad, com as regras de face simples) | **0 violações**, 0 ligações faltando | `verificacao/drc.rpt` |
 | Face simples | 117 trilhas, todas em B.Cu; 0 vias; nada em F.Cu | `verificacao/face_simples.txt` |
-| Esquema × placa | mesmas 19 peças (17 + JP1, JP2), mesmas pegadas e mesmas ligações em todos os pinos (23 redes) | `verificacao/paridade_esquema_placa.txt` |
+| Esquema × placa | mesmas 19 peças (17 + JP1, JP2), mesmas pegadas, mesmas ligações em todos os pinos (23 redes) **e** nos 17 pinos sem ligação (redes `unconnected-(…)`); atributo "lista de materiais" igual | `verificacao/paridade_esquema_placa.txt` |
 | Furação | mesmos furos, nas mesmas coordenadas, da v0.5 original | `fabricacao/*.drl` |
 | Ângulos e larguras | 117 trechos, todos a 0/45/90°; nenhuma curva fechada; trilha mais fina 1,00 mm | `verificacao/angulos_e_larguras.txt` |
 | Firmware | `config.h` com esta pinagem; checagem de sintaxe C++ OK (falta compilar no Arduino IDE e gravar) | [firmware/](../../firmware/) |
@@ -243,6 +243,8 @@ Para refazer: `make placa` (saídas) e `make drc` (verificações) na raiz do re
 | Os símbolos da biblioteca apontavam para pegadas inexistentes (`robocar:…`) | apontam para `robocar_sm:…_SoldaManual` |
 | 3D da ESP32 e do DRV8833 eram **caixas desenhadas à mão** (`.wrl`) | ESP32: STEP baixado (30 pinos), alinhado ao pino 1 e assentado nas barras fêmea; DRV8833: só as barras fêmea nativas |
 | Serigrafia "M−/M+" e "JP1/JP2" cortada pelas ilhas | textos afastados das ilhas |
+| KiCad 10: 17 avisos `net_conflict` (ilha sem a rede `unconnected-(…)` do esquemático: pinos livres da ESP32 e ULT dos DRV8833) | as 17 ilhas receberam a rede `unconnected-(…)`; o plano de GND continua desviando delas igual |
+| KiCad 10: 5 avisos `footprint_symbol_mismatch` (J1, J2, J3, J10, J11 marcados "fora da lista de materiais" só na pegada) | pegadas `Fio_0.75mm2_*` com tipo "PTH" e na lista de materiais, como os símbolos |
 
 O cobre (B.Cu), as ilhas e os furos **não mudaram**: a arte de transferência é a mesma da v0.5.
 

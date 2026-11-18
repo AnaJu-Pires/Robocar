@@ -71,10 +71,13 @@ dif = []
 if esq_fp != pcb_fp:
     dif.append("pegadas: %s" % sorted(set(esq_fp.items()) ^ set(pcb_fp.items())))
 for k in sorted(set(esq) | set(pcb)):
-    if esq.get(k, "").startswith("unconnected"):
-        continue
+    # pinos sem ligacao tambem contam: o KiCad 10 avisa (net_conflict) se a ilha ficar sem a rede unconnected-(...)
     if esq.get(k) != pcb.get(k):
         dif.append("%s pino %s: esquema=%s placa=%s" % (k[0], k[1], esq.get(k), pcb.get(k)))
+fora_bom_pcb = {fp.GetReference() for fp in placa.GetFootprints()
+                if not fp.IsBoardOnly() and fp.IsExcludedFromBOM()}
+if fora_bom_pcb:
+    dif.append("pegadas marcadas 'fora da lista de materiais' (o simbolo esta na lista): %s" % sorted(fora_bom_pcb))
 redes = {v for v in esq.values() if not v.startswith("unconnected")}
 with open(os.path.join(OUT, "paridade_esquema_placa.txt"), "w", encoding="utf-8") as f:
     f.write("PARIDADE OK: mesmas pecas, mesmas pegadas e mesmas ligacoes em todos os pinos\n" if not dif
