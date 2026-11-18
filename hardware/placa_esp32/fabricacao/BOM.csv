@@ -8,6 +8,8 @@ J10,Motor esquerdo,Fio_0.75mm2_1x02_P4.8mm_SoldaManual,23.14,62.0,fios vermelho 
 J11,Motor direito,Fio_0.75mm2_1x02_P4.8mm_SoldaManual,56.16,62.0,idem
 J12,Encoder esquerdo,Fio_sinal_1x04_P2.54mm_SoldaManual,64.0,7.8,"fios amarelo (A), verde (B), preto (+), azul (-) do encoder"
 J13,Encoder direito,Fio_sinal_1x04_P2.54mm_SoldaManual,56.0,12.0,idem
+JP1,Fio (IN1-IN3),Jumper_Fio_P8.86mm_SoldaManual,24.38,41.7,"fio rigido 0,5-0,6 mm deitado, embaixo do U2 (soldar antes das barras femea)"
+JP2,Fio (IN1-IN3),Jumper_Fio_P8.86mm_SoldaManual,57.4,41.7,idem embaixo do U3
 J14,Largada (jumper),Fio_sinal_1x02_P2.54mm_SoldaManual,56.0,26.5,barra de pinos macho 1x2 + jumper (ou botao em fios)
 R1,150k,R_Axial_DIN0207_P10.16mm_SoldaManual,74.5,15.96,laboratorio
 R2,33k,R_Axial_DIN0207_P10.16mm_SoldaManual,70.0,5.8,laboratorio

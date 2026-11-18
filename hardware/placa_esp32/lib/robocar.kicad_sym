@@ -6,7 +6,7 @@
 		(exclude_from_sim no) (in_bom yes) (on_board yes)
 		(property "Reference" "U" (at 0 21.59 0) (effects (font (size 1.27 1.27))))
 		(property "Value" "ESP32 DevKit V1 (30 pinos)" (at 0 -21.59 0) (effects (font (size 1.27 1.27))))
-		(property "Footprint" "robocar:ESP32_DevKit_V1_30p" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Footprint" "robocar_sm:ESP32_DevKit_V1_30p_SoldaManual" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Datasheet" "https://mischianti.org/wp-content/uploads/2024/11/DOIT-ESP32-DevKit-V1-schematics.pdf" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Description" "Placa ESP32 DevKit V1 (DOIT, 30 pinos, CP2102) encaixada em 2 barras femea 1x15" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(symbol "ESP32_DevKit_V1_30p_0_1"
@@ -50,7 +50,7 @@
 		(exclude_from_sim no) (in_bom yes) (on_board yes)
 		(property "Reference" "U" (at 0 11.43 0) (effects (font (size 1.27 1.27))))
 		(property "Value" "Modulo DRV8833" (at 0 -11.43 0) (effects (font (size 1.27 1.27))))
-		(property "Footprint" "robocar:DRV8833_Modulo" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Footprint" "robocar_sm:DRV8833_Modulo_SoldaManual" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/drv8833.pdf" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Description" "Modulo ponte H dupla DRV8833 (12 pinos: EEP OUT1-4 ULT / IN1-4 VCC GND)" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(symbol "DRV8833_Modulo_0_1"

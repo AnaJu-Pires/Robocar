@@ -1,5 +1,0 @@
-#VRML V2.0 utf8
-# Modelo simplificado: caixas com as medidas da peca (fontes em hardware/placa_esp32/README.md)
-Transform { translation 5.0079 -7.8228 4.6457 children [ Shape { appearance Appearance { material Material { diffuseColor 0.1 0.1 0.12 } } geometry Box { size 11.1024 20.3937 0.6299 } } ] }
-Transform { translation 5.0079 -2.6457 5.5709 children [ Shape { appearance Appearance { material Material { diffuseColor 0.75 0.75 0.78 } } geometry Box { size 7.0866 10.0394 1.2205 } } ] }
-Transform { translation 5.0079 -16.6417 5.5906 children [ Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.82 } } geometry Box { size 3.5433 2.7559 1.2598 } } ] }

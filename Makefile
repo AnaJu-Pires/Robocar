@@ -8,7 +8,7 @@ VIDEO  ?=
 OPCOES ?=
 JETSON := cd jetson &&
 
-.PHONY: ajuda testes benchmark calibrar visao gravar video carro bancada config limpar
+.PHONY: ajuda testes benchmark calibrar visao gravar video carro bancada config placa drc limpar
 
 ajuda:  ## lista os alvos
 	@echo "Alvos (make <alvo>):"
@@ -41,6 +41,12 @@ bancada:  ## teste de motores com janela e log, armando pela Jetson (RODAS SUSPE
 
 config:  ## mostra os parametros efetivos (padrao + config.json)
 	$(JETSON) $(PYTHON) seguir_linha.py --mostrar-config
+
+placa:  ## regenera as saidas da placa da ESP32 (PDFs 1:1, furacao, STEP, imagens) com o kicad-cli
+	bash hardware/placa_esp32/gerar_saidas.sh
+
+drc:  ## placa da ESP32: DRC + so B.Cu + paridade esquema x placa (precisa do Python do KiCad)
+	$(PYTHON) hardware/placa_esp32/verificar.py
 
 limpar:  ## remove caches do Python
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +

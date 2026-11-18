@@ -1,37 +1,7 @@
-** Drc report for placa_esp32.kicad_pcb **
-** Created on 2026-11-17 20:40:40 **
+** Drc report for /home/user/Robocar/hardware/placa_esp32/placa_esp32.kicad_pcb **
+** Created on 2026-11-18 17:29:18 **
 
-** Found 10 DRC violations **
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; Severity: warning
-    @(124.0800 mm, 133.5000 mm): PCB Text 'M-' on F.Silkscreen
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; Severity: warning
-    @(161.4700 mm, 111.6000 mm): PCB Text 'JP2' on F.Silkscreen
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; Severity: warning
-    @(134.3800 mm, 133.5000 mm): PCB Text 'M+' on F.Silkscreen
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; Severity: warning
-    @(128.4500 mm, 111.6000 mm): PCB Text 'JP1' on F.Silkscreen
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; Severity: warning
-    @(157.1000 mm, 133.5000 mm): PCB Text 'M-' on F.Silkscreen
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; Severity: warning
-    @(167.4000 mm, 133.5000 mm): PCB Text 'M+' on F.Silkscreen
-[lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
-    Local override; Severity: warning
-    @(112.0000 mm, 108.0000 mm): Footprint H4
-[lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
-    Local override; Severity: warning
-    @(185.0000 mm, 98.5000 mm): Footprint H3
-[lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
-    Local override; Severity: warning
-    @(112.0000 mm, 135.0000 mm): Footprint H1
-[lib_footprint_issues]: The current configuration does not include the library 'MountingHole'.
-    Local override; Severity: warning
-    @(185.0000 mm, 135.0000 mm): Footprint H2
+** Found 0 DRC violations **
 
 ** Found 0 unconnected pads **
 

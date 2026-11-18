@@ -107,9 +107,9 @@
     (scale (xyz 1 1 1))
     (rotate (xyz 0 0 0))
   )
-  (model "${KIPRJMOD}/lib/robocar.3dshapes/ESP32_DevKit_V1_30p.wrl"
-    (offset (xyz 0 0 0))
+  (model "${KIPRJMOD}/lib/robocar.3dshapes/DEVKIT_V1_ESP32-WROOM-32.step"
+    (offset (xyz 12.7 -20.05 8.5))
     (scale (xyz 1 1 1))
-    (rotate (xyz 0 0 0))
+    (rotate (xyz 270 0 180))
   )
 )

@@ -3,6 +3,12 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Corrigido (placa v0.5.1, 18/11/2026)
+- `hardware/placa_esp32/`: projeto KiCad só com cobre em **B.Cu** (D-021): os 2 jumpers deixaram de ser trilhas em F.Cu + 4 vias e viraram componentes JP1/JP2 (esquemático e placa, redes `ME_IN2_JP`/`MD_IN2_JP`); `placa_esp32.kicad_dru` faz o DRC acusar qualquer trilha/zona em F.Cu ou via. Cobre e furação iguais aos da v0.5.
+- Pegadas ligadas aos símbolos (o "Atualizar PCB a partir do esquemático" não recria peças); furos de fixação marcados "só na placa"; símbolos da biblioteca apontando para as pegadas `_SoldaManual`.
+- 3D: ESP32 com o STEP de 30 pinos baixado pela equipe; DRV8833 só com as barras fêmea nativas; apagados os `.wrl` desenhados à mão. `placa_esp32.step` e `imagens/vista_3d.png` refeitos.
+- Serigrafia M−/M+ e JP1/JP2 afastada das ilhas. DRC: 0 violações; paridade esquema × placa: 19 peças, 23 redes.
+- Novos `gerar_saidas.sh` (`make placa`) e `verificar.py` (`make drc`). README da placa com a conferência da revisão feita por outra IA.
 ### Alterado (placa v0.5, 18/11/2026)
 - `hardware/placa_esp32/`: placa refeita **enxuta, para ficar embaixo da Jetson** (D-017): 80 × 67 mm, face simples, trilha ≥ 1 mm, **2 jumpers** (eram 11). Na placa ficam só a ESP32, os 2 DRV8833 com 470 µF, os pontos de solda dos fios, o divisor da bateria e os pull-downs do nSLEEP; fusível, chave e XT60 vão para o chicote. Esquemático novo gerado da mesma tabela de ligações da placa; DRC sem erros de cobre; paridade esquema × placa OK.
 - Encoders em 3,3 V direto na ESP32, sem CD4050B e 78L05 (D-018, substitui D-011).

@@ -13,7 +13,7 @@
 | Decisões técnicas | `docs/decisoes.md` | decisão relevante = nova entrada D-xxx |
 | Vídeos, logs, capturas | `dados/` | nunca versionar (já está no `.gitignore`) |
 | Compras | `compras/` | a planilha é o documento; o CSV original não se altera |
-| Placa eletrônica (KiCad) | `hardware/placa_esp32/` | editar no KiCad; o `.kicad_sch` é a fonte das ligações e a placa é atualizada a partir dele; pinos iguais ao `config.h`; a cada mudança rodar ERC e DRC com `--schematic-parity` e reexportar os PDFs de `fabricacao/` |
+| Placa eletrônica (KiCad) | `hardware/placa_esp32/` | editar no KiCad; o `.kicad_sch` é a fonte das ligações e a placa é atualizada a partir dele; pinos iguais ao `config.h`; **só cobre em B.Cu** (o `.kicad_dru` barra F.Cu e vias; o que não couber vira jumper JP); 3D só nativo ou baixado; a cada mudança rodar o ERC no KiCad, `make drc` e `make placa` |
 | CAD (STL/STEP), quando houver | `hardware/cad/` | criar a pasta quando existir o primeiro arquivo |
 
 ## 2. Convenções

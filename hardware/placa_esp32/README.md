@@ -1,5 +1,11 @@
 # Robocar Blitz — placa da ESP32, v0.5 (enxuta, embaixo da Jetson)
 
+> **Revisão 18/11/2026 (v0.5.1):** projeto KiCad arrumado para **face simples de verdade** — nada de cobre em F.Cu,
+> nenhuma via, jumpers JP1/JP2 viraram componentes (esquemático + placa), regras de DRC que barram F.Cu/vias,
+> pegadas ligadas aos símbolos (o "Atualizar PCB a partir do esquemático" não recria nada) e 3D da ESP32 trocado
+> pelo STEP baixado. **O cobre e a furação não mudaram.** Detalhes e a conferência da revisão da outra IA em
+> [Revisão de 18/11](#revisão-de-1811-v051).
+
 Placa pequena que fica no **1º andar do carro, embaixo da Jetson**. Só tem o que precisa estar junto da ESP32:
 os dois DRV8833 (um por motor, em paralelo), os pontos de solda dos fios dos motores e dos encoders, o divisor da
 bateria e a largada. Fusível, chave, XT60 e os dois XL4016 ficam **fora**, no chicote de energia (ver "Fora da placa").
@@ -26,13 +32,20 @@ bateria e a largada. Fusível, chave, XT60 e os dois XL4016 ficam **fora**, no c
 | `placa_esp32.kicad_pro` / `.kicad_sch` / `.kicad_pcb` | Projeto KiCad (abre no KiCad 10; os arquivos estão no formato do KiCad 7, o KiCad 10 converte ao salvar) |
 | `placa_esp32.pdf` | Esquemático em PDF |
 | `fabricacao/1_cobre_transferencia_1x1.pdf` | **Arte do cobre**, 1:1 numa folha A4, preto = cobre, com marca de centro nas ilhas |
-| `fabricacao/2_montagem_e_jumpers.pdf` | Lado dos componentes: peças, referências e os 2 jumpers (vermelho) |
+| `placa_esp32.kicad_dru` | Regras de **face simples**: o DRC acusa qualquer trilha/zona em F.Cu e qualquer via |
+| `placa_esp32.step` | Placa montada em 3D (STEP do fabricante para a ESP32, modelos nativos do KiCad para o resto) |
+| `gerar_saidas.sh` | Refaz PDFs, furação, STEP e imagens com o `kicad-cli` (`make placa` na raiz) |
+| `verificar.py` | DRC + "só B.Cu" + paridade esquema × placa, com o Python do KiCad (`make drc` na raiz) |
+| `fabricacao/2_montagem_e_jumpers.pdf` | Lado dos componentes: peças, referências e os 2 jumpers (JP1, JP2: traço na serigrafia) |
 | `fabricacao/placa_esp32-PTH.drl`, `-NPTH.drl` e `*-drl_map.pdf` | Furação (Excellon) e mapa de brocas |
 | `fabricacao/BOM.csv` | Peças da placa, com posição e origem |
-| `imagens/` | Cobre visto de cima, lado do cobre (como fica na placa) e folha de montagem |
-| `verificacao/` | DRC, conferência esquema × placa, ângulos/larguras e lista dos jumpers |
-| `lib/robocar_sm.pretty` | Pegadas `_SoldaManual` (ilha maior, furo e passo originais) |
-| `lib/robocar.kicad_sym`, `lib/robocar.3dshapes` | Símbolos e 3D da ESP32 DevKit V1 e do DRV8833 |
+| `imagens/` | Cobre visto de cima, lado do cobre (como fica na placa), folha de montagem e vista 3D |
+| `verificacao/` | DRC, conferência esquema × placa, "só B.Cu", ângulos/larguras e lista dos jumpers |
+| `lib/robocar_sm.pretty` | Pegadas `_SoldaManual` (ilha maior, furo e passo originais) e `Jumper_Fio_P8.86mm_SoldaManual` |
+| `lib/robocar.kicad_sym` | Símbolos da ESP32 DevKit V1 (30 pinos) e do módulo DRV8833 |
+| `lib/robocar.3dshapes` | STEP da ESP32 DevKit V1 de 30 pinos baixado pela equipe ([LEIA-ME](lib/robocar.3dshapes/LEIA-ME.md)) |
+
+![Placa montada em 3D (ESP32 nas barras fêmea; módulos DRV8833 sem modelo, só os soquetes)](imagens/vista_3d.png)
 
 ## O que fica na placa e o que fica fora
 
@@ -132,12 +145,16 @@ No modo paralelo é preciso ligar IN1 com IN3 e IN2 com IN4. Na fileira do módu
 os dois pares se intercalam e o GND e o VCC ficam no meio, então **um dos pares sempre precisa de um jumper** (o outro
 passa por fora, pela trilha em U em cima do módulo). O jumper fica **embaixo do módulo**, que encaixa por cima.
 
+No KiCad cada jumper é um **componente** (símbolo nativo `Jumper:Jumper_2_Bridged`, pegada
+`robocar_sm:Jumper_Fio_P8.86mm_SoldaManual`, 2 furos de 0,8 mm). Por isso o lado do IN3 tem rede própria
+(`ME_IN2_JP`, `MD_IN2_JP`): é o jeito de o DRC e a paridade enxergarem a ligação sem desenhar cobre em F.Cu.
+
 Coordenadas em mm a partir do **canto superior esquerdo da placa, vista de cima** (a folha de montagem):
 
-| # | Rede | De | Até | Compr. | Fio |
+| # | Liga | De | Até | Compr. | Fio |
 |---|---|---|---|---|---|
-| JP1 | ME_IN2 (IN1+IN3 do driver esquerdo) | (15,5; 41,7) | (24,4; 41,7) | 9 mm | rígido 0,5–0,6 mm, deitado na placa |
-| JP2 | MD_IN2 (IN1+IN3 do driver direito) | (48,5; 41,7) | (57,4; 41,7) | 9 mm | idem |
+| JP1 | ME_IN2 (IN1 do U2) → ME_IN2_JP (IN3 do U2) | (24,4; 41,7) | (15,5; 41,7) | 9 mm | rígido 0,5–0,6 mm, deitado na placa |
+| JP2 | MD_IN2 (IN1 do U3) → MD_IN2_JP (IN3 do U3) | (57,4; 41,7) | (48,5; 41,7) | 9 mm | idem |
 
 Solde os jumpers **antes** das barras fêmea.
 
@@ -203,12 +220,41 @@ trilhas daquela peça, rodando o DRC de novo.
 
 | O quê | Resultado | Arquivo |
 |---|---|---|
-| DRC (KiCad) | 0 violações de cobre, 0 ligações faltando; só avisos de serigrafia cortada pela máscara e da biblioteca MountingHole (nativa do KiCad) | `verificacao/drc.rpt` |
-| Esquema × placa | mesmas 17 peças, mesmas pegadas e mesmas ligações em todos os pinos (21 redes) | `verificacao/paridade_esquema_placa.txt` |
+| DRC (KiCad, com as regras de face simples) | **0 violações**, 0 ligações faltando | `verificacao/drc.rpt` |
+| Face simples | 117 trilhas, todas em B.Cu; 0 vias; nada em F.Cu | `verificacao/face_simples.txt` |
+| Esquema × placa | mesmas 19 peças (17 + JP1, JP2), mesmas pegadas e mesmas ligações em todos os pinos (23 redes) | `verificacao/paridade_esquema_placa.txt` |
+| Furação | mesmos furos, nas mesmas coordenadas, da v0.5 original | `fabricacao/*.drl` |
 | Ângulos e larguras | 117 trechos, todos a 0/45/90°; nenhuma curva fechada; trilha mais fina 1,00 mm | `verificacao/angulos_e_larguras.txt` |
 | Firmware | `config.h` com esta pinagem; checagem de sintaxe C++ OK (falta compilar no Arduino IDE e gravar) | [firmware/](../../firmware/) |
 
 O ERC do esquemático deve ser rodado no KiCad 10 (o kicad-cli usado aqui, versão 7, não tem ERC).
+
+Para refazer: `make placa` (saídas) e `make drc` (verificações) na raiz do repositório.
+
+## Revisão de 18/11 (v0.5.1)
+
+### O que foi arrumado no KiCad
+
+| Problema | Correção |
+|---|---|
+| Os 2 jumpers estavam desenhados como **trilhas em F.Cu** + **4 vias** (numa placa sem cobre em cima) | JP1/JP2 viraram componentes com pegada de 2 furos; as trilhas em F.Cu e as vias saíram |
+| Nada impedia rotear em F.Cu por engano | `placa_esp32.kicad_dru`: o DRC acusa trilha/zona em F.Cu e qualquer via (o KiCad não aceita projeto com 1 camada só; isto é o equivalente) |
+| As pegadas da placa **não estavam ligadas** aos símbolos (sem `path`): o F8 "Atualizar PCB a partir do esquemático" do KiCad 10 apagaria e recriaria as peças | todas as 19 pegadas ligadas ao símbolo pelo UUID; furos de fixação H1–H4 marcados "só na placa" |
+| Os símbolos da biblioteca apontavam para pegadas inexistentes (`robocar:…`) | apontam para `robocar_sm:…_SoldaManual` |
+| 3D da ESP32 e do DRV8833 eram **caixas desenhadas à mão** (`.wrl`) | ESP32: STEP baixado (30 pinos), alinhado ao pino 1 e assentado nas barras fêmea; DRV8833: só as barras fêmea nativas |
+| Serigrafia "M−/M+" e "JP1/JP2" cortada pelas ilhas | textos afastados das ilhas |
+
+O cobre (B.Cu), as ilhas e os furos **não mudaram**: a arte de transferência é a mesma da v0.5.
+
+### Conferência da avaliação feita por outra IA
+
+| Item que ela apontou | Confere? | Por quê |
+|---|---|---|
+| ESP32: *strapping pins* no PWM e conflito na UART0; mover PWM para GPIO 25, 26, 27, 14 e a Jetson para UART2 (16/17) | **Não** | O PWM está em 16, 17, 19 e 21, nenhum é *strapping* (os do ESP32 são 0, 2, 5, 12 e 15). A UART0 (1/3) é a do USB, que **é** o link com a Jetson — não há conflito. A sugestão piora: o **GPIO14 solta PWM no boot**, 25/26 já são do encoder direito e 16/17 são do motor esquerdo. Ela parece ter lido a pinagem antiga da planilha da equipe (coluna "Planilha da equipe" em `docs/03_hardware.md`) |
+| DRV8833: 470 µF no VM, EEP em 3,3 V (ou GPIO32), pull-up de 10k no FLT | **Já estava feito / não se aplica** | C1 e C2 (470 µF) já estão no VM de cada módulo. O EEP já vai num GPIO (4 e 18) com pull-down de 10k: o driver dorme no boot, o que é melhor que ligar fixo em 3,3 V. GPIO32 é do encoder. O FLT (ULT) não é usado; o pull-up só faria sentido se ele fosse lido. A Jetson tem conversor próprio (XL4016 #1), separado do dos motores |
+| Trocar modelos por `PinSocket_1x15` (ESP32) e `PinSocket_1x08` (DRV) | **Metade** | Os 3D eram mesmo caixas feitas à mão (trocados). `PinSocket_1x15` já era usado. `1x08` está **errado**: o módulo DRV8833 comprado tem 2 fileiras de **6** pinos |
+| PCB: trilhas residuais em F.Cu e ilhas frágeis; passar os PWMs pelo vão de 25,4 mm e usar 2 jumpers retos para VCC | **Metade** | As "trilhas em F.Cu" eram os 2 jumpers desenhados como cobre (corrigido acima). As ilhas já são ampliadas (2,2–3,6 mm). O vão da ESP32 já é usado (encoders + 3V3), e 2 jumpers já é o mínimo: em cada módulo o GND e o VCC ficam entre IN1/IN3 e IN2/IN4, então **1 jumper por driver é inevitável** |
+| Chassi: reduzir para 2 andares de 140 × 200 mm, bateria no 1º andar sobre o eixo, filetes R3, câmera a 42° | **Não** | O chassi **já tem 2 andares** e a bateria **já está no 1º andar**, perto do eixo. Chapa de 140 mm de largura + 2 rodas de 19 mm passa dos **150 mm** da regra. 42° × 45° da câmera é ajuste de calibração, não de projeto. O chassi não foi mexido nesta revisão |
 
 ## Fontes
 

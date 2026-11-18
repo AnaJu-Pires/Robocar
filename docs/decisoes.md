@@ -135,3 +135,14 @@ O roteamento foi automático e conferido pelo DRC do KiCad (com paridade com o e
 **Contexto:** na face simples, os pinos EEP dos dois módulos ficam em cantos opostos do traçado e ligar os dois no mesmo GPIO custaria um jumper. Alguns módulos DRV8833 trazem pull-up do EEP para o VCC (7,2 V), o que levaria tensão acima de 3,3 V ao GPIO com a ESP32 desligada ou no boot.
 **Decisão:** EEP do driver esquerdo no GPIO4 e do direito no GPIO18, cada um com 10k para o GND; o firmware escreve os dois juntos.
 **Consequências:** com um pull-up de 47k no módulo, o EEP fica em ≈ 1,3 V no boot (seguro para a ESP32, abaixo do nível alto de 2 V do DRV8833); com o jumper de solda EEP–VCC do módulo fechado, é preciso abri-lo (medir antes). O buzzer saiu da placa (`PIN_BUZZER = -1`).
+
+### D-021 — Placa face simples "de verdade" no KiCad e 3D só nativo ou baixado
+*18/11/2026 · aceita*
+**Contexto:** a placa é de fenolite com cobre só embaixo, mas o projeto tinha os 2 jumpers desenhados como trilhas em F.Cu com 4 vias, as pegadas não estavam ligadas aos símbolos do esquemático e o 3D da ESP32 e do DRV8833 eram caixas desenhadas à mão. Uma revisão feita por outra IA apontou problemas parecidos (e outros que não procedem; ver [hardware/placa_esp32/README.md](../hardware/placa_esp32/README.md#revisão-de-1811-v051)).
+**Decisão:**
+* jumpers de fio viram componentes (símbolo nativo `Jumper:Jumper_2_Bridged`, pegada `Jumper_Fio_P8.86mm_SoldaManual`); o lado do IN3 ganha rede própria (`ME_IN2_JP`, `MD_IN2_JP`);
+* regras no `placa_esp32.kicad_dru` proíbem trilha/zona em F.Cu e qualquer via (o KiCad exige 2 camadas no projeto);
+* toda pegada ligada ao seu símbolo pelo UUID; furos de fixação "só na placa";
+* modelos 3D: só nativos do KiCad ou baixados do fabricante. ESP32 = STEP de 30 pinos baixado pela equipe (a pegada de 38 pinos que veio junto não é usada); DRV8833 = só as barras fêmea nativas.
+**Consequências:** cobre e furação iguais aos da v0.5 (a arte de transferência não muda). DRC 0 violações e paridade esquema × placa OK, conferidos por `make drc`; saídas refeitas por `make placa`. O STEP da placa ficou maior (~19 MB) por causa do modelo detalhado da ESP32.
+
