@@ -1,0 +1,53 @@
+{
+ "T": 3.0,
+ "folga_rasgo": -0.1,
+ "massa_MDF_g": 78.7,
+ "massa_andar2_acrilico_g": 29.3,
+ "massa_andar2_MDF_g": 18.5,
+ "comprimento_mm": [
+  -95,
+  151.4
+ ],
+ "largura_chapa_mm": 104,
+ "largura_com_rodas_mm": 123.0,
+ "altura_camera_mm": 130.0,
+ "z_andar1_topo": 15.0,
+ "z_andar2_fundo": 50.0,
+ "pecas": [
+  [
+   "andar1",
+   1,
+   "MDF"
+  ],
+  [
+   "andar2",
+   1,
+   "MDF ou acrilico"
+  ],
+  [
+   "parede",
+   2,
+   "MDF"
+  ],
+  [
+   "poste_camera",
+   2,
+   "MDF"
+  ],
+  [
+   "travessa",
+   2,
+   "MDF"
+  ],
+  [
+   "placa_camera",
+   1,
+   "MDF"
+  ],
+  [
+   "painel_chave",
+   1,
+   "MDF"
+  ]
+ ]
+}
