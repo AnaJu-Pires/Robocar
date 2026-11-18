@@ -103,3 +103,12 @@ absorve). Para zerar, seria preciso pendurar os motores embaixo da chapa, o que 
 Tudo sai do `fonte/chassi.py` (Python + CadQuery + ezdxf). Medidas como `BITOLA`, `H_PAREDE`, a posição da câmera `Q`,
 `T` e `FOLGA` estão no topo. Rodar `python3 chassi.py saida` refaz os DXF, os PDF, o STEP e as imagens. O STEP também
 pode ser importado no Onshape (`fonte/onshape_upload.py` faz isso pela API).
+
+## Abrir no Onshape (sem chave de API)
+
+1. No Onshape: **Create → Import** (ou o botão de importar na lista de documentos) e escolha `chassi_montado.step`.
+2. Espere a tradução: abre um documento com um **Assembly** (o carro montado) e um **Part Studio** com cada chapa como peça.
+3. Para ver a placa da ESP32 no lugar, importe também `hardware/placa_esp32/placa_esp32.step` no mesmo documento
+   (aba **+ → Import**) e posicione no Assembly: a borda da frente da placa fica em x = 118 mm, 25 mm acima do chão.
+4. Os DXF de `corte/` podem ser anexados no mesmo documento (aba **+ → Import**), só para guardar junto.
+5. Para mandar uma chapa editada ao laser: no Part Studio, clique com o botão direito na face da chapa → **Export as DXF/DWG**.
