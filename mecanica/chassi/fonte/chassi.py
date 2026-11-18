@@ -57,8 +57,8 @@ Z1 = EIXO_Z - EIXO_NO_SUPORTE       # topo do andar 1 = 15
 H_PAREDE = 35.0                     # vao entre andares
 Z2 = Z1 + H_PAREDE                  # fundo do andar 2 = 50
 Y_SUP = BITOLA / 2 - RODA_L / 2 - 1.5 - 6.0   # centro do suporte do motor (y) = 35
-ESP_X1 = 118.0                      # borda da frente da placa da ESP32
-PL_W, PL_H = 72.5, 63.0             # placa da ESP32 v0.6 (hardware/placa_esp32): largura (x_b) e altura (y_b)
+ESP_X1 = 124.0                      # borda da frente da placa da ESP32 (o USB da ESP32 aponta para a frente, sem parede)
+PL_W, PL_H = 63.0, 72.5             # placa da ESP32 v0.7 (hardware/placa_esp32): largura (x_b) e altura (y_b)
 PL_FUROS = [(3.5, 3.5), (PL_W - 3.5, 3.5), (PL_W - 3.5, PL_H - 3.5), (3.5, PL_H - 3.5)]  # M3 nos 4 cantos
 def furo_esp(xb, yb): return (ESP_X1 - yb, PL_W / 2 - xb)   # placa: x_b para a direita (= -y), y_b para tras
 def caixa_placa(u0, u1, v0, v1): return (ESP_X1 - v1, ESP_X1 - v0, PL_W / 2 - u1, PL_W / 2 - u0)  # (x0, x1, y0, y1)
@@ -119,7 +119,7 @@ for uc in (8, 34, 60):  # porca presa (T-nut): rasgo do parafuso + bolso da porc
     fw.append(('poly', [(uc - 1.6, H_PAREDE + 0.01), (uc - 1.6, H_PAREDE - 5.0), (uc - 2.9, H_PAREDE - 5.0), (uc - 2.9, H_PAREDE - 7.6),
                         (uc - 1.6, H_PAREDE - 7.6), (uc - 1.6, H_PAREDE - 12), (uc + 1.6, H_PAREDE - 12), (uc + 1.6, H_PAREDE - 7.6),
                         (uc + 2.9, H_PAREDE - 7.6), (uc + 2.9, H_PAREDE - 5.0), (uc + 1.6, H_PAREDE - 5.0), (uc + 1.6, H_PAREDE + 0.01)]))
-fw += [rect(12, 5, 29, 19), rect(39, 5, 55, 29)]  # janela de alivio + janela do USB da ESP32
+fw += [rect(12, 5, 29, 19)]  # janela de alivio (o USB da ESP32 agora sai pela frente, sem janela na parede)
 # o rasgo da porca encosta na borda: une ao contorno (corta como entalhe)
 import shapely.geometry as sg
 def sub(contorno, furos_borda):
@@ -175,9 +175,9 @@ for s, lado in ((1, 'esq'), (-1, 'dir')):
     caixa(f'xl4016_{lado}', XL[0], XL[1], 0.5 if s > 0 else -46.5, 46.5 if s > 0 else -0.5, Z1, Z1 + 24, (0.25, 0.5, 0.35))
 caixa('bateria', BAT[0], BAT[1], -BAT[2], BAT[2], Z1, Z1 + 25, (0.9, 0.7, 0.2))
 caixa('placa_esp32', *caixa_placa(0, PL_W, 0, PL_H), Z1 + 10, Z1 + 11.6, (0.2, 0.45, 0.25))
-caixa('esp32_devkit', *caixa_placa(0.47, 51.43, 2.22, 30.78), Z1 + 22.6, Z1 + 24.2, (0.1, 0.1, 0.12))   # sobre barras femea de 8,5 mm
-caixa('drv8833_esq', *caixa_placa(10.68, 27.98, 35.07, 54.57), Z1 + 21.6, Z1 + 23, (0.6, 0.1, 0.1))
-caixa('drv8833_dir', *caixa_placa(41.7, 59.0, 35.07, 54.57), Z1 + 21.6, Z1 + 23, (0.6, 0.1, 0.1))
+caixa('esp32_devkit', *caixa_placa(32.22, 60.78, 0.47, 51.43), Z1 + 22.6, Z1 + 24.2, (0.1, 0.1, 0.12))   # sobre barras femea de 8,5 mm
+caixa('drv8833_esq', *caixa_placa(8.43, 27.93, 10.68, 27.98), Z1 + 21.6, Z1 + 23, (0.6, 0.1, 0.1))
+caixa('drv8833_dir', *caixa_placa(8.43, 27.93, 41.7, 59.0), Z1 + 21.6, Z1 + 23, (0.6, 0.1, 0.1))
 caixa('jetson', JET_X0, JET_X0 + 100, -40, 40, Z2 + T + 12, Z2 + T + 12 + 30, (0.35, 0.45, 0.55))
 asm.add(cq.Workplane('XY').sphere(9.525 / 2).translate((ESFERA_X, 0, Z1 - T - 15 + 9.525 / 2)), name='esfera', color=cq.Color(0.7, 0.7, 0.7))
 cam = cq.Workplane('XY').box(24, 25, 4).translate((0, 0, 2)).val()

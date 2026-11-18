@@ -152,3 +152,9 @@ O roteamento foi automático e conferido pelo DRC do KiCad (com paridade com o e
 **Decisão:** refazer posicionamento e roteamento mantendo as ligações: fileira de cima da ESP32 em y = 3,8 mm (faixa de plano por cima) e SLEEP_E 1 mm mais baixo (faixa de plano por baixo), raios a 0°/90° nos pinos 14 e 29; furos M3 nos 4 cantos a 3,5 mm das bordas; módulos, capacitores e fios aproximados até o limite das regras de corrosão manual da D-015.
 **Consequências:** 72,5 × 63 mm (−15 % de área). DRC 0 violações sem tocos (mínimo de 2 raios conferido), paridade esquema × placa OK, só 0/45/90°. O H4 fica embaixo da ponta USB da ESP32: apertar os parafusos antes de encaixá-la. Chassi refeito com os furos novos (só o andar 1 muda). Coordenadas dos jumpers e da BOM mudaram.
 
+### D-023 — Placa v0.7: USB da ESP32 para a frente do carro
+*18/11/2026 · aceita*
+**Contexto:** na v0.6 o USB da ESP32 apontava para a lateral esquerda, a ~6 mm da parede; o plugue só entrava passando pela janela da parede.
+**Decisão:** girar o layout inteiro da v0.6 em 90° (sentido horário): a ESP32 fica em pé com o USB na borda de cima (frente do carro), placa de 63 × 72,5 mm; no chassi a frente da placa vai a x = 124 mm e a janela de USB das paredes sai. Girar o layout validado, em vez de rotear de novo, mantém o cobre que já passava em todas as verificações.
+**Consequências:** fios dos motores chegam pela lateral esquerda da placa e encoders/VBAT pela traseira. A traseira da placa fica a 2,5 mm da bateria (medida estimada: conferir). Coordenadas da BOM e dos jumpers mudaram; furos do andar 1 mudaram (cortar de novo se já cortado).
+

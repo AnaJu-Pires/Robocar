@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (placa v0.7, 18/11/2026)
+- `hardware/placa_esp32/`: **USB da ESP32 para a frente do carro** (D-023): layout da v0.6 girado 90°, placa de **63 × 72,5 mm**; serigrafia refeita, BOM/jumpers com coordenadas novas. DRC 0, paridade OK, zona salva conferida.
+- `verificar.py`: acusa zona de GND desatualizada no arquivo salvo.
+- `mecanica/chassi/`: placa com a frente em x = 124 mm, furos novos no andar 1, paredes sem a janela de USB; DXF/PDF, STEP e imagens refeitos.
 ### Alterado (placa v0.6, 18/11/2026)
 - `hardware/placa_esp32/`: roteamento refeito (D-022): **72,5 × 63 mm** (era 80 × 67), **furos M3 nos 4 cantos**, GND da ESP32 (pinos 14 e 29) ligado ao plano por **alívio térmico com 2 raios** em vez dos tocos de trilha. Esquemático e pinagem iguais. DRC 0, paridade OK, só 0/45/90°, cobre não-GND a ≥ 3,6 mm dos furos.
 - `verificar.py` confere também ângulos, larguras e a distância do cobre aos furos; BOM e `jumpers.json` com as coordenadas novas.

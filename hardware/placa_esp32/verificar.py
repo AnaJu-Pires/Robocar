@@ -25,7 +25,15 @@ os.makedirs(OUT, exist_ok=True)
 falhas = []
 
 placa = pcbnew.LoadBoard(PCB)
+
+# 0) a zona salva no arquivo tem de estar preenchida com a placa atual (os PDFs/Gerber usam o preenchimento salvo)
+def area_zonas(b):
+    return sum(z.GetFilledPolysList(pcbnew.B_Cu).Area() for z in b.Zones())
+salva = area_zonas(placa)
 pcbnew.ZONE_FILLER(placa).Fill(placa.Zones())
+nova = area_zonas(placa)
+if abs(nova - salva) > 0.001 * max(nova, 1):
+    falhas.append("zona de GND desatualizada no arquivo: no KiCad, Inspecionar > Preencher todas as zonas (B) e salvar")
 
 # 1) DRC
 rpt = os.path.join(OUT, "drc.rpt")

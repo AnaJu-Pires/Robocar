@@ -31,7 +31,7 @@ Nos DXF, **vermelho (camada CORTE) = cortar** e **azul (camada GRAVAR) = gravar*
 | Peça | Qtd | Função |
 |---|---|---|
 | andar1 | 1 | base: suportes dos motores, esfera, cinta da bateria, abraçadeiras dos XL4016, placa da ESP32 |
-| parede | 2 | ligam os andares; janela de alívio e janela para o cabo USB da ESP32 |
+| parede | 2 | ligam os andares; janela de alívio (o USB da ESP32 sai pela frente, sem janela) |
 | andar2 | 1 | Jetson; furo grande no meio para os cabos subirem |
 | poste_camera | 2 | mastro da câmera, já com a ponta cortada a 45° |
 | travessa | 2 | degraus entre os dois postes (deixam o mastro firme) |
@@ -61,7 +61,7 @@ Nos DXF, **vermelho (camada CORTE) = cortar** e **azul (camada GRAVAR) = gravar*
    - suportes dos motores com os parafusos M2 que vêm junto. Os furos são **oblongos** (17–21,6 mm entre centros) porque
      a distância exata do suporte branco não é publicada;
    - esfera por baixo, com os parafusos M2.5 dela;
-   - placa da ESP32 em espaçadores M3 de 10 mm (laboratório). O furo do canto da frente à esquerda fica embaixo da ponta USB da ESP32: aperte os 4 parafusos **antes** de encaixar a ESP32;
+   - placa da ESP32 em espaçadores M3 de 10 mm (laboratório). O furo do canto da frente à direita fica embaixo da ponta USB da ESP32: aperte os 4 parafusos **antes** de encaixar a ESP32. O USB aponta para a frente: encaixe o cabo pela frente do carro e passe-o por baixo do andar 2 até o furo grande do meio, subindo para a Jetson;
    - Jetson em espaçadores M2.5 de 12 mm (comprados);
    - XL4016 com abraçadeira nos rasgos (e fita dupla face);
    - bateria com cinta de velcro de 20 mm pelos rasgos. Ela sai pelo lado, sem desmontar nada.
@@ -78,7 +78,7 @@ Nos DXF, **vermelho (camada CORTE) = cortar** e **azul (camada GRAVAR) = gravar*
 | Câmera IMX219-160 | placa 25 × 24 mm; furos M2 a 21 × 12,5 mm | formato da câmera do Raspberry Pi | **sim** |
 | XL4016 | 65 × 46 × 24 mm | Smart Kits | — (vai de abraçadeira) |
 | Bateria 3S 1100 | ~75 × 35 × 25 mm | estimado | **sim** |
-| Placa da ESP32 v0.6 | 72,5 × 63 mm, 4 furos M3 nos cantos (3,5 mm das bordas) | `hardware/placa_esp32` | — |
+| Placa da ESP32 v0.7 | 63 × 72,5 mm (frente em x = 124 mm, USB da ESP32 para a frente), 4 furos M3 nos cantos (3,5 mm das bordas) | `hardware/placa_esp32` | **comprimento da bateria**: a traseira da placa fica a 2,5 mm dela |
 
 **Esfera 3 mm mais alta.** Com o motor em cima da chapa, o andar 1 fica a 12 mm do chão por baixo. A esfera tem 15 mm,
 então a frente fica 3 mm mais alta: o carro inclina ~1,3° para trás. Isso não atrapalha (a calibração da câmera
@@ -109,6 +109,6 @@ pode ser importado no Onshape (`fonte/onshape_upload.py` faz isso pela API).
 1. No Onshape: **Create → Import** (ou o botão de importar na lista de documentos) e escolha `chassi_montado.step`.
 2. Espere a tradução: abre um documento com um **Assembly** (o carro montado) e um **Part Studio** com cada chapa como peça.
 3. Para ver a placa da ESP32 no lugar, importe também `hardware/placa_esp32/placa_esp32.step` no mesmo documento
-   (aba **+ → Import**) e posicione no Assembly: a borda da frente da placa fica em x = 118 mm, 25 mm acima do chão.
+   (aba **+ → Import**) e posicione no Assembly: a borda da frente da placa fica em x = 124 mm, 25 mm acima do chão, com o USB da ESP32 para a frente.
 4. Os DXF de `corte/` podem ser anexados no mesmo documento (aba **+ → Import**), só para guardar junto.
 5. Para mandar uma chapa editada ao laser: no Part Studio, clique com o botão direito na face da chapa → **Export as DXF/DWG**.
