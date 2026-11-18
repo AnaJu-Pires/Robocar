@@ -1,4 +1,9 @@
-# Robocar Blitz — placa da ESP32, v0.5 (enxuta, embaixo da Jetson)
+# Robocar Blitz — placa da ESP32, v0.6 (enxuta, embaixo da Jetson)
+
+> **v0.6 (18/11/2026):** placa **menor (72,5 × 63 mm, era 80 × 67)**, **furos M3 nos 4 cantos** (3,5 mm das bordas,
+> retângulo de 65,5 × 56 mm entre centros) e **GND da ESP32 ligado ao plano do jeito certo**: os pinos 14 e 29 recebem
+> alívio térmico com 2 raios cada (em cima e embaixo), sem os tocos de trilha que havia antes. Todo o roteamento foi
+> refeito; a ligação elétrica (esquemático, pinagem, firmware) **não mudou**. Detalhes em [v0.6](#v06-1811).
 
 > **Revisão 18/11/2026 (v0.5.1):** projeto KiCad arrumado para **face simples de verdade** — nada de cobre em F.Cu,
 > nenhuma via, jumpers JP1/JP2 viraram componentes (esquemático + placa), regras de DRC que barram F.Cu/vias,
@@ -10,14 +15,15 @@ Placa pequena que fica no **1º andar do carro, embaixo da Jetson**. Só tem o q
 os dois DRV8833 (um por motor, em paralelo), os pontos de solda dos fios dos motores e dos encoders, o divisor da
 bateria e a largada. Fusível, chave, XT60 e os dois XL4016 ficam **fora**, no chicote de energia (ver "Fora da placa").
 
-* **80 × 67 mm**, face simples, PTH, para **corrosão manual**: trilha mínima de **1,0 mm**, folga de 0,5 mm, ilhas grandes.
+* **72,5 × 63 mm**, face simples, PTH, para **corrosão manual**: trilha mínima de **1,0 mm**, folga de 0,5 mm, ilhas grandes.
+* **4 furos M3 nos cantos**, a 3,5 mm das bordas (65,5 × 56 mm entre centros). Nenhum cobre que não seja GND a menos de 3,6 mm do centro dos furos (o espaçador pode ser metálico).
 * **2 jumpers** de fio, ambos escondidos embaixo dos DRV8833 (são inevitáveis no modo paralelo, ver "Jumpers").
 * Só peças que já temos (lista de compras + laboratório). **Nada novo para comprar.**
 * Motores em **7,2 V** (XL4016 #2) e encoders em **3,3 V** direto na ESP32.
 
-| v0.4 (anterior) | **v0.5 (esta)** |
+| v0.4 | **v0.5 / v0.6 (esta)** |
 |---|---|
-| 103 × 95 mm, tudo na placa (fusível, chave, conversores, CD4050, 78L05, buzzer) | **80 × 67 mm**, só ESP32 + drivers + pontos de fio |
+| 103 × 95 mm, tudo na placa (fusível, chave, conversores, CD4050, 78L05, buzzer) | **72,5 × 63 mm** (v0.5: 80 × 67), só ESP32 + drivers + pontos de fio |
 | 11 jumpers | **2 jumpers** (ambos embaixo dos módulos) |
 | encoders em 5 V com CD4050B e 78L05 | encoders em **3,3 V** direto ([D-018](../../docs/decisoes.md)) |
 | motores em 6,0 V | motores em **7,2 V** ([D-019](../../docs/decisoes.md)) |
@@ -75,6 +81,11 @@ ESP32 fica embaixo da Jetson. Levar a bateria até esta placa só para voltar ao
   do XL4016 dele (J2 e J3).
 * **Motores na borda de baixo** (J10, J11), **encoders no canto de cima à direita** (J12, J13, mesma ordem nos dois: A, B, +, −).
 * **Plano de GND** em todo o cobre livre (folga 0,6 mm, alívio térmico com raios de 1 mm). Nenhuma ilha de GND solta.
+  Toda ilha de GND chega ao plano por **pelo menos 2 raios** (regra do DRC). Os GND da ESP32 (pinos 14 e 29) ficam
+  espremidos entre vizinhos, então os raios deles são a 0°/90°: o de dentro vai para o plano entre as fileiras e o de
+  fora para uma faixa de plano deixada de propósito (em cima da fileira de cima, embaixo da fileira de baixo).
+  Os GND de potência dos DRV8833 vão por trilha de 1,5 mm até o 470 µF e o fio do XL4016 (caminho curto da corrente
+  do motor), e também se ligam ao plano.
 
 ### Pinagem da ESP32 (igual ao [config.h](../../firmware/robocar_esp32/config.h))
 
@@ -153,16 +164,16 @@ Coordenadas em mm a partir do **canto superior esquerdo da placa, vista de cima*
 
 | # | Liga | De | Até | Compr. | Fio |
 |---|---|---|---|---|---|
-| JP1 | ME_IN2 (IN1 do U2) → ME_IN2_JP (IN3 do U2) | (24,4; 41,7) | (15,5; 41,7) | 9 mm | rígido 0,5–0,6 mm, deitado na placa |
-| JP2 | MD_IN2 (IN1 do U3) → MD_IN2_JP (IN3 do U3) | (57,4; 41,7) | (48,5; 41,7) | 9 mm | idem |
+| JP1 | ME_IN2 (IN1 do U2) → ME_IN2_JP (IN3 do U2) | (24,4; 40,1) | (15,5; 40,1) | 9 mm | rígido 0,5–0,6 mm, deitado na placa |
+| JP2 | MD_IN2 (IN1 do U3) → MD_IN2_JP (IN3 do U3) | (55,4; 40,1) | (46,5; 40,1) | 9 mm | idem |
 
 Solde os jumpers **antes** das barras fêmea.
 
 ## Fabricação caseira (transferência térmica)
 
 1. **Imprimir** `fabricacao/1_cobre_transferencia_1x1.pdf` em impressora **laser**, escala **100 %** (sem "ajustar à
-   página"). Conferir com régua: a placa tem **80 × 67 mm**.
-2. **Conferir a orientação.** Na folha, o texto "BLITZ v0.5" aparece **espelhado**. Depois de transferido, ele fica
+   página"). Conferir com régua: a placa tem **72,5 × 63 mm**.
+2. **Conferir a orientação.** Na folha, o texto "BLITZ v0.6" aparece **espelhado**. Depois de transferido, ele fica
    **legível** olhando o lado do cobre (`imagens/lado_do_cobre.png`). Se não ficar legível, a placa saiu espelhada e a
    ESP32 entraria invertida.
 3. **Transferir, corroer e limpar.** As marquinhas no centro das ilhas guiam a broca.
@@ -173,7 +184,7 @@ Solde os jumpers **antes** das barras fêmea.
 | 0,8 mm | resistores, eletrolíticos, furos dos jumpers |
 | 1,0 mm | barras fêmea, J12, J13, J14 |
 | 1,5–1,6 mm | pontos dos fios grossos (J1, J2, J3, J10, J11) |
-| 3,2 mm | 4 furos de fixação M3 |
+| 3,2 mm | 4 furos de fixação M3 (cantos) |
 
 5. **Montar:** JP1 e JP2 → resistores → barras fêmea (2 × 1x15 para a ESP32, 4 × 1x6 para os DRV8833) → 470 µF (atenção
    ao +) → pinos do J14 → fios.
@@ -221,15 +232,24 @@ trilhas daquela peça, rodando o DRC de novo.
 | O quê | Resultado | Arquivo |
 |---|---|---|
 | DRC (KiCad, com as regras de face simples) | **0 violações**, 0 ligações faltando | `verificacao/drc.rpt` |
-| Face simples | 117 trilhas, todas em B.Cu; 0 vias; nada em F.Cu | `verificacao/face_simples.txt` |
+| Face simples | 109 trilhas, todas em B.Cu; 0 vias; nada em F.Cu | `verificacao/face_simples.txt` |
 | Esquema × placa | mesmas 19 peças (17 + JP1, JP2), mesmas pegadas, mesmas ligações em todos os pinos (23 redes) **e** nos 17 pinos sem ligação (redes `unconnected-(…)`); atributo "lista de materiais" igual | `verificacao/paridade_esquema_placa.txt` |
-| Furação | mesmos furos, nas mesmas coordenadas, da v0.5 original | `fabricacao/*.drl` |
-| Ângulos e larguras | 117 trechos, todos a 0/45/90°; nenhuma curva fechada; trilha mais fina 1,00 mm | `verificacao/angulos_e_larguras.txt` |
+| Ângulos, larguras e furos | 109 trechos, todos a 0/45/90° (toda curva chanfrada; derivações em T a 90°, nenhum encontro agudo); trilhas de 1,0 e 1,5 mm; nenhum cobre que não seja GND a menos de 3,6 mm do centro de um furo de fixação | `verificacao/angulos_e_larguras.txt` |
+| Alívio térmico | todas as ilhas de GND com ≥ 2 raios (nenhum `starved_thermal`), sem toco de trilha até o plano | `verificacao/drc.rpt` |
 | Firmware | `config.h` com esta pinagem; checagem de sintaxe C++ OK (falta compilar no Arduino IDE e gravar) | [firmware/](../../firmware/) |
 
 O ERC do esquemático deve ser rodado no KiCad 10 (o kicad-cli usado aqui, versão 7, não tem ERC).
 
 Para refazer: `make placa` (saídas) e `make drc` (verificações) na raiz do repositório.
+
+## v0.6 (18/11)
+
+| Pedido | O que foi feito |
+|---|---|
+| GND da ESP32 ligado por "gambiarra" | Na v0.5 os pinos 14 e 29 (GND) chegavam ao plano por um **toco de trilha fora do centro**, porque o plano não conseguia formar 2 raios de alívio térmico (os vizinhos ficam a 0,64 mm, e embaixo do pino 29 passava a trilha do SLEEP_E). Agora: tocos removidos; raios a 0°/90°; foi deixada uma faixa de plano **em cima da fileira de cima** (fileira descida para y = 3,8 mm) e **embaixo da fileira de baixo** (SLEEP_E desceu 1 mm). Cada pino tem 2 raios gerados pela própria zona, conferidos pelo DRC (`starved_thermal` = erro, mínimo 2 raios) |
+| Furos nos cantos | H1–H4 nos 4 cantos, a 3,5 mm das bordas. O H4 (frente-esquerda) fica embaixo da ponta USB da ESP32, que está ~11 mm acima da placa: cabe a cabeça do parafuso, mas **aperte antes de encaixar a ESP32**. Uma regra no `.kicad_dru` libera só essa sobreposição de courtyard (H4 × U1) |
+| Menor possível, mas dá para soldar e corroer | 80 × 67 → **72,5 × 63 mm** (−15 % de área). Mantidas as regras de corrosão (trilha ≥ 1 mm, folga ≥ 0,5 mm, plano ≥ 1 mm, ilhas grandes, só 45°, nada de ângulo agudo) e a distância física entre as peças: capacitores longe dos módulos, fios do VM com 6,5 mm do capacitor, J14 fora da sombra da ESP32. A largura agora é limitada pelo bloco dos encoders/divisor à direita da ESP32 e a altura pela pilha ESP32 → DRV8833 → fio do motor |
+| Chassi | `mecanica/chassi/fonte/chassi.py` com o tamanho e os furos novos; refeitos `corte_MDF.dxf`/PDF, `chassi_montado.step` e as imagens (só os 4 furos da placa no andar 1 mudaram) |
 
 ## Revisão de 18/11 (v0.5.1)
 
@@ -246,7 +266,7 @@ Para refazer: `make placa` (saídas) e `make drc` (verificações) na raiz do re
 | KiCad 10: 17 avisos `net_conflict` (ilha sem a rede `unconnected-(…)` do esquemático: pinos livres da ESP32 e ULT dos DRV8833) | as 17 ilhas receberam a rede `unconnected-(…)`; o plano de GND continua desviando delas igual |
 | KiCad 10: 5 avisos `footprint_symbol_mismatch` (J1, J2, J3, J10, J11 marcados "fora da lista de materiais" só na pegada) | pegadas `Fio_0.75mm2_*` com tipo "PTH" e na lista de materiais, como os símbolos |
 
-O cobre (B.Cu), as ilhas e os furos **não mudaram**: a arte de transferência é a mesma da v0.5.
+Nessa revisão o cobre não mudou; na v0.6 (abaixo) o roteamento foi refeito.
 
 ### Conferência da avaliação feita por outra IA
 

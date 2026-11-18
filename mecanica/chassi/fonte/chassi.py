@@ -57,8 +57,11 @@ Z1 = EIXO_Z - EIXO_NO_SUPORTE       # topo do andar 1 = 15
 H_PAREDE = 35.0                     # vao entre andares
 Z2 = Z1 + H_PAREDE                  # fundo do andar 2 = 50
 Y_SUP = BITOLA / 2 - RODA_L / 2 - 1.5 - 6.0   # centro do suporte do motor (y) = 35
-ESP_X1 = 118.0                      # borda da frente da placa da ESP32 (80 x 67)
-def furo_esp(xb, yb): return (ESP_X1 - yb, 40.0 - xb)   # placa: x_b para a direita (= -y), y_b para tras
+ESP_X1 = 118.0                      # borda da frente da placa da ESP32
+PL_W, PL_H = 72.5, 63.0             # placa da ESP32 v0.6 (hardware/placa_esp32): largura (x_b) e altura (y_b)
+PL_FUROS = [(3.5, 3.5), (PL_W - 3.5, 3.5), (PL_W - 3.5, PL_H - 3.5), (3.5, PL_H - 3.5)]  # M3 nos 4 cantos
+def furo_esp(xb, yb): return (ESP_X1 - yb, PL_W / 2 - xb)   # placa: x_b para a direita (= -y), y_b para tras
+def caixa_placa(u0, u1, v0, v1): return (ESP_X1 - v1, ESP_X1 - v0, PL_W / 2 - u1, PL_W / 2 - u0)  # (x0, x1, y0, y1)
 JET_X0 = 14.0                       # Jetson Nano 100 x 80; furos 86 x 58 (conferir)
 JET_FUROS = [(JET_X0 + 7, s * 29) for s in (1, -1)] + [(JET_X0 + 93, s * 29) for s in (1, -1)]
 BAT = (14.0, 49.0, 37.5)            # bateria deitada: x0, x1, meia largura (75 x 35 x ~25)
@@ -74,7 +77,7 @@ f1 = []
 for sy in (1, -1):
     for sx in (1, -1):
         f1.append(slot((sx * 8.5, sy * Y_SUP), (sx * 10.8, sy * Y_SUP), 2.3))       # suporte do motor (M2), oblongo p/ ajustar
-for (xb, yb) in [(3.5, 63.5), (76.5, 63.5), (76.5, 27.0), (3.5, 36.5)]:
+for (xb, yb) in PL_FUROS:
     f1.append(circ(*furo_esp(xb, yb), 3.4))                                        # placa da ESP32 (M3)
 f1 += [circ(ESFERA_X, 8, 2.8), circ(ESFERA_X, -8, 2.8)]                             # esfera (M2.5, furos a 16 mm)
 for sy in (1, -1):
@@ -171,10 +174,10 @@ for s, lado in ((1, 'esq'), (-1, 'dir')):
     caixa(f'suporte_{lado}', -12.5, 12.5, s * Y_SUP - 6, s * Y_SUP + 6, Z1, Z1 + 12, (0.95, 0.95, 0.95))
     caixa(f'xl4016_{lado}', XL[0], XL[1], 0.5 if s > 0 else -46.5, 46.5 if s > 0 else -0.5, Z1, Z1 + 24, (0.25, 0.5, 0.35))
 caixa('bateria', BAT[0], BAT[1], -BAT[2], BAT[2], Z1, Z1 + 25, (0.9, 0.7, 0.2))
-caixa('placa_esp32', ESP_X1 - 67, ESP_X1, -40, 40, Z1 + 10, Z1 + 11.6, (0.2, 0.45, 0.25))
-caixa('esp32_devkit', ESP_X1 - 30.2, ESP_X1 - 2, -12.5 + 40 - 52, 40, Z1 + 21.6, Z1 + 23.2, (0.1, 0.1, 0.12))
-caixa('drv8833_esq', ESP_X1 - 59, ESP_X1 - 42, 40 - 31, 40 - 12.7, Z1 + 21.6, Z1 + 23, (0.6, 0.1, 0.1))
-caixa('drv8833_dir', ESP_X1 - 59, ESP_X1 - 42, 40 - 64, 40 - 45.7, Z1 + 21.6, Z1 + 23, (0.6, 0.1, 0.1))
+caixa('placa_esp32', *caixa_placa(0, PL_W, 0, PL_H), Z1 + 10, Z1 + 11.6, (0.2, 0.45, 0.25))
+caixa('esp32_devkit', *caixa_placa(0.47, 51.43, 2.22, 30.78), Z1 + 22.6, Z1 + 24.2, (0.1, 0.1, 0.12))   # sobre barras femea de 8,5 mm
+caixa('drv8833_esq', *caixa_placa(10.68, 27.98, 35.07, 54.57), Z1 + 21.6, Z1 + 23, (0.6, 0.1, 0.1))
+caixa('drv8833_dir', *caixa_placa(41.7, 59.0, 35.07, 54.57), Z1 + 21.6, Z1 + 23, (0.6, 0.1, 0.1))
 caixa('jetson', JET_X0, JET_X0 + 100, -40, 40, Z2 + T + 12, Z2 + T + 12 + 30, (0.35, 0.45, 0.55))
 asm.add(cq.Workplane('XY').sphere(9.525 / 2).translate((ESFERA_X, 0, Z1 - T - 15 + 9.525 / 2)), name='esfera', color=cq.Color(0.7, 0.7, 0.7))
 cam = cq.Workplane('XY').box(24, 25, 4).translate((0, 0, 2)).val()

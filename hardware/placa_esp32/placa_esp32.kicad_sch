@@ -1,7 +1,7 @@
 (kicad_sch (version 20230121) (generator eeschema)
   (uuid 0050fe91-91b9-523e-97a3-dbbe686b83b4)
   (paper "A4")
-  (title_block (title "Robocar Blitz - placa da ESP32 v0.5") (date "2026-11-18") (rev "0.5") (company "Robocar Blitz - RoboCar Race 2026 Micro")
+  (title_block (title "Robocar Blitz - placa da ESP32 v0.6") (date "2026-11-18") (rev "0.6") (company "Robocar Blitz - RoboCar Race 2026 Micro")
     (comment 1 "Pinagem igual a firmware/robocar_esp32/config.h")
     (comment 2 "Face simples, PTH, corrosao caseira; trilha >= 1 mm, ilhas grandes; modulos em barras femea"))
   (lib_symbols
@@ -454,7 +454,7 @@
         )
       )
   )
-  (text "Robocar Blitz - placa da ESP32 v0.5 (enxuta, embaixo da Jetson)" (at 12 16 0) (effects (font (size 2.2 2.2) bold) (justify left bottom)) (uuid 386f1005-129f-5821-8a99-cafc495145bf))
+  (text "Robocar Blitz - placa da ESP32 v0.6 (enxuta, embaixo da Jetson)" (at 12 16 0) (effects (font (size 2.2 2.2) bold) (justify left bottom)) (uuid 386f1005-129f-5821-8a99-cafc495145bf))
   (text "Rotulos com o mesmo nome estao ligados. Pinagem = firmware/robocar_esp32/config.h." (at 12 21 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid eaa417b9-b586-52dd-b495-ebad5faca449))
   (text "1. ESP32 DevKit V1 (30 pinos), alimentada pelo USB da Jetson" (at 82 34 0) (effects (font (size 1.4 1.4) bold) (justify left bottom)) (uuid 4f17a602-aa1c-57f4-bc55-e12b2bfacf77))
   (symbol (lib_id "robocar:ESP32_DevKit_V1_30p") (at 120 70 0) (unit 1) (in_bom yes) (on_board yes) (dnp no)

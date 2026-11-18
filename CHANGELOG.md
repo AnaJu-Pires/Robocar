@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (placa v0.6, 18/11/2026)
+- `hardware/placa_esp32/`: roteamento refeito (D-022): **72,5 × 63 mm** (era 80 × 67), **furos M3 nos 4 cantos**, GND da ESP32 (pinos 14 e 29) ligado ao plano por **alívio térmico com 2 raios** em vez dos tocos de trilha. Esquemático e pinagem iguais. DRC 0, paridade OK, só 0/45/90°, cobre não-GND a ≥ 3,6 mm dos furos.
+- `verificar.py` confere também ângulos, larguras e a distância do cobre aos furos; BOM e `jumpers.json` com as coordenadas novas.
+- `mecanica/chassi/`: `chassi.py` com o tamanho e os furos novos da placa; `corte_MDF.dxf`/PDF, `chassi_montado.step` e imagens refeitos.
 ### Corrigido (placa v0.5.1, 18/11/2026)
 - `hardware/placa_esp32/`: projeto KiCad só com cobre em **B.Cu** (D-021): os 2 jumpers deixaram de ser trilhas em F.Cu + 4 vias e viraram componentes JP1/JP2 (esquemático e placa, redes `ME_IN2_JP`/`MD_IN2_JP`); `placa_esp32.kicad_dru` faz o DRC acusar qualquer trilha/zona em F.Cu ou via. Cobre e furação iguais aos da v0.5.
 - Pegadas ligadas aos símbolos (o "Atualizar PCB a partir do esquemático" não recria peças); furos de fixação marcados "só na placa"; símbolos da biblioteca apontando para as pegadas `_SoldaManual`.

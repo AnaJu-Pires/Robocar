@@ -1,1 +1,2 @@
-trechos de trilha: 117; fora de 0/45/90 graus: 0; curvas fechadas (<135) ou encontros agudos (<90): 0; derivacoes em T a 90 graus: 12; trilha mais fina: 1.00 mm
+trechos de trilha: 109; fora de 0/45/90 graus: 0; larguras usadas: 1.00, 1.50 mm; mais finas que 1,0 mm: 0
+cobre (nao GND) a menos de 3,6 mm do centro de um furo de fixacao: nenhum

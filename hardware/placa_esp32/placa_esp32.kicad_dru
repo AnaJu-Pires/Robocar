@@ -12,3 +12,10 @@
 
 (rule "face_simples_sem_vias"
   (constraint disallow via micro_via buried_via))
+
+# O furo H4 (canto de cima a esquerda) fica embaixo da ponta do USB da ESP32. A ESP32 fica ~11 mm acima da
+# placa (barra femea + barra macho), entao a cabeca do parafuso M3 (~3 mm) cabe embaixo dela. So o
+# courtyard se sobrepoe; aperte o parafuso ANTES de encaixar a ESP32.
+(rule "H4_sob_a_ponta_USB_da_ESP32"
+  (condition "A.Reference == 'H4' && B.Reference == 'U1'")
+  (constraint courtyard_clearance (min -20mm)))

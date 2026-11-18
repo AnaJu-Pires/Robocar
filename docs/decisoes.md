@@ -146,3 +146,9 @@ O roteamento foi automático e conferido pelo DRC do KiCad (com paridade com o e
 * modelos 3D: só nativos do KiCad ou baixados do fabricante. ESP32 = STEP de 30 pinos baixado pela equipe (a pegada de 38 pinos que veio junto não é usada); DRV8833 = só as barras fêmea nativas.
 **Consequências:** cobre e furação iguais aos da v0.5 (a arte de transferência não muda). DRC 0 violações e paridade esquema × placa OK, conferidos por `make drc`; saídas refeitas por `make placa`. O STEP da placa ficou maior (~19 MB) por causa do modelo detalhado da ESP32.
 
+### D-022 — Placa v0.6: 72,5 × 63 mm, furos nos cantos, GND da ESP32 por alívio térmico
+*18/11/2026 · aceita*
+**Contexto:** na v0.5 os pinos GND da ESP32 (14 e 29) só chegavam ao plano por tocos de trilha fora do centro, porque o plano não tinha espaço para formar 2 raios de alívio térmico. Os furos de fixação estavam em posições irregulares (dois deles longe dos cantos) e a placa tinha espaço sobrando.
+**Decisão:** refazer posicionamento e roteamento mantendo as ligações: fileira de cima da ESP32 em y = 3,8 mm (faixa de plano por cima) e SLEEP_E 1 mm mais baixo (faixa de plano por baixo), raios a 0°/90° nos pinos 14 e 29; furos M3 nos 4 cantos a 3,5 mm das bordas; módulos, capacitores e fios aproximados até o limite das regras de corrosão manual da D-015.
+**Consequências:** 72,5 × 63 mm (−15 % de área). DRC 0 violações sem tocos (mínimo de 2 raios conferido), paridade esquema × placa OK, só 0/45/90°. O H4 fica embaixo da ponta USB da ESP32: apertar os parafusos antes de encaixá-la. Chassi refeito com os furos novos (só o andar 1 muda). Coordenadas dos jumpers e da BOM mudaram.
+

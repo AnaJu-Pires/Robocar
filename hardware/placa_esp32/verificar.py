@@ -48,6 +48,48 @@ with open(os.path.join(OUT, "face_simples.txt"), "w", encoding="utf-8") as f:
 if fora or zonas:
     falhas.append("face simples: %d itens fora de B.Cu" % (len(fora) + len(zonas)))
 
+# 2b) angulos (so 0/45/90), largura minima de 1,0 mm e cobre que nao e GND longe dos furos de fixacao
+#     (o espacador M3 encosta no cobre por baixo: raio ~3,2 mm; exigimos 3,6 mm ate a borda da trilha/ilha)
+import math
+mm = pcbnew.ToMM
+tortos, finas = [], []
+for t in placa.GetTracks():
+    if t.GetClass() != "PCB_TRACK":
+        continue
+    dx, dy = mm(t.GetEnd().x - t.GetStart().x), mm(t.GetEnd().y - t.GetStart().y)
+    ang = math.degrees(math.atan2(dy, dx)) % 45
+    if min(ang, 45 - ang) > 0.5:
+        tortos.append(t)
+    if mm(t.GetWidth()) < 0.999:
+        finas.append(t)
+furos = [fp for fp in placa.GetFootprints() if fp.GetReference().startswith("H")]
+def dist_seg(px, py, ax, ay, bx, by):
+    vx, vy = bx - ax, by - ay
+    L = vx * vx + vy * vy
+    k = 0 if L == 0 else max(0, min(1, ((px - ax) * vx + (py - ay) * vy) / L))
+    return math.hypot(px - ax - k * vx, py - ay - k * vy)
+perto = []
+for h in furos:
+    hx, hy = mm(h.GetPosition().x), mm(h.GetPosition().y)
+    for t in placa.GetTracks():
+        if t.GetNetname() != "GND":
+            d = dist_seg(hx, hy, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)) - mm(t.GetWidth()) / 2
+            if d < 3.6:
+                perto.append((h.GetReference(), t.GetNetname(), round(d, 2)))
+    for fp in placa.GetFootprints():
+        for pad in fp.Pads():
+            if pad.GetNetname() != "GND" and fp.GetReference() != h.GetReference():
+                d = math.hypot(hx - mm(pad.GetPosition().x), hy - mm(pad.GetPosition().y)) - max(mm(pad.GetSize().x), mm(pad.GetSize().y)) / 2
+                if d < 3.6:
+                    perto.append((h.GetReference(), "%s.%s" % (fp.GetReference(), pad.GetNumber()), round(d, 2)))
+larg = sorted({round(mm(t.GetWidth()), 2) for t in placa.GetTracks() if t.GetClass() == "PCB_TRACK"})
+with open(os.path.join(OUT, "angulos_e_larguras.txt"), "w", encoding="utf-8") as f:
+    f.write("trechos de trilha: %d; fora de 0/45/90 graus: %d; larguras usadas: %s mm; mais finas que 1,0 mm: %d\n"
+            % (n_trilhas, len(tortos), ", ".join("%.2f" % w for w in larg), len(finas)))
+    f.write("cobre (nao GND) a menos de 3,6 mm do centro de um furo de fixacao: %s\n" % (perto or "nenhum"))
+if tortos or finas or perto:
+    falhas.append("angulos/larguras/furos: %d tortos, %d finas, %d perto dos furos" % (len(tortos), len(finas), len(perto)))
+
 # 3) paridade esquematico x placa (netlist exportada pelo kicad-cli)
 with tempfile.TemporaryDirectory() as tmp:
     xml = os.path.join(tmp, "net.xml")
