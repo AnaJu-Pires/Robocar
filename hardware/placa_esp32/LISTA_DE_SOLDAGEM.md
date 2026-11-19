@@ -40,6 +40,12 @@ montar o R1 em pé; R2, R3 e R4 ficam embaixo da ESP32 e **precisam ser de 1/4 W
 |---|---|---|---|
 | 4 | Parafuso M3 + porca | Furos dos 4 cantos | **Temos** (L13) |
 | 4 | **Espaçador M3 ≈ 15 mm** | Placa por cima do eixo/motores (bateria no meio, placa atrás) | **Temos** (L13; conferir se tem de 15 mm) |
+| ~10 | **Abraçadeira de nylon pequena** (≈ 2,5 × 100 mm) | Alívio de tração dos fios: prender cada cabo no chassi a 2–3 cm da placa, deixando uma folga (barriga) no trecho até a solda | **Temos?** (L13 lista abraçadeiras; senão, pacote em loja de ferragens/elétrica ou na Santa Ifigênia) |
+
+**Alívio de tração:** quem segura o puxão é a abraçadeira no chassi, não a solda. A placa não tem furo de alívio: os
+fios grossos ficam perto das bordas e dos furos M3, e um furo a mais ali enfraqueceria o fenolite. Ao soldar, passe o
+fio por cima (lado das peças) e deixe o isolamento encostar na placa. Uma gota de cola quente no isolamento, do lado
+das peças (nunca na solda), ajuda nos fios finos do encoder.
 
 ## 4. Para fazer a placa (corrosão) e soldar
 
