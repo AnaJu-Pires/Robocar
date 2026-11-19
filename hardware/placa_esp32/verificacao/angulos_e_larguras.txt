@@ -1,0 +1,2 @@
+trechos de trilha: 131; fora de 0/45/90 graus: 0; larguras usadas: 1.00, 1.50 mm; mais finas que 1,0 mm: 0
+cobre (nao GND) a menos de 3,6 mm do centro de um furo de fixacao: nenhum

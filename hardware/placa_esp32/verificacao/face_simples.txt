@@ -1,0 +1,2 @@
+trilhas: 131 (todas em B.Cu: sim); vias: 0; trilhas/zonas em F.Cu: 0
+jumpers de fio (lado dos componentes): JP1, JP2, JP3

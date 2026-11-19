@@ -1,0 +1,7 @@
+# Na Jetson (JetPack 4.6 / Python 3.6), prefira os pacotes do sistema:
+#   OpenCV: ja vem no JetPack COM GStreamer (nao instale opencv-python por pip na Jetson!)
+#   sudo apt install python3-numpy python3-serial
+# No PC (testes offline), instale com: pip install -r jetson/requirements.txt
+numpy
+opencv-python
+pyserial

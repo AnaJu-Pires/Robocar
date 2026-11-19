@@ -1,0 +1,24 @@
+(version 1)
+
+# Placa de FACE SIMPLES (fenolite com cobre so embaixo): todo o cobre roteado fica em B.Cu.
+# O KiCad exige pelo menos 2 camadas de cobre no projeto; estas regras fazem o DRC acusar
+# qualquer trilha, via ou zona que aparecer em F.Cu. Os pads PTH continuam com "*.Cu" (padrao do
+# KiCad), mas a arte de transferencia so imprime B.Cu. Ligacoes que nao cabem em B.Cu viram
+# jumper de fio (JP1, JP2: pegada robocar_sm:Jumper_Fio_P8.86mm_SoldaManual).
+
+(rule "face_simples_sem_trilha_em_F.Cu"
+  (layer "F.Cu")
+  (constraint disallow track zone))
+
+(rule "face_simples_sem_vias"
+  (constraint disallow via micro_via buried_via))
+
+# Resistores deitados (2,5 mm de altura) entre as fileiras da ESP32, que fica ~11 mm acima da placa nas
+# barras femea (R3 e R4). Soldar ANTES de encaixar a ESP32.
+(rule "resistores_embaixo_da_ESP32"
+  (condition "A.Reference == 'U1' && (B.Reference == 'R1' || B.Reference == 'R2' || B.Reference == 'R3' || B.Reference == 'R4')")
+  (constraint courtyard_clearance (min -20mm)))
+
+(rule "R3_R4_lado_a_lado_GND"
+  (condition "A.Reference == 'R3' && B.Reference == 'R4'")
+  (constraint courtyard_clearance (min -20mm)))

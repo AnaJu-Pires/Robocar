@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Dados gerados em testes (videos, logs, capturas): grandes e locais
+dados/*
+!dados/README.md
+
+# Calibracao depende do local/iluminacao (exemplo versionado: calibracao.exemplo.json)
+jetson/config/calibracao.json
+
+# Arduino / editores / sistema
+firmware/**/build/
+.vscode/
+.idea/
+*.swp
+.DS_Store
+~$*.xlsx
+
+# KiCad: arquivos locais e de backup
+*.kicad_prl
+*-backups/
+_autosave-*
+fp-info-cache
+*.lck
