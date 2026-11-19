@@ -163,9 +163,15 @@ O roteamento foi automático e conferido pelo DRC do KiCad (com paridade com o e
 *19/11/2026 · aceita*
 **Contexto:** a equipe vai pôr a bateria no meio do carro (peso entre as rodas) e a placa atrás, em cima do eixo. Na v0.7 os fios dos dois motores chegavam pela mesma lateral e os encoders pela traseira, cruzando o carro. Também foi pedido: ilhas maiores para soldar (sem mudar furo nem passo), trilhas ≥ 1 mm calculadas para a corrente, saída reta das ilhas, gotas (teardrops), ilhas cercadas pelo plano de GND e nenhuma curva de 90°.
 **Decisão:**
-* placa de **80 × 70 mm** espelhada: ESP32 em pé no meio (USB para trás, antena para a frente com área sem cobre embaixo); U2, J10, J12, C1 e J2 à esquerda; U3, J11, J13, C2 e J3 à direita;
+* placa de **80 × 70 mm** (depois 80 × 73, ajuste da equipe) espelhada: ESP32 em pé no meio (USB para trás, antena para a frente com área sem cobre embaixo); U2, J10, J12, C1 e J2 à esquerda; U3, J11, J13, C2 e J3 à direita;
 * **pinagem nova da ESP32** para cada coluna atender um lado: motor E 33/25, nSLEEP E 32, encoder E 26/27; motor D 19/21, nSLEEP D 18, encoder D 17/16; bateria 36; largada 4; LED 2 (`config.h` atualizado);
 * encoders na ordem **A, B, −, +** (J12/J13); **3º jumper** (JP3, nSLEEP do U3); resistores de passo 7,62 mm, R2–R4 embaixo da ESP32;
 * ilhas retangulares arredondadas, alongadas só no sentido que não aproxima o pino vizinho; sinal 1,0 mm (≈ 2,4 A) e potência 1,5 mm (≈ 3,2 A contra 1,9 A de pico; IPC-2221, 35 µm, +10 °C); curvas chanfradas a 45°; 62 gotas; alívio térmico com ≥ 2 raios;
 * a placa é gerada por `ferramentas/montar_placa_v08.py` a partir do esquemático (tabelas de posição e de rotas).
 **Consequências:** DRC 0 e paridade OK (`make drc`). 3 jumpers de fio (eram 2). R2, R3 e R4 têm de ser soldados antes das barras fêmea (ficam embaixo da ESP32) e ser de 1/4 W. O chassi (`mecanica/chassi/`) ainda está com a placa v0.7: refazer quando a posição da bateria e da placa estiver fechada (placa sobre o eixo com espaçadores de ~15 mm). Faltam comprar barras fêmea e fenolite ([LISTA_DE_SOLDAGEM.md](../hardware/placa_esp32/LISTA_DE_SOLDAGEM.md)).
+
+### D-025 — GND dos drivers por trilha, não pelo plano
+*19/11/2026 · aceita*
+**Contexto:** no ajuste da equipe, o GND dos módulos DRV8833 foi ligado ao plano por um toco de trilha (o pino fica entre VCC e IN3 e não recebe 2 raios de alívio térmico). Medido no plano, o caminho do driver até o fio de GND e o 470 µF ficava com 0,4–0,5 mm de largura no trecho mais estreito.
+**Decisão:** o GND de cada driver é uma trilha de 1,5 mm até o 470 µF e o fio de GND do XL4016, por fora do VM. O plano volta para folga de 0,6 mm, largura mínima de 1,0 mm e raios de 1,0 mm. Mantidos os outros ajustes da equipe (80 × 73 mm, Y do motor, resistores no meio da ESP32, J2 alinhado com o C1).
+**Consequências:** a corrente do motor (até 1,9 A) volta direto ao fio sem passar pelo plano embaixo da ESP32. O trecho mais estreito do GND, do driver até o fio, ficou com 1,5 mm. DRC 0 e paridade OK. Esquemático com PWR_FLAG em VM_E, VM_D e GND e tudo na grade de 1,27 mm (ERC do KiCad 10 sem os 3 erros e os 98 avisos; rodar de novo para confirmar).

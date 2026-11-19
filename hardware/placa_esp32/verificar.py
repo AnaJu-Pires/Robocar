@@ -10,10 +10,7 @@ Grava em verificacao/:
 Sai com codigo 1 se algo falhar.
 """
 import os
-import subprocess
 import sys
-import tempfile
-import xml.etree.ElementTree as ET
 
 import pcbnew
 
@@ -102,16 +99,11 @@ if tortos or finas or perto:
     falhas.append("angulos/larguras/furos: %d tortos, %d finas, %d perto dos furos" % (len(tortos), len(finas), len(perto)))
 
 # 3) paridade esquematico x placa (netlist exportada pelo kicad-cli)
-with tempfile.TemporaryDirectory() as tmp:
-    xml = os.path.join(tmp, "net.xml")
-    subprocess.run(["kicad-cli", "sch", "export", "netlist", "--format", "kicadxml", "-o", xml, SCH],
-                   check=True, stdout=subprocess.DEVNULL)
-    raiz = ET.parse(xml).getroot()
-esq_fp = {c.get("ref"): c.findtext("footprint") for c in raiz.iter("comp")}
-esq = {}
-for net in raiz.iter("net"):
-    for no in net.iter("node"):
-        esq[(no.get("ref"), no.get("pin"))] = net.get("name")
+#    (kicad-cli; se ele for mais velho que o esquematico, leitura em texto: ferramentas/netlist_texto.py)
+sys.path.insert(0, os.path.join(AQUI, "ferramentas"))
+from netlist_texto import netlist_esquematico
+comp, esq = netlist_esquematico(SCH)
+esq_fp = {r: c["pegada"] for r, c in comp.items()}
 pcb_fp, pcb = {}, {}
 for fp in placa.GetFootprints():
     if fp.IsBoardOnly():

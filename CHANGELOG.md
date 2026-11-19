@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Corrigido (placa v0.8, ajustes da equipe, 19/11/2026)
+- `hardware/placa_esp32/`: incorporados os ajustes feitos no KiCad 10 (placa **80 × 73**, motor em Y, R2–R4 no meio da ESP32, J2 alinhado com o C1, texto BLITZ). Corrigido o GND dos drivers, que ia ao plano por um toco e passava por um trecho de 0,4 mm: voltou a ser trilha de 1,5 mm (D-025). Plano de volta para 0,6/1,0/1,0 mm. Borda exata, furos simétricos, degraus e curva de 90° tirados. DRC 0, paridade OK.
+- Esquemático: PWR_FLAG em VM_E, VM_D e GND (3 erros do ERC) e tudo na grade de 1,27 mm (98 avisos). Ligações iguais.
+- Novo `ferramentas/netlist_texto.py`: lê o esquemático do KiCad 10 sem o KiCad (usado pelo gerador e pelo `verificar.py` quando o kicad-cli é mais velho). `.history/` (VS Code) no `.gitignore`.
 ### Alterado (placa v0.8, 19/11/2026)
 - `hardware/placa_esp32/`: **placa espelhada** (D-024), 80 × 70 mm: tudo do motor esquerdo à esquerda e do direito à direita, ESP32 no meio com o USB para trás e área sem cobre embaixo da antena. Ilhas retangulares arredondadas alongadas (furo e passo iguais), trilhas de 1,0 mm (sinal) e 1,5 mm (potência), curvas chanfradas a 45°, saída reta das ilhas, 62 gotas, plano de GND em volta de tudo. 3 jumpers (JP3 novo), resistores de passo 7,62 mm (R2–R4 embaixo da ESP32), encoders na ordem A, B, −, +. DRC 0, paridade OK.
 - Esquemático: pinagem nova da ESP32 e JP3 (`SLEEP_D_JP`); `config.h` com os GPIOs novos; `docs/03_hardware.md` (pinagem) atualizado.

@@ -36,27 +36,20 @@ for cand in (os.environ.get("KICAD_FOOTPRINT_DIR", ""), "/usr/share/kicad/footpr
         LIB_FURO = os.path.join(cand, "MountingHole.pretty")
         break
 
-W, H = 80.0, 70.0                 # placa
-OX, OY = 108.5, 71.5              # origem da folha (mantida das versoes anteriores)
+W, H = 80.0, 73.0                 # placa (80 x 73: 3 mm a mais na frente, ajuste da equipe em 19/11)
+OX, OY = 108.5, 71.5              # origem das coordenadas (mantida das versoes anteriores)
+TOPO = -3.0                       # borda da frente da placa (v = -3); a borda de tras fica em v = 70
 FM, mm = pcbnew.FromMM, pcbnew.ToMM
 def P(u, v): return pcbnew.VECTOR2I(FM(OX + u), FM(OY + v))
 
 S, PW = 1.0, 1.5                  # largura: sinal 1,0 mm; potencia (VM, GND dos drivers, motores) 1,5 mm
 
 # ---------------------------------------------------------------------------------------------- netlist
-with tempfile.TemporaryDirectory() as tmp:
-    xml = os.path.join(tmp, "net.xml")
-    subprocess.run(["kicad-cli", "sch", "export", "netlist", "--format", "kicadxml", "-o", xml, SCH],
-                   check=True, stdout=subprocess.DEVNULL)
-    raiz = ET.parse(xml).getroot()
-COMP = {}
-for c in raiz.iter("comp"):
-    COMP[c.get("ref")] = dict(valor=c.findtext("value"), pegada=c.findtext("footprint"),
-                              tstamp=(c.findtext("tstamps") or "").split()[0] if c.findtext("tstamps") else None)
-PINO = {}
-for n in raiz.iter("net"):
-    for no in n.iter("node"):
-        PINO[(no.get("ref"), no.get("pin"))] = n.get("name")
+# kicad-cli quando ele le o esquematico; senao (esquematico salvo num KiCad mais novo), leitura em texto
+import sys
+sys.path.insert(0, AQUI)
+from netlist_texto import netlist_esquematico
+COMP, PINO = netlist_esquematico(SCH)
 
 # ---------------------------------------------------------------------------------------------- posicoes
 # (u, v, orientacao em graus KiCad). Posicao = pino 1.
@@ -66,24 +59,24 @@ POS = {
     "U1": (27.3, Y0, 0),                     # ESP32: USB para tras (borda de baixo), antena para a frente
     "U2": (19.0, 9.06, -90), "U3": (70.5, 9.06, -90),          # DRV8833: entradas embaixo, saidas em cima
     "JP1": (6.3, 20.7, 0), "JP2": (57.8, 20.7, 0), "JP3": (73.4, 23.3, 90),
-    "R1": (34.1, 5.5, 180), "R2": (31.0, row(2), 0), "R3": (31.0, row(6), 0), "R4": (49.0, row(7), 180),
+    "R1": (34.1, 5.5, 180), "R2": (35.0, row(2), 0), "R3": (35.0, row(6), 0), "R4": (42.62, 40.44, 180),
     "C1": (7.9, 53.3, 180), "C2": (76.8, 53.3, 180),
-    "J2": (9.2, 60.5, 180), "J3": (76.8, 60.5, 180),
+    "J2": (7.9, 60.5, 180), "J3": (76.8, 60.5, 180),       # + do VM reto do capacitor ate o fio
     "J10": (9.12, 2.75, 0), "J11": (60.62, 2.75, 0),
     "J12": (11.0, row(9), 0), "J13": (72.0, row(9), 0), "J14": (60.0, row(11), 0),
     "J1": (39.5, 5.5, 0),
 }
-FUROS = {"H1": (3.5, 3.5), "H2": (W - 3.5, 3.5), "H3": (3.5, H - 3.5), "H4": (W - 3.5, H - 3.5)}
+FUROS = {"H1": (3.5, TOPO + 3.5), "H2": (W - 3.5, TOPO + 3.5), "H3": (3.5, TOPO + H - 3.5), "H4": (W - 3.5, TOPO + H - 3.5)}
 
 # ---------------------------------------------------------------------------------------------- trilhas
 r = row
 ROTAS = [
     # ----- lado ESQUERDO (motor esquerdo)
-    ("/VBAT_ADC", S, [(27.3, r(2)), (25.6, r(2)), (24.5, r(2) - 1.1), (24.5, 6.5), (25.5, 5.5), (26.5, 5.5)]),
-    ("/VBAT_ADC", S, [(27.3, r(2)), (31.0, r(2))]),
+    ("/VBAT_ADC", S, [(27.3, r(2)), (24.37, r(2)), (23.46, r(2) - 0.91), (23.46, 7.54), (25.5, 5.5), (26.5, 5.5)]),
+    ("/VBAT_ADC", S, [(27.3, r(2)), (35.0, r(2))]),
     ("/VBAT", S, [(34.1, 5.5), (39.5, 5.5)]),
-    ("/SLEEP_E", S, [(27.3, r(6)), (23.0, r(6)), (22.0, r(6) - 1), (22.0, 7.4), (21.5, 6.9), (19.5, 6.9), (19.0, 7.4), (19.0, 9.06)]),
-    ("/SLEEP_E", S, [(27.3, r(6)), (31.0, r(6))]),
+    ("/SLEEP_E", S, [(27.3, r(6)), (24.01, r(6)), (22.91, r(6) - 1.1), (22.91, 22.89), (19.0, 18.98), (19.0, 9.06)]),
+    ("/SLEEP_E", S, [(27.3, r(6)), (35.0, r(6))]),
     ("/ME_IN1", S, [(27.3, r(7)), (20.0, r(7)), (19.0, r(7) - 1), (19.0, 24.3)]),
     ("/ME_IN1", S, [(8.84, 24.3), (8.84, 26.5), (9.84, 27.5), (18.0, 27.5), (19.0, 26.5)]),
     ("/ME_IN2", S, [(27.3, r(8)), (7.3, r(8)), (6.3, r(8) - 1), (6.3, 24.3), (6.3, 20.7)]),
@@ -92,19 +85,19 @@ ROTAS = [
     ("/ENC_E_B", S, [(27.3, r(10)), (11.0, r(10))]),
     ("/VM_E", PW, [(11.38, 24.3), (11.38, 19.1), (10.38, 18.1), (4.6, 18.1), (3.6, 19.1), (3.6, 46.6), (7.9, 50.9), (7.9, 53.3)]),
     ("GND", PW, [(13.92, 24.3), (13.92, 16.6), (12.92, 15.6), (2.4, 15.6), (1.4, 16.6), (1.4, 47.8), (4.4, 50.8), (4.4, 53.3)]),
-    ("/VM_E", PW, [(7.9, 53.3), (7.9, 55.3), (9.2, 56.6), (9.2, 60.5)]),
-    ("GND", PW, [(4.4, 53.3), (4.4, 60.5)]),
-    ("/ME_M1", PW, [(13.92, 9.06), (13.92, 11.01), (12.92, 12.01), (9.84, 12.01), (8.84, 11.01), (8.84, 9.06)]),
+    ("/VM_E", PW, [(7.9, 53.3), (7.9, 60.5)]),
+    ("GND", PW, [(4.4, 53.3), (4.4, 55.3), (3.1, 56.6), (3.1, 60.5)]),
+    ("/ME_M1", PW, [(13.92, 9.06), (13.92, 12.32), (12.97, 13.27), (9.79, 13.27), (8.84, 12.32), (8.84, 9.06)]),
     ("/ME_M1", PW, [(8.84, 9.06), (8.84, 6.6), (9.12, 6.32), (9.12, 2.75)]),
-    ("/ME_M2", PW, [(11.38, 9.06), (11.38, 6.8), (12.38, 5.8), (12.38, 4.0)]),
-    ("/ME_M2", PW, [(16.46, 9.06), (16.46, 6.8), (15.46, 5.8), (15.46, 4.0)]),
+    ("/ME_M2", PW, [(11.38, 9.06), (11.38, 6.8), (13.92, 4.26), (16.46, 6.8), (16.46, 9.06)]),     # Y saindo do centro do M-
+    ("/ME_M2", PW, [(13.92, 4.26), (13.92, 2.75)]),
     # ----- lado DIREITO (motor direito)
     ("/MD_IN2", S, [(52.7, r(5)), (56.8, r(5)), (57.8, r(5) - 1), (57.8, 24.3), (57.8, 20.7)]),
     ("/MD_IN2_JP", S, [(67.96, 24.3), (67.96, 20.7)]),
     ("/MD_IN1", S, [(52.7, r(6)), (59.34, r(6)), (60.34, r(6) - 1), (60.34, 24.3)]),
     ("/MD_IN1", S, [(70.5, 24.3), (70.5, 26.5), (69.5, 27.5), (61.34, 27.5), (60.34, 26.5)]),
     ("/SLEEP_D", S, [(52.7, r(7)), (72.4, r(7)), (73.4, r(7) - 1), (73.4, 23.3)]),
-    ("/SLEEP_D", S, [(52.7, r(7)), (49.0, r(7))]),
+    ("/SLEEP_D", S, [(52.7, r(7)), (49.0, r(7)), (46.0, r(7) + 3), (46.0, 39.44), (45.0, 40.44), (42.62, 40.44)]),
     ("/SLEEP_D_JP", S, [(73.4, 13.14), (73.4, 7.4), (72.9, 6.9), (71.0, 6.9), (70.5, 7.4), (70.5, 9.06)]),
     ("/ENC_D_A", S, [(52.7, r(9)), (72.0, r(9))]),
     ("/ENC_D_B", S, [(52.7, r(10)), (72.0, r(10))]),
@@ -113,10 +106,10 @@ ROTAS = [
     ("GND", PW, [(65.42, 24.3), (65.42, 19.1), (66.42, 18.1), (74.9, 18.1), (75.9, 19.1), (75.9, 47.0), (73.3, 49.6), (73.3, 53.3)]),
     ("/VM_D", PW, [(76.8, 53.3), (76.8, 60.5)]),
     ("GND", PW, [(73.3, 53.3), (73.3, 55.3), (72.0, 56.6), (72.0, 60.5)]),
-    ("/MD_M1", PW, [(65.42, 9.06), (65.42, 11.01), (64.42, 12.01), (61.34, 12.01), (60.34, 11.01), (60.34, 9.06)]),
+    ("/MD_M1", PW, [(65.42, 9.06), (65.42, 12.32), (64.47, 13.27), (61.29, 13.27), (60.34, 12.32), (60.34, 9.06)]),
     ("/MD_M1", PW, [(60.34, 9.06), (60.34, 6.6), (60.62, 6.32), (60.62, 2.75)]),
-    ("/MD_M2", PW, [(62.88, 9.06), (62.88, 6.8), (63.88, 5.8), (63.88, 4.0)]),
-    ("/MD_M2", PW, [(67.96, 9.06), (67.96, 6.8), (66.96, 5.8), (66.96, 4.0)]),
+    ("/MD_M2", PW, [(62.88, 9.06), (62.88, 6.8), (65.42, 4.26), (67.96, 6.8), (67.96, 9.06)]),
+    ("/MD_M2", PW, [(65.42, 4.26), (65.42, 2.75)]),
     # ----- 3V3 dos encoders: sai do pino 3V3 (embaixo a direita) pelos dois lados da ilha
     ("+3V3", S, [(52.7, r(15)), (50.0, r(15)), (49.0, r(15) + 1), (49.0, r(15) + 3), (48.0, r(15) + 4),
                  (15.0, r(15) + 4), (14.0, r(15) + 3), (14.0, r(12) + 1), (13.0, r(12)), (11.0, r(12))]),
@@ -173,7 +166,7 @@ for ref, (u, v) in FUROS.items():
     fp.SetPosition(P(u, v))
 
 # contorno
-cant = [(0, 0), (W, 0), (W, H), (0, H)]
+cant = [(0, TOPO), (W, TOPO), (W, TOPO + H), (0, TOPO + H)]
 for i in range(4):
     s = pcbnew.PCB_SHAPE(b)
     s.SetShape(pcbnew.SHAPE_T_SEGMENT); s.SetLayer(pcbnew.Edge_Cuts); s.SetWidth(FM(0.1))
@@ -208,7 +201,7 @@ def zona(pts, net=None, prioridade=0, regra=False, nome=""):
     return z
 
 # plano de GND
-g = zona([(0.5, 0.5), (W - 0.5, 0.5), (W - 0.5, H - 0.5), (0.5, H - 0.5)], rede("GND"), 0, nome="GND")
+g = zona([(0.5, TOPO + 0.5), (W - 0.5, TOPO + 0.5), (W - 0.5, TOPO + H - 0.5), (0.5, TOPO + H - 0.5)], rede("GND"), 0, nome="GND")
 g.SetLocalClearance(FM(0.6)); g.SetMinThickness(FM(1.0))
 g.SetThermalReliefGap(FM(0.6)); g.SetThermalReliefSpokeWidth(FM(1.0))
 g.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL)
@@ -273,14 +266,14 @@ TXT = [
     ("VBAT", 39.5, 9.3), ("ENC E", 11.0, 36.4, 0.9), ("ENC D", 72.0, 36.4, 0.9),
     ("A", 7.4, r(9), 0.8), ("B", 7.4, r(10), 0.8), ("-", 7.4, r(11), 0.8), ("+", 7.4, r(12), 0.8),
     ("A", 75.0, r(9), 0.8), ("B", 75.0, r(10), 0.8), ("-", 75.0, r(11), 0.8), ("+", 75.0, r(12), 0.8),
-    ("LARGADA", 60.0, 49.0, 0.9), ("VM E", 6.4, 65.2, 0.9), ("+", 11.9, 60.5, 1.0),
+    ("LARGADA", 60.0, 49.0, 0.9), ("VM E", 6.4, 65.2, 0.9), ("+", 10.6, 60.5, 1.0),
     ("VM D", 72.4, 65.2, 0.9), ("+", 79.3, 61.8, 1.0),
     ("USB", 40.0, 66.0), ("ROBOCAR BLITZ v0.8", 40.0, 61.0),
 ]
 for item in TXT:
     s, u, v = item[:3]
     texto(s, u, v, item[3] if len(item) > 3 else 1.0)
-texto("BLITZ v0.8", 40.0, 45.0, 1.5, 0, pcbnew.B_Cu, True)
+texto("BLITZ", 40.0, 45.0, 1.5, 0, pcbnew.B_Cu, True)
 
 pcbnew.ZONE_FILLER(b).Fill(b.Zones())
 b.Save(PCB)

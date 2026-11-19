@@ -1,0 +1,315 @@
+ERC report (2026-11-19T02:40:56, Encoding UTF8)
+Report includes: Errors, Warnings, Exclusions
+
+***** Sheet /
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(3924 mils, 3356 mils): Symbol #PWR01 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(8268 mils, 1805 mils): Symbol U2 Pino 9 [VCC, Alimentação de entrada, Linha]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(8268 mils, 4009 mils): Symbol U3 Pino 9 [VCC, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(994 mils, 4293 mils): Symbol J1 Pino 1 [Pin_1, Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(994 mils, 4293 mils): Fio horizontal, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(1150 mils, 1891 mils): Symbol #PWR05 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(1150 mils, 1991 mils): Symbol #PWR04 Pino oculto 1 [+3V3, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(1250 mils, 1691 mils): Fio horizontal, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(1250 mils, 1691 mils): Symbol J12 Pino 1 [Pin_1, Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(1250 mils, 1791 mils): Fio horizontal, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(1250 mils, 1891 mils): Fio horizontal, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(1250 mils, 1991 mils): Fio horizontal, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(2691 mils, 4300 mils): Symbol R2 Pino 1 [Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(2691 mils, 4300 mils): Fio vertical, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(2691 mils, 4600 mils): Fio vertical, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(2691 mils, 4700 mils): Symbol #PWR08 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(3924 mils, 3356 mils): Symbol #PWR01 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(4124 mils, 2056 mils): Symbol U1 Pino 1 [EN, Entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(4124 mils, 2156 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(4124 mils, 2556 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(4124 mils, 2656 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(4124 mils, 2756 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(4124 mils, 2856 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(4124 mils, 2956 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(4124 mils, 3356 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(5300 mils, 3350 mils): Fio vertical, comprimento 6 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(5300 mils, 3356 mils): Fio horizontal, comprimento 24 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(5324 mils, 2456 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(5324 mils, 2556 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(5324 mils, 2656 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(5324 mils, 2856 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(5324 mils, 2956 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(5324 mils, 3056 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(5324 mils, 3456 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(5524 mils, 3456 mils): Symbol #PWR03 Pino oculto 1 [+3V3, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7323 mils, 2842 mils): Symbol R3 Pino 1 [Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7323 mils, 2842 mils): Fio vertical, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7323 mils, 3142 mils): Fio vertical, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7323 mils, 3242 mils): Symbol #PWR13 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7323 mils, 5047 mils): Symbol R4 Pino 1 [Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7323 mils, 5047 mils): Fio vertical, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7323 mils, 5347 mils): Fio vertical, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7323 mils, 5447 mils): Symbol #PWR17 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7868 mils, 2055 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7868 mils, 2055 mils): Symbol U2 Pino 3 [OUT2, Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7868 mils, 2155 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7868 mils, 2255 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7868 mils, 2355 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7868 mils, 4259 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7868 mils, 4259 mils): Symbol U3 Pino 3 [OUT2, Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7868 mils, 4359 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7868 mils, 4459 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(7868 mils, 4559 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8268 mils, 1805 mils): Fio vertical, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8268 mils, 2605 mils): Fio vertical, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8268 mils, 2805 mils): Symbol #PWR10 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8268 mils, 4009 mils): Fio vertical, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8268 mils, 4809 mils): Fio vertical, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8268 mils, 5009 mils): Symbol #PWR14 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8668 mils, 2055 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8668 mils, 2155 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8668 mils, 2255 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8668 mils, 2355 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8668 mils, 2455 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8668 mils, 4259 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8668 mils, 4359 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8668 mils, 4459 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8668 mils, 4559 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(8668 mils, 4659 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9370 mils, 1740 mils): Fio vertical, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9370 mils, 1740 mils): Symbol C1 Pino 1 [Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9370 mils, 2040 mils): Fio vertical, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9370 mils, 2140 mils): Symbol #PWR11 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9370 mils, 3944 mils): Fio vertical, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9370 mils, 3944 mils): Symbol C2 Pino 1 [Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9370 mils, 4244 mils): Fio vertical, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9370 mils, 4344 mils): Symbol #PWR15 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9406 mils, 3228 mils): Symbol JP1 Pino 1 [A, Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9406 mils, 3228 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9406 mils, 5433 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9406 mils, 5433 mils): Symbol JP2 Pino 1 [A, Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9406 mils, 5906 mils): Symbol JP3 Pino 1 [A, Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9406 mils, 5906 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9806 mils, 3228 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9806 mils, 5433 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(9806 mils, 5906 mils): Fio horizontal, comprimento 200 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10094 mils, 1911 mils): Symbol #PWR12 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10094 mils, 4116 mils): Symbol #PWR16 Pino oculto 1 [GND, Alimentação de entrada, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10100 mils, 1800 mils): Fio vertical, comprimento 11 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10100 mils, 1811 mils): Fio horizontal, comprimento 6 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10150 mils, 1911 mils): Fio horizontal, comprimento 56 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10150 mils, 1900 mils): Fio vertical, comprimento 11 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10194 mils, 2520 mils): Symbol J10 Pino 1 [Pin_1, Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10194 mils, 2520 mils): Fio horizontal, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10194 mils, 2620 mils): Fio horizontal, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10194 mils, 4016 mils): Symbol J3 Pino 1 [Pin_1, Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10194 mils, 4016 mils): Fio horizontal, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10194 mils, 4116 mils): Fio horizontal, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10194 mils, 4724 mils): Symbol J11 Pino 1 [Pin_1, Passivo, Linha]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10194 mils, 4724 mils): Fio horizontal, comprimento 100 mils
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(10194 mils, 4824 mils): Fio horizontal, comprimento 100 mils
+
+ ** ERC messages: 101  Errors 3  Warnings 98
+
+ ** Ignored checks:
+    - Global label only appears once in the schematic
+    - Four connection points are joined together
+    - SPICE model issue
+    - Assigned footprint doesn't match footprint filters

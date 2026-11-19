@@ -25,3 +25,6 @@ firmware/**/build/
 _autosave-*
 fp-info-cache
 *.lck
+
+# Historico local do VS Code (extensao Local History)
+.history/

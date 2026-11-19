@@ -4,7 +4,7 @@
 # O KiCad exige pelo menos 2 camadas de cobre no projeto; estas regras fazem o DRC acusar
 # qualquer trilha, via ou zona que aparecer em F.Cu. Os pads PTH continuam com "*.Cu" (padrao do
 # KiCad), mas a arte de transferencia so imprime B.Cu. Ligacoes que nao cabem em B.Cu viram
-# jumper de fio (JP1, JP2: pegada robocar_sm:Jumper_Fio_P8.86mm_SoldaManual).
+# jumper de fio (JP1, JP2, JP3: pegada robocar_sm:Jumper_Fio_P10.16mm_SoldaManual).
 
 (rule "face_simples_sem_trilha_em_F.Cu"
   (layer "F.Cu")

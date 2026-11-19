@@ -12,7 +12,7 @@ Inspeção e treino em **04/12/2026**; torneio em **05/12/2026** (SENAC Santo Am
 | Software da Jetson | Implementado; **35 testes automáticos passando no PC**; integração com ESP32 **simulada** OK. Não testado na câmera real |
 | Firmware da ESP32 | Implementado; **só checagem de sintaxe**, falta compilar e gravar |
 | Hardware | Compras definidas (R$ 694,02 com fretes, dentro dos R$ 800); **pedidos a fazer** |
-| Placa da ESP32 | **v0.8 espelhada** (motor esquerdo à esquerda, direito à direita; ESP32 no meio, USB para trás): 80 × 70 mm com furos M3 nos cantos, face simples (só B.Cu, sem vias), trilhas de 1,0/1,5 mm com gotas, **3 jumpers**; DRC 0 violações e paridade esquema × placa OK (`make drc`); **falta comprar barras fêmea e fenolite** ([lista de soldagem](hardware/placa_esp32/LISTA_DE_SOLDAGEM.md)), medir as peças, corroer e montar; chassi ainda na v0.7 ([hardware/placa_esp32/](hardware/placa_esp32/)) |
+| Placa da ESP32 | **v0.8 espelhada** (motor esquerdo à esquerda, direito à direita; ESP32 no meio, USB para trás): 80 × 73 mm com furos M3 nos cantos, face simples (só B.Cu, sem vias), trilhas de 1,0/1,5 mm com gotas, **3 jumpers**; DRC 0 violações e paridade esquema × placa OK (`make drc`); **falta comprar barras fêmea e fenolite** ([lista de soldagem](hardware/placa_esp32/LISTA_DE_SOLDAGEM.md)), medir as peças, corroer e montar; chassi ainda na v0.7 ([hardware/placa_esp32/](hardware/placa_esp32/)) |
 | Mecânica | Chassi a projetar (CAD) e imprimir |
 
 Próximos passos e cronograma: [docs/07_plano.md](docs/07_plano.md).

@@ -16,7 +16,10 @@ if [ -z "${KICAD10_3DMODEL_DIR:-}" ]; then
 fi
 
 echo "== esquematico (PDF)"
-kicad-cli sch export pdf -o "$P.pdf" "$P.kicad_sch" >/dev/null
+if ! kicad-cli sch export pdf -o "$P.pdf" "$P.kicad_sch" >/dev/null 2>&1; then
+  echo "   AVISO: este kicad-cli nao le o esquematico (salvo num KiCad mais novo): $P.pdf NAO foi refeito."
+  echo "   No KiCad 10: Arquivo > Plotar > PDF, ou kicad-cli 10 sch export pdf."
+fi
 
 echo "== arte do cobre 1:1 (so B.Cu: face simples), preto = cobre, marca de broca no centro das ilhas"
 kicad-cli pcb export pdf --layers B.Cu,Edge.Cuts --black-and-white --drill-shape-opt 1 \

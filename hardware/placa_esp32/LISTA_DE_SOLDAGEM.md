@@ -45,7 +45,7 @@ montar o R1 em pé; R2, R3 e R4 ficam embaixo da ESP32 e **precisam ser de 1/4 W
 
 | Item | Para que serve | Situação |
 |---|---|---|
-| **Placa de fenolite cobreada face simples**, ≥ 80 × 70 mm (10 × 10 cm serve) | A placa em si | **FALTA** (a "placa perfurada" L11 é outra coisa) |
+| **Placa de fenolite cobreada face simples**, ≥ 80 × 73 mm (10 × 10 cm serve) | A placa em si | **FALTA** (a "placa perfurada" L11 é outra coisa) |
 | Impressão **laser** da arte do cobre (`fabricacao/1_cobre_transferencia_1x1.pdf`, 100 %) em papel couché/fotográfico | Transferência térmica do desenho | **FALTA** (impressora laser e papel) |
 | Ferro de passar, palha de aço/esponja, álcool isopropílico | Transferir e limpar o cobre | **FALTA** (verificar no laboratório) |
 | **Percloreto de ferro** + vasilha plástica | Corroer o cobre que não é trilha | **FALTA** |
@@ -57,7 +57,7 @@ montar o R1 em pé; R2, R3 e R4 ficam embaixo da ESP32 e **precisam ser de 1/4 W
 ## Resumo: o que falta conseguir
 
 1. **Barra fêmea 2,54 mm**: 2 barras de **1x40** cortáveis já dão 2 × 15 + 4 × 6 (cada corte perde 1 posição).
-2. **Fenolite face simples** ≥ 80 × 70 mm.
+2. **Fenolite face simples** ≥ 80 × 73 mm.
 3. **Percloreto de ferro**, impressão laser e brocas (se o laboratório não tiver).
 
 ## Ordem de montagem

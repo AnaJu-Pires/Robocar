@@ -6,8 +6,8 @@ motor direito na metade direita**: cada cabo de motor (6 fios) e cada par de VM 
 
 ![Cobre visto de cima (azul = cobre embaixo; branco = sem cobre)](imagens/cobre_vista_de_cima.png)
 
-* **80 × 70 mm** (vista de cima: borda de cima = frente do carro, borda de baixo = traseira).
-* **4 furos M3 nos cantos**, a 3,5 mm das bordas (73 × 63 mm entre centros). Nenhum cobre que não seja GND a menos
+* **80 × 73 mm** (vista de cima: borda de cima = frente do carro, borda de baixo = traseira).
+* **4 furos M3 nos cantos**, a 3,5 mm das bordas (73 × 66 mm entre centros). Nenhum cobre que não seja GND a menos
   de 3,6 mm do centro de um furo (pode usar espaçador metálico).
 * **ESP32 em pé, no meio, com o USB para trás** (borda de baixo) e a antena para a frente. Embaixo da antena **não
   tem cobre** (área proibida no KiCad), como pede a Espressif — mesmo sem a ESP32 usar rádio neste projeto.
@@ -16,7 +16,7 @@ motor direito na metade direita**: cada cabo de motor (6 fios) e cada par de VM 
 * **Trilhas**: sinal 1,0 mm; potência (VM, GND dos drivers e motores) 1,5 mm. Só 0°/45°/90°, **nenhuma curva de
   90°** (toda curva é chanfrada) e toda trilha **sai reta da ilha**, no sentido do lado comprido dela. Folga mínima
   0,5 mm (0,6 mm no plano de GND).
-* **Gotas (teardrops)** em 62 saídas de ilha: o cobre engrossa na junção ilha–trilha (mais resistente ao calor do
+* **Gotas (teardrops)** em 64 saídas de ilha: o cobre engrossa na junção ilha–trilha (mais resistente ao calor do
   ferro e à corrosão por baixo).
 * **Plano de GND** em volta de todas as ilhas; toda ilha de GND chega ao plano com pelo menos 2 raios de alívio
   térmico (sem toco de trilha).
@@ -141,8 +141,8 @@ barras fêmea.
 ## Fabricação caseira (transferência térmica)
 
 1. **Imprimir** `fabricacao/1_cobre_transferencia_1x1.pdf` em impressora **laser**, escala **100 %**. Conferir com
-   régua: **80 × 70 mm**.
-2. **Orientação:** na folha, "BLITZ v0.8" aparece **espelhado**; depois de transferido, fica legível olhando o cobre.
+   régua: **80 × 73 mm**.
+2. **Orientação:** na folha, "BLITZ" aparece **espelhado**; depois de transferido, fica legível olhando o cobre.
 3. **Transferir, corroer e limpar.**
 4. **Furar**: 0,8 mm (resistores, eletrolíticos, jumpers) · 1,0 mm (barras fêmea, J12, J13, J14) · 1,5–1,6 mm (J1,
    J2, J3, J10, J11) · 3,2 mm (4 furos M3).
@@ -158,8 +158,8 @@ barras fêmea.
 |---|---|---|
 | DRC (KiCad 7.0.11, com as regras de face simples) | **0 violações**, 0 ligações faltando | `verificacao/drc.rpt` |
 | Face simples | todas as trilhas em B.Cu; 0 vias; nada em F.Cu | `verificacao/face_simples.txt` |
-| Esquema × placa | mesmas 22 peças, pegadas e ligações em todos os pinos (24 redes) | `verificacao/paridade_esquema_placa.txt` |
-| Ângulos, larguras, furos | 131 trechos a 0/45/90°; trilhas de 1,0 e 1,5 mm; nenhum cobre não-GND a < 3,6 mm dos furos | `verificacao/angulos_e_larguras.txt` |
+| Esquema × placa | mesmas 20 peças, pegadas e ligações em todos os pinos (24 redes) | `verificacao/paridade_esquema_placa.txt` |
+| Ângulos, larguras, furos | 131 trechos a 0/45/90° (nenhuma curva de 90°); trilhas de 1,0 e 1,5 mm; nenhum cobre não-GND a < 3,6 mm dos furos | `verificacao/angulos_e_larguras.txt` |
 | Alívio térmico | toda ilha de GND com ≥ 2 raios | `verificacao/drc.rpt` |
 | Zona salva | igual à zona repreenchida | `make drc` |
 
@@ -167,8 +167,41 @@ barras fêmea.
 dá para regenerar as gotas pelo próprio KiCad (Editar → Editar gotas) se quiser os parâmetros dele.
 
 **Chassi:** `mecanica/chassi/` ainda tem os furos da placa v0.7. Quando a posição da bateria e da placa estiver
-definida (bateria no meio, placa atrás em cima do eixo), refazer o `chassi.py` com 80 × 70 mm e os furos novos.
+definida (bateria no meio, placa atrás em cima do eixo), refazer o `chassi.py` com 80 × 73 mm e os furos novos.
 Em cima do eixo a placa precisa de espaçadores de ~15 mm para passar por cima dos motores e suportes (topo a 27 mm do chão).
+
+## Ajustes da equipe e conferência (19/11)
+
+A equipe ajustou a v0.8 no KiCad 10 (branch `main`). O que ficou e o que foi corrigido:
+
+| Ajuste | Ficou? | Observação |
+|---|---|---|
+| Placa 80 × 73 (3 mm a mais na frente) e furos de cima a 3,5 mm da nova borda | sim | borda redesenhada exata (80,00 × 73,00; estava 80,08 × 72,97) e os 4 furos simétricos |
+| Fio do motor (M−) saindo em **Y** do centro da ilha; volta do M+ mais baixa | sim | lados esquerdo e direito iguais (espelhados) |
+| R2, R3, R4 mais para o meio da ESP32; trilhas de VBAT_ADC, SLEEP_E e SLEEP_D refeitas | sim | os 3 resistores alinhados (ilhas em x = 35,0 e 42,62 mm); tirados os degraus de 0,04–0,18 mm que sobraram do arraste, a curva de 90° do SLEEP_D e a saída torta do pino 1 do U2 |
+| J2 alinhado com o + do C1 (VM reto) | sim | o GND faz o desvio de 45°, igual ao J3 do outro lado |
+| Texto do cobre "BLITZ" | sim | |
+| **GND dos drivers (U2/U3 pino 10) pelo plano**, com um toco de trilha até o plano | **não** | ver abaixo |
+| Plano de GND refeito com os padrões do KiCad 10 (folga 0,5, largura mínima 0,25, raio térmico 0,5 mm) | **não** | voltou para folga 0,6, largura mínima 1,0 e raio de 1,0 mm (corrosão manual) |
+
+**Por que o GND dos drivers voltou a ser trilha.** O pino GND do módulo fica entre o VCC e o IN3: o plano não chega
+nele com 2 raios, por isso o KiCad não faz o alívio térmico. Na versão ajustada ele ia ao plano por um toco de 1 mm com
+duas pontas soltas e a 0,44 mm da gota do VM (a regra é 0,5). Pior: medindo o plano, o caminho do pino GND do driver até
+o fio de GND e o 470 µF passava por um trecho de **0,4 mm** (U2) e 0,5 mm (U3). Por ali voltam até 1,9 A do motor
+travado: 0,4 mm aguenta ~1,3 A (IPC-2221) e, na corrosão caseira, um filete desses some. Por isso o GND de cada driver
+é uma trilha de **1,5 mm** direto até o 470 µF e o fio do XL4016 (caminho curto e sem passar embaixo da ESP32: o ruído
+do motor não passa pelo terra da ESP32). Com isso o trecho mais estreito do GND, do driver até o fio, ficou com 1,5 mm.
+
+**Esquemático:** o ERC do KiCad 10 acusava 3 erros e 98 avisos:
+* **3 erros:** faltava PWR_FLAG. VM_E, VM_D e GND chegam por fio, e o ERC não sabe que têm fonte. Foi acrescentado o bloco 5 com os 3 PWR_FLAG.
+* **98 avisos:** pinos e fios fora da grade de 1,27 mm. Tudo foi alinhado na grade.
+
+As ligações foram conferidas iguais, pino a pino, antes e depois.
+
+**Formato dos arquivos:** o esquemático continua no formato do KiCad 10. A placa é gerada pelo
+`ferramentas/montar_placa_v08.py` e salva no formato do KiCad 7, para o DRC e o preenchimento do plano rodarem aqui; o
+KiCad 10 abre e converte ao salvar. O `placa_esp32.pdf` (esquemático) não foi refeito aqui (o kicad-cli 7 não lê o
+arquivo do KiCad 10): refazer no KiCad 10 em Arquivo > Plotar.
 
 ## v0.7 (18/11)
 
