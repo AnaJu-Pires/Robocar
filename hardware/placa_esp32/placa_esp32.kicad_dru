@@ -13,9 +13,12 @@
 (rule "face_simples_sem_vias"
   (constraint disallow via micro_via buried_via))
 
-# O furo H4 (canto de cima a esquerda) fica embaixo da ponta do USB da ESP32. A ESP32 fica ~11 mm acima da
-# placa (barra femea + barra macho), entao a cabeca do parafuso M3 (~3 mm) cabe embaixo dela. So o
-# courtyard se sobrepoe; aperte o parafuso ANTES de encaixar a ESP32.
-(rule "H4_sob_a_ponta_USB_da_ESP32"
-  (condition "A.Reference == 'H4' && B.Reference == 'U1'")
+# Resistores deitados (2,5 mm de altura) entre as fileiras da ESP32, que fica ~11 mm acima da placa nas
+# barras femea (R3 e R4). Soldar ANTES de encaixar a ESP32.
+(rule "resistores_embaixo_da_ESP32"
+  (condition "A.Reference == 'U1' && (B.Reference == 'R1' || B.Reference == 'R2' || B.Reference == 'R3' || B.Reference == 'R4')")
+  (constraint courtyard_clearance (min -20mm)))
+
+(rule "R3_R4_lado_a_lado_GND"
+  (condition "A.Reference == 'R3' && B.Reference == 'R4'")
   (constraint courtyard_clearance (min -20mm)))

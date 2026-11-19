@@ -1,20 +1,21 @@
-Ref,Valor,Pegada,X (mm),Y (mm),Origem / observacao
-C1,470uF 16V,CP_Radial_D8.0mm_P3.50mm_SoldaManual,19,32.5,Smart Kits (comprados 4)
-C2,470uF 16V,CP_Radial_D8.0mm_P3.50mm_SoldaManual,19,63.5,idem
-J1,VBAT apos a chave,Fio_0.75mm2_1x01_SoldaManual,38.5,68.5,fio fino do VBAT depois da chave
-J2,VM esq. (XL4016 #2),Fio_0.75mm2_1x02_P4.8mm_SoldaManual,19,39,"par de cabinho 0,75 mm2 do XL4016 #2 (7,2 V)"
-J3,VM dir. (XL4016 #2),Fio_0.75mm2_1x02_P4.8mm_SoldaManual,19,70,"idem, segundo par"
-J10,Motor esquerdo,Fio_0.75mm2_1x02_P4.8mm_SoldaManual,4.5,23.14,fios vermelho (M+) e branco (M-) do motor
-J11,Motor direito,Fio_0.75mm2_1x02_P4.8mm_SoldaManual,4.5,54.16,idem
-J12,Encoder esquerdo,Fio_sinal_1x04_P2.54mm_SoldaManual,54.4,61.5,"fios amarelo (A), verde (B), preto (+), azul (-) do encoder"
-J13,Encoder direito,Fio_sinal_1x04_P2.54mm_SoldaManual,51,54.5,idem
-JP1,Fio (IN1-IN3),Jumper_Fio_P8.86mm_SoldaManual,22.86,24.38,"fio rigido 0,5-0,6 mm deitado, embaixo do U2 (soldar antes das barras femea)"
-JP2,Fio (IN1-IN3),Jumper_Fio_P8.86mm_SoldaManual,22.86,55.4,idem embaixo do U3
-J14,Largada (jumper),Fio_sinal_1x02_P2.54mm_SoldaManual,34.3,54.4,barra de pinos macho 1x2 + jumper (ou botao em fios)
-R1,150k,R_Axial_DIN0207_P10.16mm_SoldaManual,43.64,70,laboratorio
-R2,33k,R_Axial_DIN0207_P10.16mm_SoldaManual,53.8,66.5,laboratorio
-R3,10k,R_Axial_DIN0207_P10.16mm_SoldaManual,16,4.5,laboratorio
-R4,10k,R_Axial_DIN0207_P10.16mm_SoldaManual,4.5,42,laboratorio
-U1,ESP32 DevKit V1 (30 pinos),ESP32_DevKit_V1_30p_SoldaManual,59.2,46,ja temos; encaixa em 2 barras femea 1x15
-U2,DRV8833 motor esquerdo,DRV8833_Modulo_SoldaManual,10.56,12.98,DRV8833 (Smart Kits); encaixa em 2 barras femea 1x6
-U3,DRV8833 motor direito,DRV8833_Modulo_SoldaManual,10.56,44,idem
+Ref,Valor,Pegada,X (mm),Y (mm),Rotacao,Origem / observacao
+C1,470uF 16V,CP_Radial_D8.0mm_P3.50mm_SoldaManual,7.9,53.3,180,"Smart Kits (4 comprados); medir diametro e passo das pernas: pegada = 8 mm, passo 3,5 mm"
+C2,470uF 16V,CP_Radial_D8.0mm_P3.50mm_SoldaManual,76.8,53.3,180,idem
+J1,VBAT apos a chave,Fio_0.75mm2_1x01_SoldaManual,39.5,5.5,0,fio fino do + da bateria depois da chave
+J2,VM esq. (XL4016 #2),Fio_0.75mm2_1x02_P4.8mm_SoldaManual,9.2,60.5,180,"par de cabinho 0,75 mm2 do XL4016 #2 (7,2 V)"
+J3,VM dir. (XL4016 #2),Fio_0.75mm2_1x02_P4.8mm_SoldaManual,76.8,60.5,180,"idem, segundo par"
+J10,Motor esquerdo,Fio_0.75mm2_1x02_P4.8mm_SoldaManual,9.12,2.75,0,fios vermelho (M+) e branco (M-) do motor esquerdo
+J11,Motor direito,Fio_0.75mm2_1x02_P4.8mm_SoldaManual,60.62,2.75,0,"idem, motor direito"
+J12,Encoder esquerdo,Fio_sinal_1x04_P2.54mm_SoldaManual,11,38.62,0,"fios amarelo (A), verde (B), azul (-), preto (+) do encoder esquerdo"
+J13,Encoder direito,Fio_sinal_1x04_P2.54mm_SoldaManual,72,38.62,0,"idem, encoder direito"
+J14,Largada (jumper),Fio_sinal_1x02_P2.54mm_SoldaManual,60,43.7,0,barra de pinos macho 1x2 + jumper (sobra do pacote J48) ou botao em 2 fios
+JP1,Fio (IN1-IN3),Jumper_Fio_P10.16mm_SoldaManual,6.3,20.7,0,"fio rigido 0,5-0,6 mm deitado embaixo do U2 (soldar antes das barras femea)"
+JP2,Fio (IN1-IN3),Jumper_Fio_P10.16mm_SoldaManual,57.8,20.7,0,"idem, embaixo do U3"
+JP3,Fio (SLEEP_D),Jumper_Fio_P10.16mm_SoldaManual,73.4,23.3,90,"fio rigido 0,5-0,6 mm em pe, a direita do U3"
+R1,150k,R_Axial_DIN0207_P7.62mm_SoldaManual,34.1,5.5,180,laboratorio (L08)
+R2,33k,R_Axial_DIN0207_P7.62mm_SoldaManual,31,20.84,0,laboratorio (L08); fica embaixo da ESP32: soldar antes das barras femea
+R3,10k,R_Axial_DIN0207_P7.62mm_SoldaManual,31,31,0,laboratorio; embaixo da ESP32
+R4,10k,R_Axial_DIN0207_P7.62mm_SoldaManual,49,33.54,180,laboratorio; embaixo da ESP32
+U1,ESP32 DevKit V1 (30 pinos),ESP32_DevKit_V1_30p_SoldaManual,27.3,18.3,0,ja temos; encaixa em 2 barras femea 1x15 (comprar)
+U2,DRV8833 motor esquerdo,DRV8833_Modulo_SoldaManual,19,9.06,-90,Smart Kits; encaixa em 2 barras femea 1x6 (comprar)
+U3,DRV8833 motor direito,DRV8833_Modulo_SoldaManual,70.5,9.06,-90,idem

@@ -78,7 +78,7 @@ Nos DXF, **vermelho (camada CORTE) = cortar** e **azul (camada GRAVAR) = gravar*
 | Câmera IMX219-160 | placa 25 × 24 mm; furos M2 a 21 × 12,5 mm | formato da câmera do Raspberry Pi | **sim** |
 | XL4016 | 65 × 46 × 24 mm | Smart Kits | — (vai de abraçadeira) |
 | Bateria 3S 1100 | ~75 × 35 × 25 mm | estimado | **sim** |
-| Placa da ESP32 v0.7 | 63 × 72,5 mm (frente em x = 124 mm, USB da ESP32 para a frente), 4 furos M3 nos cantos (3,5 mm das bordas) | `hardware/placa_esp32` | **comprimento da bateria**: a traseira da placa fica a 2,5 mm dela |
+| Placa da ESP32 v0.7 | 63 × 72,5 mm (frente em x = 124 mm, USB da ESP32 para a frente), 4 furos M3 nos cantos (3,5 mm das bordas) | `hardware/placa_esp32` | **comprimento da bateria**: a traseira da placa fica a 2,5 mm dela. **A placa v0.8 (80 × 70 mm, espelhada, para ir atrás em cima do eixo) ainda não está no chassi** |
 
 **Esfera 3 mm mais alta.** Com o motor em cima da chapa, o andar 1 fica a 12 mm do chão por baixo. A esfera tem 15 mm,
 então a frente fica 3 mm mais alta: o carro inclina ~1,3° para trás. Isso não atrapalha (a calibração da câmera

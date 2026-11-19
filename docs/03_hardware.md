@@ -89,22 +89,24 @@ Consequências:
 
 **Fonte única: [firmware/robocar_esp32/config.h](../firmware/robocar_esp32/config.h).** Esta tabela a reproduz. O esquemático e a placa (PCB) estão em [hardware/placa_esp32/](../hardware/placa_esp32/).
 
-| Função | GPIO | Planilha da equipe | Observação |
+| Função | GPIO | Pino da DevKit | Observação |
 |---|---|---|---|
-| Motor esquerdo IN1 | **16** | 25 | DRV8833 em modo paralelo; na placa vai em IN2+IN4 do módulo (ponte espelhada: [D-013](decisoes.md)) |
-| Motor esquerdo IN2 | **17** | 26 | na placa: IN1+IN3 |
-| Motor direito IN1 | **19** | 27 | |
-| Motor direito IN2 | **21** | 14 | |
-| nSLEEP driver esquerdo / direito | **4 / 18** | 18 | um GPIO por driver, pull-down de 10k em cada ([D-020](decisoes.md)); 3,3 V liga |
-| Encoder esquerdo A/B | **32 / 33** | 32 / 33 | encoder em 3,3 V, saída direto no GPIO ([D-018](decisoes.md)); INPUT_PULLUP |
-| Encoder direito A/B | **25 / 26** | 34 / 35 | idem |
-| Bateria (ADC1) | 36 | 36 | divisor 150 k / 33 k |
-| Largada | 23 | 23 | jumper (ou botão) para o GND (INPUT_PULLUP) |
-| Buzzer | — | — | saiu da placa v0.5 (`PIN_BUZZER = -1`); o aviso de bateria baixa vai na telemetria |
-| LED | 2 | — | LED da própria DevKit: aceso = armado; pisca devagar = pronto; pisca rápido = falha |
+| Motor esquerdo IN1 | **33** | 7 | coluna **esquerda** da ESP32 = motor esquerdo; na placa vai em IN2+IN4 do U2 (ponte espelhada: [D-013](decisoes.md)) |
+| Motor esquerdo IN2 | **25** | 8 | IN1+IN3 do U2 (IN3 pelo JP1) |
+| nSLEEP driver esquerdo | **32** | 6 | pull-down de 10k (R3) ([D-020](decisoes.md)); 3,3 V liga |
+| Encoder esquerdo A/B | **26 / 27** | 9 / 10 | encoder em 3,3 V, saída direto no GPIO ([D-018](decisoes.md)); INPUT_PULLUP |
+| Motor direito IN1 | **19** | 21 | coluna **direita** da ESP32 = motor direito; IN2+IN4 do U3 |
+| Motor direito IN2 | **21** | 20 | IN1+IN3 do U3 (IN3 pelo JP2) |
+| nSLEEP driver direito | **18** | 22 | pull-down de 10k (R4); passa pelo jumper JP3 até o EEP do U3 |
+| Encoder direito A/B | **17 / 16** | 24 / 25 | idem |
+| Bateria (ADC1) | 36 | 2 | divisor 150 k / 33 k (R1/R2) |
+| Largada | **4** | 26 | jumper (ou botão) para o GND (INPUT_PULLUP) |
+| Buzzer | — | — | fora da placa (`PIN_BUZZER = -1`); o aviso de bateria baixa vai na telemetria |
+| LED | 2 | 27 | LED da própria DevKit: aceso = armado; pisca devagar = pronto; pisca rápido = falha |
 
-Por que a pinagem mudou na v0.5 ([D-017](decisoes.md)): ela saiu do traçado da placa de face simples, para nenhuma trilha
-cruzar. Pinos evitados: 0, 2, 5, 12, 15 (strapping), 1 e 3 (USB serial), 14 (PWM no boot) e 39.
+Por que a pinagem mudou na v0.8 ([D-024](decisoes.md)): a placa ficou **espelhada** — a coluna esquerda da ESP32
+atende só o motor esquerdo e a direita só o direito, para que cada cabo de motor (6 fios) e cada par de VM chegue no
+lado certo da placa. Pinos evitados: 0, 2, 5, 12, 15 (strapping), 1 e 3 (USB serial), 14 (PWM no boot) e 39.
 
 ## 7. Regras de ligação (resumo da aba LIGACOES ELETRICAS da equipe)
 

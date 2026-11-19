@@ -87,7 +87,10 @@ for h in furos:
     for fp in placa.GetFootprints():
         for pad in fp.Pads():
             if pad.GetNetname() != "GND" and fp.GetReference() != h.GetReference():
-                d = math.hypot(hx - mm(pad.GetPosition().x), hy - mm(pad.GetPosition().y)) - max(mm(pad.GetSize().x), mm(pad.GetSize().y)) / 2
+                bb = pad.GetBoundingBox()
+                ddx = max(mm(bb.GetX()) - hx, 0, hx - mm(bb.GetRight()))
+                ddy = max(mm(bb.GetY()) - hy, 0, hy - mm(bb.GetBottom()))
+                d = math.hypot(ddx, ddy)
                 if d < 3.6:
                     perto.append((h.GetReference(), "%s.%s" % (fp.GetReference(), pad.GetNumber()), round(d, 2)))
 larg = sorted({round(mm(t.GetWidth()), 2) for t in placa.GetTracks() if t.GetClass() == "PCB_TRACK"})

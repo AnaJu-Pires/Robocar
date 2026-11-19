@@ -22,7 +22,7 @@ echo "== arte do cobre 1:1 (so B.Cu: face simples), preto = cobre, marca de broc
 kicad-cli pcb export pdf --layers B.Cu,Edge.Cuts --black-and-white --drill-shape-opt 1 \
   -o "$F/1_cobre_transferencia_1x1.pdf" "$P.kicad_pcb" >/dev/null
 
-echo "== folha de montagem (lado dos componentes, jumpers JP1/JP2 em serigrafia)"
+echo "== folha de montagem (lado dos componentes, jumpers JP1-JP3 em serigrafia)"
 kicad-cli pcb export pdf --layers F.Cu,F.SilkS,F.Fab,Edge.Cuts \
   -o "$F/2_montagem_e_jumpers.pdf" "$P.kicad_pcb" >/dev/null
 

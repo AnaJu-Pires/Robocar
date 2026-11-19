@@ -8,24 +8,26 @@
 #define PROTOCOLO_VERSAO 1
 
 // ----- Pinagem (ESP32 DevKit) -------------------------------------------------------
-// Placa v0.5 (hardware/placa_esp32, D-017): a pinagem saiu do traçado da placa de face simples,
-// para nenhuma trilha cruzar. Pinos evitados: strapping (0, 2, 5, 12, 15), TX/RX (1, 3) e 14
-// (PWM no boot). DRV8833 em modo paralelo, um modulo por motor (IN1+IN3 juntos, IN2+IN4 juntos).
+// Placa v0.8 (hardware/placa_esp32, D-024): placa ESPELHADA. A coluna esquerda da ESP32 (EN...VIN)
+// atende so o motor ESQUERDO e a coluna direita (GPIO23...3V3) so o motor DIREITO, para que tudo do
+// motor esquerdo fique na metade esquerda da placa e tudo do direito na metade direita.
+// Pinos evitados: strapping (0, 2, 5, 12, 15), TX/RX (1, 3), 14 (PWM no boot) e 39.
+// DRV8833 em modo paralelo, um modulo por motor (IN1+IN3 juntos, IN2+IN4 juntos).
 // Ponte ESPELHADA (D-013): PIN_x_IN1 vai em IN2+IN4 do modulo e o M+ do motor sai de OUT2+OUT4.
 // A tabela-verdade do DRV8833 e simetrica: IN1=1/IN2=0 continua sendo "M+ positivo".
-const int PIN_ME_IN1 = 16;   // motor esquerdo: IN2+IN4 do modulo esquerdo (U2)
-const int PIN_ME_IN2 = 17;   // motor esquerdo: IN1+IN3
-const int PIN_MD_IN1 = 19;   // motor direito:  IN2+IN4 do modulo direito (U3)
-const int PIN_MD_IN2 = 21;   // motor direito:  IN1+IN3
-const int PIN_SLEEP_E = 4;   // EEP (nSLEEP) do modulo esquerdo; pull-down de 10k na placa. HIGH = ligado
-const int PIN_SLEEP_D = 18;  // EEP (nSLEEP) do modulo direito;  pull-down de 10k na placa
-const int PIN_ENC_E_A = 32;  // encoder esquerdo, alimentado em 3,3 V (D-018): saida 0/3,3 V direto no GPIO
-const int PIN_ENC_E_B = 33;
-const int PIN_ENC_D_A = 25;  // encoder direito, idem
-const int PIN_ENC_D_B = 26;
-const int PIN_VBAT   = 36;   // ADC1: divisor 150k (topo) / 33k (baixo)
-const int PIN_BOTAO  = 23;   // largada: jumper (ou botao) para o GND, INPUT_PULLUP
-const int PIN_BUZZER = -1;   // sem buzzer na placa v0.5 (-1 = desligado)
+const int PIN_ME_IN1 = 33;   // motor esquerdo: IN2+IN4 do modulo esquerdo (U2)       [pino 7 da DevKit]
+const int PIN_ME_IN2 = 25;   // motor esquerdo: IN1+IN3                                [pino 8]
+const int PIN_MD_IN1 = 19;   // motor direito:  IN2+IN4 do modulo direito (U3)         [pino 21]
+const int PIN_MD_IN2 = 21;   // motor direito:  IN1+IN3                                [pino 20]
+const int PIN_SLEEP_E = 32;  // EEP (nSLEEP) do modulo esquerdo; pull-down de 10k. HIGH = ligado [pino 6]
+const int PIN_SLEEP_D = 18;  // EEP (nSLEEP) do modulo direito;  pull-down de 10k     [pino 22]
+const int PIN_ENC_E_A = 26;  // encoder esquerdo, alimentado em 3,3 V (D-018)         [pino 9]
+const int PIN_ENC_E_B = 27;  //                                                       [pino 10]
+const int PIN_ENC_D_A = 17;  // encoder direito, idem                                 [pino 24]
+const int PIN_ENC_D_B = 16;  //                                                       [pino 25]
+const int PIN_VBAT   = 36;   // ADC1: divisor 150k (topo) / 33k (baixo)               [pino 2]
+const int PIN_BOTAO  = 4;    // largada: jumper (ou botao) para o GND, INPUT_PULLUP   [pino 26]
+const int PIN_BUZZER = -1;   // sem buzzer na placa (-1 = desligado)
 const int PIN_LED    = 2;    // LED da propria DevKit
 
 // ----- Motores ----------------------------------------------------------------------

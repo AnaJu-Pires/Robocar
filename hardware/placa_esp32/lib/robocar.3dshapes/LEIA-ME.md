@@ -15,6 +15,6 @@ Sem modelo baixado:
 * **Módulo DRV8833** (Smart Kits, 2 fileiras de 6 pinos a 15,24 mm): só as 2 barras fêmea nativas
   `PinSocket_1x06_P2.54mm_Vertical`. O módulo em si não aparece no 3D: ele é mais baixo que a ESP32, então a altura
   máxima da placa montada continua sendo a da ESP32 (≈ 16,8 mm acima da face de baixo do fenolite).
-* **Jumpers JP1/JP2** (fio rígido deitado): sem modelo.
+* **Jumpers JP1–JP3** (fio rígido): sem modelo.
 
 Os antigos `ESP32_DevKit_V1_30p.wrl` e `DRV8833_Modulo.wrl` (caixas desenhadas à mão) foram apagados.

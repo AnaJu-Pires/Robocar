@@ -3,6 +3,12 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (placa v0.8, 19/11/2026)
+- `hardware/placa_esp32/`: **placa espelhada** (D-024), 80 × 70 mm: tudo do motor esquerdo à esquerda e do direito à direita, ESP32 no meio com o USB para trás e área sem cobre embaixo da antena. Ilhas retangulares arredondadas alongadas (furo e passo iguais), trilhas de 1,0 mm (sinal) e 1,5 mm (potência), curvas chanfradas a 45°, saída reta das ilhas, 62 gotas, plano de GND em volta de tudo. 3 jumpers (JP3 novo), resistores de passo 7,62 mm (R2–R4 embaixo da ESP32), encoders na ordem A, B, −, +. DRC 0, paridade OK.
+- Esquemático: pinagem nova da ESP32 e JP3 (`SLEEP_D_JP`); `config.h` com os GPIOs novos; `docs/03_hardware.md` (pinagem) atualizado.
+- Novo gerador `ferramentas/montar_placa_v08.py`; `verificar.py` mede a distância aos furos pela ilha inteira; regras novas no `.kicad_dru`.
+- Novo `LISTA_DE_SOLDAGEM.md` (o que é cada peça e se já temos); BOM e `jumpers.json` refeitos; PDFs, furação, STEP e imagens refeitos.
+- Pendente: chassi ainda com a placa v0.7.
 ### Alterado (placa v0.7, 18/11/2026)
 - `hardware/placa_esp32/`: **USB da ESP32 para a frente do carro** (D-023): layout da v0.6 girado 90°, placa de **63 × 72,5 mm**; serigrafia refeita, BOM/jumpers com coordenadas novas. DRC 0, paridade OK, zona salva conferida.
 - `verificar.py`: acusa zona de GND desatualizada no arquivo salvo.

@@ -158,3 +158,14 @@ O roteamento foi automático e conferido pelo DRC do KiCad (com paridade com o e
 **Decisão:** girar o layout inteiro da v0.6 em 90° (sentido horário): a ESP32 fica em pé com o USB na borda de cima (frente do carro), placa de 63 × 72,5 mm; no chassi a frente da placa vai a x = 124 mm e a janela de USB das paredes sai. Girar o layout validado, em vez de rotear de novo, mantém o cobre que já passava em todas as verificações.
 **Consequências:** fios dos motores chegam pela lateral esquerda da placa e encoders/VBAT pela traseira. A traseira da placa fica a 2,5 mm da bateria (medida estimada: conferir). Coordenadas da BOM e dos jumpers mudaram; furos do andar 1 mudaram (cortar de novo se já cortado).
 
+
+### D-024 — Placa v0.8 espelhada: lado esquerdo = motor esquerdo, lado direito = motor direito
+*19/11/2026 · aceita*
+**Contexto:** a equipe vai pôr a bateria no meio do carro (peso entre as rodas) e a placa atrás, em cima do eixo. Na v0.7 os fios dos dois motores chegavam pela mesma lateral e os encoders pela traseira, cruzando o carro. Também foi pedido: ilhas maiores para soldar (sem mudar furo nem passo), trilhas ≥ 1 mm calculadas para a corrente, saída reta das ilhas, gotas (teardrops), ilhas cercadas pelo plano de GND e nenhuma curva de 90°.
+**Decisão:**
+* placa de **80 × 70 mm** espelhada: ESP32 em pé no meio (USB para trás, antena para a frente com área sem cobre embaixo); U2, J10, J12, C1 e J2 à esquerda; U3, J11, J13, C2 e J3 à direita;
+* **pinagem nova da ESP32** para cada coluna atender um lado: motor E 33/25, nSLEEP E 32, encoder E 26/27; motor D 19/21, nSLEEP D 18, encoder D 17/16; bateria 36; largada 4; LED 2 (`config.h` atualizado);
+* encoders na ordem **A, B, −, +** (J12/J13); **3º jumper** (JP3, nSLEEP do U3); resistores de passo 7,62 mm, R2–R4 embaixo da ESP32;
+* ilhas retangulares arredondadas, alongadas só no sentido que não aproxima o pino vizinho; sinal 1,0 mm (≈ 2,4 A) e potência 1,5 mm (≈ 3,2 A contra 1,9 A de pico; IPC-2221, 35 µm, +10 °C); curvas chanfradas a 45°; 62 gotas; alívio térmico com ≥ 2 raios;
+* a placa é gerada por `ferramentas/montar_placa_v08.py` a partir do esquemático (tabelas de posição e de rotas).
+**Consequências:** DRC 0 e paridade OK (`make drc`). 3 jumpers de fio (eram 2). R2, R3 e R4 têm de ser soldados antes das barras fêmea (ficam embaixo da ESP32) e ser de 1/4 W. O chassi (`mecanica/chassi/`) ainda está com a placa v0.7: refazer quando a posição da bateria e da placa estiver fechada (placa sobre o eixo com espaçadores de ~15 mm). Faltam comprar barras fêmea e fenolite ([LISTA_DE_SOLDAGEM.md](../hardware/placa_esp32/LISTA_DE_SOLDAGEM.md)).
