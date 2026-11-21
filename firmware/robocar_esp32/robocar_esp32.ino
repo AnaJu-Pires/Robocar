@@ -5,7 +5,8 @@
  * mede a bateria, cuida da largada e da seguranca. Pinos e constantes: config.h.
  * Protocolo: docs/05_protocolo_serial.md (comandos M, S, A, V; respostas T e I).
  *
- * ESTADO: nao testado em hardware; so checagem de sintaxe. Teste por etapas (docs/06_testes.md).
+ * ESTADO: validado em simulacao no PC (firmware/simulacao: 20 verificacoes com o codigo real da Jetson);
+ * ainda nao gravado numa ESP32 real. Teste por etapas (docs/06_testes.md).
  * Placa: "ESP32 Dev Module" (Arduino-ESP32 core 2.x ou 3.x). Serial USB a 115200 baud.
  *
  * Maquina de estados:
@@ -17,6 +18,7 @@
  */
 
 #include <Arduino.h>
+#include "soc/soc.h"        // REG_READ (leitura direta dos GPIOs na interrupcao)
 #include "soc/gpio_reg.h"
 #include "config.h"
 
@@ -35,7 +37,7 @@ static void pwmEscrever(int pino, int canal, int duty) { (void)pino; ledcWrite(c
 #endif
 
 // ------------------------------------------------------------------ encoders (quadratura x4)
-static const int8_t QDEC[16] = {0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0};
+static const DRAM_ATTR int8_t QDEC[16] = {0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0};
 volatile int32_t encE = 0, encD = 0;
 volatile uint8_t estE = 0, estD = 0;
 

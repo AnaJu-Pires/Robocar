@@ -7,8 +7,13 @@ Os estados estão em [docs/02_arquitetura.md](../docs/02_arquitetura.md#3-estado
 |---|---|
 | `robocar_esp32/config.h` | **Pinos e constantes** (fonte única da pinagem; reproduzida em docs/03_hardware.md) |
 | `robocar_esp32/robocar_esp32.ino` | Lógica: estados, protocolo, motores, encoders, bateria |
+| `simulacao/` | Arduino falso + roteiro que testa o firmware com o código da Jetson (`make sim-esp32`) |
 
-> **Estado:** passou só por checagem de sintaxe, com cabeçalhos simulados dos cores 2.x e 3.x. **Não foi compilado com o core real nem testado na placa.**
+> **Estado:** pinagem conferida pino a pino com o esquemático da placa v0.8 e **validado em simulação no PC**
+> (`make sim-esp32`: o firmware roda com um Arduino falso e conversa com o código real da Jetson; 20 verificações:
+> versão, estados, largada pelo J14, PWM e sentido dos dois motores, encoders, bateria pelo divisor 220k/47k,
+> watchdog, $A/$S e corte por bateria baixa). Sintaxe conferida para os cores 2.x e 3.x. **Falta gravar numa ESP32
+> real** (a compilação com o core da Espressif é feita na Arduino IDE).
 
 ## Compilar e gravar
 1. Arduino IDE → Gerenciador de placas → "esp32" (Espressif), versão 2.x ou 3.x.

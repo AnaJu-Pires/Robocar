@@ -8,7 +8,7 @@ VIDEO  ?=
 OPCOES ?=
 JETSON := cd jetson &&
 
-.PHONY: ajuda testes benchmark calibrar visao gravar video carro bancada config placa drc limpar
+.PHONY: sim-esp32 ajuda testes benchmark calibrar visao gravar video carro bancada config placa drc limpar
 
 ajuda:  ## lista os alvos
 	@echo "Alvos (make <alvo>):"
@@ -35,6 +35,9 @@ video:  ## reprocessa um video: make video VIDEO=dados/gravacoes/arquivo.avi
 
 carro:  ## modo corrida: ESP32 + sem janela + log em dados/logs/ (PORTA=/dev/ttyUSB0)
 	$(JETSON) $(PYTHON) seguir_linha.py --esp32 $(PORTA) --sem-janela --log $(OPCOES)
+
+sim-esp32:  ## simula o firmware da ESP32 no PC e testa com o codigo da Jetson (g++)
+	bash firmware/simulacao/compilar.sh
 
 bancada:  ## teste de motores com janela e log, armando pela Jetson (RODAS SUSPENSAS!)
 	$(JETSON) $(PYTHON) seguir_linha.py --esp32 $(PORTA) --log --armar $(OPCOES)
