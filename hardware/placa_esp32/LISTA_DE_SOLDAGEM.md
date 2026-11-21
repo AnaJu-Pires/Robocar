@@ -15,8 +15,8 @@ Situação: **Temos** = já possuímos ou o laboratório tem · **Comprado** = e
 | 2 | **Barra de pinos fêmea 1x15**, 2,54 mm, altura 8,5 mm | soquete do U1 | Soquete da ESP32 | **FALTA** |
 | 4 | **Barra de pinos fêmea 1x6**, 2,54 mm | soquete do U2/U3 | Soquete dos módulos DRV8833 | **FALTA** |
 | 2 | **Capacitor eletrolítico 470 µF 16 V** | C1, C2 | "Reservatório" de energia junto de cada driver: segura os picos de corrente do motor e evita que o VM caia/oscile. Tem polaridade (perna maior = +, faixa = −) | **Comprado** (item 17, 4 un.). Medir: pegada para **Ø 8 mm, pernas a 3,5 mm**. Se for Ø 10 mm / 5 mm, avisar (não cabe no lugar) |
-| 1 | **Resistor 150 kΩ** 1/4 W | R1 | Parte de cima do divisor da bateria: 12,6 V → ≈ 2,3 V, que a ESP32 consegue ler | **Temos** (laboratório, L08) |
-| 1 | **Resistor 33 kΩ** 1/4 W | R2 | Parte de baixo do divisor da bateria | **Temos** (L08) |
+| 1 | **Resistor 220 kΩ** 1/4 W | R1 | Parte de cima do divisor da bateria: 12,6 V → ≈ 2,2 V, que a ESP32 consegue ler | **Temos** |
+| 1 | **Resistor 47 kΩ** 1/4 W | R2 | Parte de baixo do divisor da bateria | **Temos** |
 | 2 | **Resistor 10 kΩ** 1/4 W | R3, R4 | Pull-down do nSLEEP: mantém os drivers **desligados** enquanto a ESP32 está ligando (motor não dá tranco no boot) | **Temos** (L08 tem 10k) |
 | 1 | **Barra de pinos macho 1x2** + **jumper** | J14 | Largada: com o jumper, o GPIO4 vai para o GND. Pode trocar por um botão em 2 fios | Jumper: **Temos** (sobra do pacote de 4 do item 13). Pinos macho: **sobra** da barra que vem com o DRV8833 |
 | ~15 cm | **Fio rígido 0,5–0,6 mm** (perna cortada de resistor serve) | JP1, JP2, JP3 | "Pontes" no lado dos componentes, porque a placa só tem cobre embaixo e 3 ligações não cabem sem cruzar | **Temos** (pernas cortadas) |

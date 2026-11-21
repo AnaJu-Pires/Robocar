@@ -26,7 +26,7 @@ Também usamos dados da planilha de especificações da equipe (abas LIGACOES EL
 LiPo 3S 11,1 V ─XT60─► fusível 7 A ─► chave ─┬─► XL4016 #1 → 5,2 V (limite ~5 A) ─► plug P4 ─► Jetson J25 (J48 fechado)
   (9,9–12,6 V)                               ├─► XL4016 #2 → 7,2 V (limite ~4 A) ─┬─► J2 da placa (DRV8833 esquerdo, 470 µF)
                                              │                                     └─► J3 da placa (DRV8833 direito, 470 µF)
-                                             └─► fio fino ─► J1 da placa ─► divisor 150 k / 33 k ─► GPIO36 (ADC)
+                                             └─► fio fino ─► J1 da placa ─► divisor 220 k / 47 k ─► GPIO36 (ADC)
 Jetson USB-A ─► ESP32 (dados + 5 V) ─► 3V3 da DevKit ─► encoders (J12, J13)
 GND comum: a corrente dos motores volta pelos fios pretos de J2/J3 até o XL4016 #2, não pelo cabo USB.
 ```
@@ -47,7 +47,7 @@ GND comum: a corrente dos motores volta pelos fios pretos de J2/J3 até o XL4016
 | Fusível | entre o pico (4,3 A) e o limite do fio | **7 A**; cabinho 0,75 mm² (~18 AWG) |
 | Stall em 7,2 V | 1,6 A × 7,2 / 6 (corrente proporcional à tensão no motor travado) | ≈ 1,9 A [E] |
 | DRV8833 em paralelo | 2,4 A > 1,9 A de stall | margem de 25 % [V] |
-| Divisor da bateria | 12,6 V × 33 / 183 | 2,27 V no ADC; consome 69 µA (depois da chave: zero com a chave desligada) |
+| Divisor da bateria | 12,6 V × 47 / 267 | 2,22 V no ADC; consome 47 µA (depois da chave: zero com a chave desligada) |
 
 ## 4. Massa
 
@@ -99,7 +99,7 @@ Consequências:
 | Motor direito IN2 | **21** | 20 | IN1+IN3 do U3 (IN3 pelo JP2) |
 | nSLEEP driver direito | **18** | 22 | pull-down de 10k (R4); passa pelo jumper JP3 até o EEP do U3 |
 | Encoder direito A/B | **17 / 16** | 24 / 25 | idem |
-| Bateria (ADC1) | 36 | 2 | divisor 150 k / 33 k (R1/R2) |
+| Bateria (ADC1) | 36 | 2 | divisor 220 k / 47 k (R1/R2) |
 | Largada | **4** | 26 | jumper (ou botão) para o GND (INPUT_PULLUP) |
 | Buzzer | — | — | fora da placa (`PIN_BUZZER = -1`); o aviso de bateria baixa vai na telemetria |
 | LED | 2 | 27 | LED da própria DevKit: aceso = armado; pisca devagar = pronto; pisca rápido = falha |

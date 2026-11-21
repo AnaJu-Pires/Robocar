@@ -12,8 +12,8 @@ J14,Largada (jumper),Fio_sinal_1x02_P2.54mm_SoldaManual,60,46.7,0,barra de pinos
 JP1,Fio (IN1-IN3),Jumper_Fio_P10.16mm_SoldaManual,6.3,23.7,0,"fio rigido 0,5-0,6 mm deitado embaixo do U2 (soldar antes das barras femea)"
 JP2,Fio (IN1-IN3),Jumper_Fio_P10.16mm_SoldaManual,57.8,23.7,0,"idem, embaixo do U3"
 JP3,Fio (SLEEP_D),Jumper_Fio_P10.16mm_SoldaManual,73.4,26.3,90,"fio rigido 0,5-0,6 mm em pe, a direita do U3"
-R1,150k,R_Axial_DIN0207_P7.62mm_SoldaManual,34.1,8.5,180,laboratorio (L08)
-R2,33k,R_Axial_DIN0207_P7.62mm_SoldaManual,35,23.84,0,laboratorio (L08); fica embaixo da ESP32: soldar antes das barras femea
+R1,220k,R_Axial_DIN0207_P7.62mm_SoldaManual,34.1,8.5,180,laboratorio (L08)
+R2,47k,R_Axial_DIN0207_P7.62mm_SoldaManual,35,23.84,0,laboratorio (L08); fica embaixo da ESP32: soldar antes das barras femea
 R3,10k,R_Axial_DIN0207_P7.62mm_SoldaManual,35,34,0,laboratorio; embaixo da ESP32
 R4,10k,R_Axial_DIN0207_P7.62mm_SoldaManual,42.62,43.44,180,laboratorio; embaixo da ESP32
 U1,ESP32 DevKit V1 (30 pinos),ESP32_DevKit_V1_30p_SoldaManual,27.3,21.3,0,ja temos; encaixa em 2 barras femea 1x15 (comprar)

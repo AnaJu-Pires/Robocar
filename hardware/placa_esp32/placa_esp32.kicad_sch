@@ -2268,7 +2268,7 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "12,6 V -> 2,27 V no ADC"
+	(text "12,6 V -> 2,22 V no ADC"
 		(exclude_from_sim no)
 		(at 20.32 124.46 0)
 		(effects
@@ -4240,7 +4240,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "150k"
+		(property "Value" "220k"
 			(at 55.94 114.33 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6076,7 +6076,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "33k"
+		(property "Value" "47k"
 			(at 71.18 114.33 0)
 			(show_name no)
 			(do_not_autoplace no)

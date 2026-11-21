@@ -25,7 +25,7 @@ const int PIN_ENC_E_A = 26;  // encoder esquerdo, alimentado em 3,3 V (D-018)   
 const int PIN_ENC_E_B = 27;  //                                                       [pino 10]
 const int PIN_ENC_D_A = 17;  // encoder direito, idem                                 [pino 24]
 const int PIN_ENC_D_B = 16;  //                                                       [pino 25]
-const int PIN_VBAT   = 36;   // ADC1: divisor 150k (topo) / 33k (baixo)               [pino 2]
+const int PIN_VBAT   = 36;   // ADC1: divisor 220k (topo) / 47k (baixo)               [pino 2]
 const int PIN_BOTAO  = 4;    // largada: jumper (ou botao) para o GND, INPUT_PULLUP   [pino 26]
 const int PIN_BUZZER = -1;   // sem buzzer na placa (-1 = desligado)
 const int PIN_LED    = 2;    // LED da propria DevKit
@@ -44,7 +44,7 @@ const uint32_t WATCHDOG_DESARME_MS = 1000;  // sem comando: desarma (exige novo 
 const uint32_t TELEMETRIA_MS = 20;          // 50 Hz
 
 // ----- Bateria 3S -------------------------------------------------------------------
-const float DIVISOR_VBAT = (150.0f + 33.0f) / 33.0f;
+const float DIVISOR_VBAT = (220.0f + 47.0f) / 47.0f;   // 12,6 V -> 2,22 V no pino
 const int   VBAT_AVISO_MV = 9900;           // 3,3 V/celula: aviso na telemetria (e buzzer, se houver)
 const int   VBAT_CORTE_MV = 9600;           // 3,2 V/celula por 2 s: FALHA_BATERIA
 const int   VBAT_MINIMA_VALIDA_MV = 5000;   // abaixo disso: divisor desligado (bancada via USB)

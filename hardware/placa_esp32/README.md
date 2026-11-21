@@ -67,7 +67,7 @@ Lista do que soldar, o que é cada peça e o que já temos: **[LISTA_DE_SOLDAGEM
 
 | Pino | GPIO | Função | Vai para |
 |---|---|---|---|
-| 2 | 36 (VP) | bateria (ADC1) | R1 150k (VBAT) / R2 33k (GND) |
+| 2 | 36 (VP) | bateria (ADC1) | R1 220k (VBAT) / R2 47k (GND) |
 | 6 | 32 | nSLEEP do U2 | EEP do U2; R3 10k para o GND |
 | 7 | 33 | motor esquerdo IN1 | IN2+IN4 do U2 (ponte espelhada, [D-013](../../docs/decisoes.md)) |
 | 8 | 25 | motor esquerdo IN2 | IN1 do U2 e, pelo JP1, IN3 |
