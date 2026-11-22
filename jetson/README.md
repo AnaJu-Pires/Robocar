@@ -25,6 +25,7 @@ Os comandos rodam na raiz do repositório (ver `make ajuda`):
 | `make gravar` | idem, gravando vídeo em `dados/gravacoes/` |
 | `make video VIDEO=dados/gravacoes/x.avi` | reprocessa um vídeo |
 | `make bancada PORTA=/dev/ttyUSB0` | com a ESP32, arma pela Jetson: **rodas suspensas** |
+| `make movimento PORTA=/dev/ttyUSB0` | sem câmera: frente, giro de 360° e ré; largada pelo botão da ESP32 (`OPCOES="--giro 2.2"` ajusta o giro; `--armar` só com as rodas suspensas) |
 | `make carro PORTA=/dev/ttyUSB0` | modo corrida: sem janela, com log; a largada é o botão |
 | `make config` | parâmetros efetivos |
 

@@ -24,7 +24,7 @@ const int      VEL_RETA        = 400;    // frente e re: 0..1000 (400 = 40 % de 
 const uint32_t TEMPO_FRENTE_MS = 1500;
 const uint32_t TEMPO_TRAS_MS   = 1500;
 const int      VEL_GIRO        = 600;    // giro no lugar: roda esquerda para frente, direita para tras
-const uint32_t TEMPO_GIRO_MS   = 1200;    // tempo de UMA volta: ajustar no chao (girou pouco -> aumente)
+const uint32_t TEMPO_GIRO_MS   = 2000;    // UMA volta no chao a 600 (medido em 21/11/2026)
 const long     PULSOS_GIRO_360 = 0;      // > 0: gira pelos encoders (media das 2 rodas) em vez do tempo
 const uint32_t PAUSA_MS        = 800;    // parado (freando) entre as etapas
 const uint32_t ESPERA_MS       = 1000;   // do botao ate comecar a andar

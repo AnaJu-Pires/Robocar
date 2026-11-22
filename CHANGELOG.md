@@ -3,6 +3,8 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Adicionado (22/11/2026)
+- `jetson/teste_movimento.py` e `robocar/manobra.py` (`make movimento`): o mesmo teste (frente, giro de 360° e ré) comandado pela Jetson com o firmware do robô; largada pelo botão, botão de novo para na hora; mostra os pulsos dos encoders de cada etapa. Giro padrão 0,6 por 2,0 s (medido no chão). 5 testes novos (`test_manobra.py`, com uma ESP32 falsa) e conferido com o firmware simulado.
 ### Adicionado (21/11/2026)
 - Sentido dos motores (T05 no carro): as duas rodas giravam ao contrário; `INVERTER_E = true` e `INVERTER_D = false` no `config.h` e no teste de movimento (roteiro da simulação ajustado, 20/20 OK). Giro do teste a 60 % por 1,2 s.
 - `firmware/teste_movimento/`: teste sem a Jetson. No botão de largada, anda para a frente, gira 360° no lugar e anda de ré; botão de novo para na hora; mostra os pulsos dos encoders de cada etapa. Conferido numa simulação no PC (Arduino falso); falta testar no carro.

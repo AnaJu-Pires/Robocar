@@ -49,4 +49,9 @@ Preencha uma linha por ensaio. O arquivo de log/vídeo fica em `dados/`; cite o 
 | Data | ID | Resultado | Medições | Arquivo em dados/ | Responsável |
 |---|---|---|---|---|---|
 | 09/11/2026 | Nível 1 | OK (35/35) | algoritmo 0,5–0,75 ms no PC | — | — |
+| 21/11/2026 | T01 | OK | câmera 60 fps, 3,8 ms por quadro; Jetson ↔ ESP32 OK (`make bancada`) | `dados/logs/` | — |
+| 21/11/2026 | T04 | OK pelo P4 | pelos pinos 5 V do J41 com fio jumper a Jetson desligava no boot; pelo plug P4 funcionou | — | — |
+| 21/11/2026 | T05 | OK | as duas rodas giravam ao contrário: `INVERTER_E = true`, `INVERTER_D = false` | — | — |
+| 21/11/2026 | Movimento (só ESP32) | OK | giro de 360° no chão: 60 % por 2,0 s | — | — |
+
 | | | | | | |
