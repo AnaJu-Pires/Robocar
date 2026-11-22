@@ -5,6 +5,7 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões n
 ## [Não lançado]
 ### Corrigido (22/11/2026)
 - `robocar/esp32.py`: `abrir_porta` confere se chega telemetria legível; se vier embaralhada (primeira abertura depois de ligar o USB, Jetson Nano + CP2102), reabre a porta em 9600 e volta para 115200, até 3 vezes. 4 testes novos.
+- Porta serial aberta em modo exclusivo: um segundo programa na mesma porta (ex.: `make movimento` rodando duas vezes) dá erro em vez de misturar comandos e telemetria.
 ### Adicionado (22/11/2026)
 - `jetson/teste_movimento.py` e `robocar/manobra.py` (`make movimento`): o mesmo teste (frente, giro de 360° e ré) comandado pela Jetson com o firmware do robô; largada pelo botão, botão de novo para na hora; mostra os pulsos dos encoders de cada etapa. Giro padrão 0,6 por 2,0 s (medido no chão). 5 testes novos (`test_manobra.py`, com uma ESP32 falsa) e conferido com o firmware simulado.
 ### Adicionado (21/11/2026)

@@ -16,6 +16,7 @@ def _abrir(serial, porta, baud):
     ser.write_timeout = 0
     ser.dtr = False  # evita reset da placa ao abrir (nem toda placa respeita)
     ser.rts = False
+    ser.exclusive = True  # dois programas na mesma porta misturam comandos e telemetria (21/11/2026)
     ser.open()
     return ser
 

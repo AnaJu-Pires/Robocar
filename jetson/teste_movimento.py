@@ -129,7 +129,12 @@ def main(argv=None):
     sequencia = manobra.criar_sequencia(args.vel, args.tempo, args.vel_giro, args.giro, args.pausa)
 
     from robocar.esp32 import LinkESP32, abrir_porta
-    link = LinkESP32(abrir_porta(porta, cfg["esp32"]["baud"]))
+    try:
+        link = LinkESP32(abrir_porta(porta, cfg["esp32"]["baud"]))
+    except Exception as e:  # porta inexistente ou ja aberta por outro programa
+        print("ERRO ao abrir %s: %s" % (porta, e))
+        print("Outro programa usando a porta? Veja com: pgrep -af 'teste_movimento|seguir_linha'")
+        return 2
     link.pedir_versao()
     print("ESP32 em %s. Frente %.1f s a %.0f%%, giro %.1f s a %.0f%%, re %.1f s." % (
         porta, args.tempo, args.vel * 100, args.giro, args.vel_giro * 100, args.tempo))
