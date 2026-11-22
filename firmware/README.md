@@ -8,6 +8,7 @@ Os estados estão em [docs/02_arquitetura.md](../docs/02_arquitetura.md#3-estado
 | `robocar_esp32/config.h` | **Pinos e constantes** (fonte única da pinagem; reproduzida em docs/03_hardware.md) |
 | `robocar_esp32/robocar_esp32.ino` | Lógica: estados, protocolo, motores, encoders, bateria |
 | `simulacao/` | Arduino falso + roteiro que testa o firmware com o código da Jetson (`make sim-esp32`) |
+| `teste_movimento/teste_movimento.ino` | Teste **sem a Jetson**: no botão de largada, anda para a frente, gira 360° no lugar e anda de ré |
 
 > **Estado:** pinagem conferida pino a pino com o esquemático da placa v0.8 e **validado em simulação no PC**
 > (`make sim-esp32`: o firmware roda com um Arduino falso e conversa com o código real da Jetson; 20 verificações:
@@ -26,3 +27,19 @@ Os estados estão em [docs/02_arquitetura.md](../docs/02_arquitetura.md#3-estado
 2. Na Jetson: `make bancada PORTA=/dev/ttyUSB0` → LED piscando devagar (PRONTO), depois aceso (ARMADO).
 3. Fechar o programa: freia em 250 ms; em 1 s o LED apaga (teste T08).
 4. Só depois ligar os drivers e os motores, **com as rodas suspensas** (teste T05). Ajustar `INVERTER_E/INVERTER_D` em `config.h`.
+
+## Teste de movimento sem a Jetson (`teste_movimento/`)
+Programa separado, só para conferir motores, sentido das rodas e encoders. **Ele substitui o firmware do robô:
+depois do teste, grave de novo `robocar_esp32/robocar_esp32.ino`.**
+
+1. Arduino IDE → abrir `teste_movimento/teste_movimento.ino` → gravar (mesma placa e porta).
+2. ESP32 alimentada pelo USB (Jetson ligada, carregador de celular ou PC) e bateria ligada (motores).
+3. Monitor serial a 115200 (opcional). **Primeiro com as rodas no ar.**
+4. Apertar o botão de largada: 1 s depois, FRENTE → pausa → GIRO de 360° para a direita → pausa → RÉ.
+   Apertar o botão de novo durante o movimento **para na hora**.
+5. No chão (≥ 1,5 m livres na frente e atrás), ajustar `TEMPO_GIRO_MS` até dar uma volta completa. O monitor
+   mostra os pulsos dos encoders de cada etapa; com a média do giro em `PULSOS_GIRO_360`, o giro passa a ser
+   medido pelos encoders.
+
+Velocidades e tempos ficam no topo do arquivo. Os pinos são uma **cópia** de `robocar_esp32/config.h`: se a
+pinagem ou `INVERTER_E/INVERTER_D` mudarem lá, mudar aqui também.

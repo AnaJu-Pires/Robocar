@@ -3,6 +3,9 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Adicionado (21/11/2026)
+- `firmware/teste_movimento/`: teste sem a Jetson. No botão de largada, anda para a frente, gira 360° no lugar e anda de ré; botão de novo para na hora; mostra os pulsos dos encoders de cada etapa. Conferido numa simulação no PC (Arduino falso); falta testar no carro.
+- Primeiros testes reais: firmware compilado (core 3.3.12) e gravado na ESP32; câmera a 60 fps (3,8 ms por quadro) e Jetson ↔ ESP32 funcionando (`make bancada`); Jetson na bateria pelo plug P4 (pelos pinos 5 V com fio jumper ela desligava no boot).
 ### Corrigido (placa v0.8, ajustes da equipe, 19/11/2026)
 - `hardware/placa_esp32/`: incorporados os ajustes feitos no KiCad 10 (placa **80 × 73**, motor em Y, R2–R4 no meio da ESP32, J2 alinhado com o C1, texto BLITZ). Corrigido o GND dos drivers, que ia ao plano por um toco e passava por um trecho de 0,4 mm: voltou a ser trilha de 1,5 mm (D-025). Plano de volta para 0,6/1,0/1,0 mm. Borda exata, furos simétricos, degraus e curva de 90° tirados. DRC 0, paridade OK.
 - Esquemático: PWR_FLAG em VM_E, VM_D e GND (3 erros do ERC) e tudo na grade de 1,27 mm (98 avisos). Ligações iguais.
