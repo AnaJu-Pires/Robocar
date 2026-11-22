@@ -23,8 +23,8 @@
 const int      VEL_RETA        = 400;    // frente e re: 0..1000 (400 = 40 % de 7,2 V)
 const uint32_t TEMPO_FRENTE_MS = 1500;
 const uint32_t TEMPO_TRAS_MS   = 1500;
-const int      VEL_GIRO        = 400;    // giro no lugar: roda esquerda para frente, direita para tras
-const uint32_t TEMPO_GIRO_MS   = 900;    // tempo de UMA volta: ajustar no chao (girou pouco -> aumente)
+const int      VEL_GIRO        = 600;    // giro no lugar: roda esquerda para frente, direita para tras
+const uint32_t TEMPO_GIRO_MS   = 1200;    // tempo de UMA volta: ajustar no chao (girou pouco -> aumente)
 const long     PULSOS_GIRO_360 = 0;      // > 0: gira pelos encoders (media das 2 rodas) em vez do tempo
 const uint32_t PAUSA_MS        = 800;    // parado (freando) entre as etapas
 const uint32_t ESPERA_MS       = 1000;   // do botao ate comecar a andar
@@ -43,8 +43,8 @@ const int PIN_ENC_D_A = 17, PIN_ENC_D_B = 16;
 const int PIN_VBAT  = 36;    // divisor 220k / 47k
 const int PIN_BOTAO = 4;     // botao de largada para o GND
 const int PIN_LED   = 2;
-const bool INVERTER_E = false;
-const bool INVERTER_D = true;
+const bool INVERTER_E = true;
+const bool INVERTER_D = false;
 const uint32_t PWM_FREQ = 20000;
 const uint8_t  PWM_BITS = 10;
 const float DIVISOR_VBAT = (220.0f + 47.0f) / 47.0f;

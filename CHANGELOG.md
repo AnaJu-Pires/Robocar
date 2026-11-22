@@ -4,6 +4,7 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões n
 
 ## [Não lançado]
 ### Adicionado (21/11/2026)
+- Sentido dos motores (T05 no carro): as duas rodas giravam ao contrário; `INVERTER_E = true` e `INVERTER_D = false` no `config.h` e no teste de movimento (roteiro da simulação ajustado, 20/20 OK). Giro do teste a 60 % por 1,2 s.
 - `firmware/teste_movimento/`: teste sem a Jetson. No botão de largada, anda para a frente, gira 360° no lugar e anda de ré; botão de novo para na hora; mostra os pulsos dos encoders de cada etapa. Conferido numa simulação no PC (Arduino falso); falta testar no carro.
 - Primeiros testes reais: firmware compilado (core 3.3.12) e gravado na ESP32; câmera a 60 fps (3,8 ms por quadro) e Jetson ↔ ESP32 funcionando (`make bancada`); Jetson na bateria pelo plug P4 (pelos pinos 5 V com fio jumper ela desligava no boot).
 ### Corrigido (placa v0.8, ajustes da equipe, 19/11/2026)

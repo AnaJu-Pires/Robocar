@@ -31,8 +31,8 @@ const int PIN_BUZZER = -1;   // sem buzzer na placa (-1 = desligado)
 const int PIN_LED    = 2;    // LED da propria DevKit
 
 // ----- Motores ----------------------------------------------------------------------
-const bool INVERTER_E = false;      // ajuste com as rodas suspensas (teste T05)
-const bool INVERTER_D = true;       // motores espelhados: normalmente um e invertido
+const bool INVERTER_E = true;       // T05 (21/11): com false/true as duas rodas giravam ao contrario
+const bool INVERTER_D = false;      // motores espelhados: normalmente um e invertido
 const uint32_t PWM_FREQ = 20000;    // 20 kHz: fora da faixa audivel
 const uint8_t  PWM_BITS = 10;
 const int      DUTY_MAX_PCT = 100;  // VM regulado em 7,2 V pelo XL4016 #2 (D-019): 100% = 7,2 V no motor
