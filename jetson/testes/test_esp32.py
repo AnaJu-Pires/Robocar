@@ -1,14 +1,14 @@
 import unittest
 
 from robocar import protocolo
-from robocar.esp32 import LinkESP32
+from robocar.esp32 import LinkESP32, recebe_linha_valida
 
 
 class SerialFalsa(object):
     """Imita a parte da API do pyserial usada pelo LinkESP32."""
 
     def __init__(self, recebido=""):
-        self.entrada = recebido.encode("ascii")
+        self.entrada = recebido.encode("latin-1")  # aceita bytes > 127 (dados embaralhados)
         self.saida = b""
 
     @property
@@ -53,6 +53,30 @@ class TestLinkESP32(unittest.TestCase):
         ser.entrada = msg[10:].encode("ascii")
         link.ler()
         self.assertTrue(link.telemetria["armado"])
+
+
+class TestConferenciaDaPorta(unittest.TestCase):
+
+    def _conferir(self, recebido):
+        t = [0.0]
+
+        def dormir(s):
+            t[0] += s
+
+        return recebe_linha_valida(SerialFalsa(recebido), 1.0, relogio=lambda: t[0], dormir=dormir)
+
+    def test_telemetria_legivel(self):
+        self.assertTrue(self._conferir("lixo\n" + protocolo.montar("T,20,0,0,806,0,0")))
+
+    def test_dados_embaralhados(self):
+        # o que a Jetson recebeu com a velocidade errada (21/11/2026)
+        self.assertFalse(self._conferir("p\x80`\x80p|pp\x0c\x00p\x0c\x00p\x8c`\x8ep\x0c\x0c\x0c" * 10))
+
+    def test_checksum_errado_nao_conta(self):
+        self.assertFalse(self._conferir("$T,20,0,0,806,0,0*00\n"))
+
+    def test_sem_dados(self):
+        self.assertFalse(self._conferir(""))
 
 
 if __name__ == "__main__":

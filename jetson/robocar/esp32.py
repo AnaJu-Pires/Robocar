@@ -8,9 +8,7 @@ import time
 from . import protocolo
 
 
-def abrir_porta(porta, baud=115200, esperar_boot_s=1.5):
-    """Abre a porta serial real (pyserial)."""
-    import serial  # importado aqui: o resto do software funciona sem pyserial
+def _abrir(serial, porta, baud):
     ser = serial.Serial()
     ser.port = porta
     ser.baudrate = baud
@@ -19,9 +17,54 @@ def abrir_porta(porta, baud=115200, esperar_boot_s=1.5):
     ser.dtr = False  # evita reset da placa ao abrir (nem toda placa respeita)
     ser.rts = False
     ser.open()
-    time.sleep(esperar_boot_s)  # a placa pode reiniciar ao abrir a porta
-    ser.reset_input_buffer()
     return ser
+
+
+def recebe_linha_valida(ser, tempo_s=1.0, relogio=time.time, dormir=time.sleep):
+    """True se chegar alguma linha '$...*HH' com checksum certo em tempo_s (a ESP32 manda $T a cada 20 ms)."""
+    fim = relogio() + tempo_s
+    buf = ""
+    while relogio() < fim:
+        n = ser.in_waiting
+        if n:
+            buf += ser.read(n).decode("ascii", "ignore")
+            linhas = buf.split("\n")
+            buf = linhas.pop()
+            if any(protocolo.validar(l) for l in linhas):
+                return True
+            buf = buf[-200:]
+        dormir(0.02)
+    return False
+
+
+def abrir_porta(porta, baud=115200, esperar_boot_s=1.5, tentativas=4):
+    """Abre a porta serial real (pyserial) e confere se a telemetria chega legivel.
+
+    Na Jetson Nano (kernel 4.9, chip CP2102 da ESP32), a primeira abertura depois de ligar o USB as vezes
+    recebe os dados embaralhados, como se a velocidade nao tivesse sido programada no chip (21/11/2026).
+    Abrir a porta em outra velocidade e voltar resolve: e o que se faz aqui antes de desistir.
+    """
+    import serial  # importado aqui: o resto do software funciona sem pyserial
+    ser = _abrir(serial, porta, baud)
+    time.sleep(esperar_boot_s)  # a placa pode reiniciar ao abrir a porta
+    for tentativa in range(1, tentativas + 1):
+        ser.reset_input_buffer()
+        if recebe_linha_valida(ser):
+            if tentativa > 1:
+                print("Porta serial OK depois de reabrir.")
+            ser.reset_input_buffer()
+            return ser
+        ser.close()
+        if tentativa == tentativas:
+            break
+        print("AVISO: nada legivel da ESP32 em %s; reabrindo a porta (%d/%d)..." % (porta, tentativa, tentativas - 1))
+        outra = _abrir(serial, porta, 9600)  # forca o driver a reprogramar a velocidade do chip USB-serial
+        time.sleep(0.2)
+        outra.close()
+        ser = _abrir(serial, porta, baud)
+        time.sleep(0.3)
+    print("AVISO: a ESP32 nao mandou nada legivel. Confira se o firmware gravado e o robocar_esp32.")
+    return _abrir(serial, porta, baud)
 
 
 class LinkESP32(object):
