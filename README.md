@@ -67,4 +67,5 @@ legado/      peb.py e seguir_linha.py originais, intactos
 - [ ] Testar a câmera real: modo, campo de visão, exposição, **latência**, tempo na Jetson.
 - [ ] Controle de velocidade com encoder (PI na ESP32, protocolo v2).
 - [ ] Ajustar ganhos e velocidades na pista de teste; definir a detecção do box conforme a resposta da organização.
-- [ ] Início automático no boot (systemd) e desligamento seguro.
+- [x] Início automático no boot (`make servico`, em `jetson/servico/`). Falta testar na Jetson.
+- [ ] Desligamento seguro sem SSH.

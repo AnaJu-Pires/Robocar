@@ -1,0 +1,27 @@
+# Robocar Blitz - inicio automatico do seguidor de linha no boot da Jetson.
+# NAO copie este arquivo a mao: instale com  sudo bash jetson/servico/instalar.sh
+# (o instalador troca @USUARIO@, @REPO@ e @PORTA@ pelos valores da Jetson).
+#
+# O robo NAO anda sozinho ao ligar: o programa so espera a largada pelo botao da ESP32.
+
+[Unit]
+Description=Robocar Blitz - seguidor de linha (largada pelo botao da ESP32)
+After=nvargus-daemon.service
+Wants=nvargus-daemon.service
+# tenta de novo para sempre (ex.: ESP32 desconectada por um tempo)
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=@USUARIO@
+WorkingDirectory=@REPO@/jetson
+ExecStart=/bin/sh @REPO@/jetson/servico/iniciar.sh @PORTA@
+Restart=always
+RestartSec=3
+# Ctrl+C no programa: ele manda $S para a ESP32 (desarma) e fecha a camera antes de sair
+KillSignal=SIGINT
+TimeoutStopSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

@@ -8,7 +8,7 @@ VIDEO  ?=
 OPCOES ?=
 JETSON := cd jetson &&
 
-.PHONY: sim-esp32 ajuda testes benchmark calibrar visao gravar video carro bancada movimento config placa drc limpar
+.PHONY: sim-esp32 ajuda testes benchmark calibrar visao gravar video carro bancada movimento servico config placa drc limpar
 
 ajuda:  ## lista os alvos
 	@echo "Alvos (make <alvo>):"
@@ -44,6 +44,9 @@ bancada:  ## teste de motores com janela e log, armando pela Jetson (RODAS SUSPE
 
 movimento:  ## sem camera: frente, giro 360 e re pela ESP32 (largada no botao; OPCOES="--armar" = rodas no ar)
 	$(JETSON) $(PYTHON) teste_movimento.py --esp32 $(PORTA) $(OPCOES)
+
+servico:  ## instala o inicio automatico no boot (modo carro; pede a senha do sudo)
+	sudo bash jetson/servico/instalar.sh $(PORTA)
 
 config:  ## mostra os parametros efetivos (padrao + config.json)
 	$(JETSON) $(PYTHON) seguir_linha.py --mostrar-config

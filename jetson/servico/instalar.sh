@@ -1,0 +1,37 @@
+#!/bin/bash
+# Instala (ou atualiza) o inicio automatico do robo no boot da Jetson.
+# Uso:  sudo bash jetson/servico/instalar.sh [PORTA]      (padrao /dev/ttyUSB0)
+# Desfazer: sudo systemctl disable --now robocar
+set -euo pipefail
+
+if [ "$(id -u)" -ne 0 ]; then
+  echo "Rode com sudo:  sudo bash $0 ${1:-}"
+  exit 1
+fi
+USUARIO=${SUDO_USER:-}
+if [ -z "$USUARIO" ] || [ "$USUARIO" = "root" ]; then
+  echo "Rode com sudo a partir do seu usuario (ex.: blitz), nao como root."
+  exit 1
+fi
+REPO=$(cd "$(dirname "$0")/../.." && pwd)
+PORTA=${1:-/dev/ttyUSB0}
+
+case "$REPO" in
+  *" "*) echo "O caminho do repositorio nao pode ter espacos: $REPO"; exit 1 ;;
+esac
+id -nG "$USUARIO" | grep -qw dialout || {
+  echo "AVISO: $USUARIO nao esta no grupo dialout (acesso a ESP32). Rodando: usermod -aG dialout $USUARIO"
+  usermod -aG dialout "$USUARIO"
+}
+
+sed -e "s|@USUARIO@|$USUARIO|g" -e "s|@REPO@|$REPO|g" -e "s|@PORTA@|$PORTA|g" \
+  "$REPO/jetson/servico/robocar.service" > /etc/systemd/system/robocar.service
+systemctl daemon-reload
+systemctl enable robocar.service
+
+echo
+echo "Servico instalado: liga sozinho no proximo boot (usuario $USUARIO, porta $PORTA)."
+echo "  Iniciar agora:        sudo systemctl start robocar"
+echo "  Ver o que ele mostra: journalctl -u robocar -f"
+echo "  Parar (para usar make visao/calibrar/bancada): sudo systemctl stop robocar"
+echo "  Desligar o inicio automatico: sudo systemctl disable --now robocar"

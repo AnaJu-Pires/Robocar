@@ -3,6 +3,8 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Adicionado (24/11/2026)
+- `jetson/servico/` e `make servico`: início automático no boot (systemd). Abre o modo corrida e espera o botão de largada; espera a ESP32 aparecer, reinicia se o programa cair e para com SIGINT (desarma a ESP32). Unidade conferida com `systemd-analyze verify`; falta testar na Jetson.
 ### Corrigido (22/11/2026)
 - `robocar/esp32.py`: `abrir_porta` confere se chega telemetria legível; se vier embaralhada (primeira abertura depois de ligar o USB, Jetson Nano + CP2102), reabre a porta em 9600 e volta para 115200, até 3 vezes. 4 testes novos.
 - Porta serial aberta em modo exclusivo: um segundo programa na mesma porta (ex.: `make movimento` rodando duas vezes) dá erro em vez de misturar comandos e telemetria.

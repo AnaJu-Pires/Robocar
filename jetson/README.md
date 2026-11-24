@@ -32,6 +32,23 @@ Os comandos rodam na raiz do repositório (ver `make ajuda`):
 Diretamente: `cd jetson && python3 seguir_linha.py --help`.
 Teclas da janela: `q` sair, `i` iniciar, `p` parar, `f` salvar o quadro.
 
+## Início automático no boot (dia da prova)
+
+Na prova não há SSH: a Jetson liga, o programa abre sozinho no modo corrida e espera o **botão de largada**.
+
+```bash
+make servico PORTA=/dev/ttyUSB0      # instala e ativa (uma vez); vale a partir do próximo boot
+sudo systemctl start robocar         # iniciar agora, sem reiniciar
+journalctl -u robocar -f             # ver as mensagens (LARGADA, PARADO, erros)
+sudo systemctl stop robocar          # parar: libera a câmera e a porta para make visao/calibrar/bancada
+sudo systemctl disable --now robocar # desligar o início automático
+```
+
+* O robô **não anda ao ligar**: só depois do botão. Se a ESP32 não estiver conectada, o serviço tenta de novo a cada ~3 s.
+* Enquanto o serviço roda, **nenhum outro programa** abre a câmera ou a ESP32 (`make visao`, `calibrar`, `bancada`, `movimento`): pare o serviço antes.
+* Logs CSV de cada corrida em `dados/logs/`, como no `make carro`.
+* Arquivos: `jetson/servico/` (`robocar.service`, `iniciar.sh`, `instalar.sh`).
+
 ## Desenvolvimento no PC
 
 ```bash
