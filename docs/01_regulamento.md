@@ -22,7 +22,7 @@ Em 09/11/2026 o caderno de regras ligado no [site oficial](https://www.robocarra
 | Motores **3–12 V CC** e **500–7.000 rpm** | N20 6 V 750 rpm em trilho regulado de 7,2 V (≈ 900 rpm em vazio; D-019). A 3S direta (12,6 V) ultrapassaria 12 V |
 | **2 ou 4 rodas tracionadas** que tocam a pista | Tração diferencial em 2 rodas |
 | Sensoriamento **100 % embarcado**; sem controle remoto nem computação externa | Wi‑Fi/SSH só em testes, nunca nas voltas oficiais |
-| Largada dada por um membro da equipe; ninguém toca no robô | Botão de largada na ESP32 (GPIO23) |
+| Largada dada por um membro da equipe; ninguém toca no robô | Botão de largada na ESP32 (GPIO4, conector J14) |
 | **Ao fim, entra no box e para sozinho, senão a volta é inválida** | Parada por linha perdida e por marca escura (configurável) |
 | Duas tentativas; saiu da linha = volta perdida | Confiabilidade antes de velocidade |
 | Classificação: maior distância; entre quem completa, menor tempo (§4.3) | Completar a volta é o primeiro objetivo |

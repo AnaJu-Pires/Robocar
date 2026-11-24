@@ -30,32 +30,56 @@ def argumentos(argv=None):
     ap.add_argument("--vel-giro", type=float, default=manobra.VEL_GIRO, help="velocidade das rodas no giro (0-1)")
     ap.add_argument("--giro", type=float, default=manobra.TEMPO_GIRO_S, help="segundos de giro (360 graus)")
     ap.add_argument("--pausa", type=float, default=manobra.PAUSA_S, help="segundos parado entre as etapas")
-    return ap.parse_args(argv)
+    args = ap.parse_args(argv)
+    for nome in ("vel", "vel_giro"):
+        if not 0.0 <= getattr(args, nome) <= 1.0:
+            ap.error("--%s deve ficar entre 0 e 1" % nome.replace("_", "-"))
+    for nome in ("tempo", "giro", "pausa"):
+        if getattr(args, nome) < 0:
+            ap.error("--%s nao pode ser negativo" % nome)
+    return args
+
+
+REENVIAR_ARMAR_S = 0.5   # --armar: repete o $A enquanto a ESP32 continuar PRONTO
+TELEMETRIA_PARADA_S = 2.0
 
 
 def _esperar_largada(link, armar, relogio, dormir, imprimir, espera_max_s):
     """Manda zero ate a ESP32 armar (botao ou --armar). Retorna a telemetria armada ou um codigo de saida."""
     t_ini = relogio()
-    avisou = pediu_armar = False
+    avisou = False
+    t_armar = None
+    ultimo_ms, t_ultimo_ms = None, t_ini
     while True:
         link.enviar_motores(0.0, 0.0)   # mantem o link vivo: a ESP32 so arma com comandos chegando
         link.ler()
         tel = link.telemetria
+        agora = relogio()
+        if tel is not None and tel["ms"] != ultimo_ms:
+            ultimo_ms, t_ultimo_ms = tel["ms"], agora
         if tel is None:
-            if relogio() - t_ini > espera_max_s:
+            if agora - t_ini > espera_max_s:
                 imprimir("ERRO: nenhuma telemetria valida da ESP32 em %.0f s. Confira o cabo e a porta, se o "
                          "firmware gravado e o robocar_esp32 (e nao o teste_movimento.ino) e rode de novo."
                          % espera_max_s)
                 return 2
+        elif agora - t_ultimo_ms > TELEMETRIA_PARADA_S:
+            imprimir("ERRO: a ESP32 parou de mandar telemetria (cabo USB solto? ESP32 reiniciou?).")
+            return 2
         elif tel["estado"] == protocolo.FALHA_BATERIA:
             imprimir("ERRO: ESP32 em FALHA_BATERIA (%.2f V). Carregue a bateria e reinicie a ESP32." % tel["vbat"])
             return 1
         elif tel["armado"]:
             return tel
+        elif tel["estado"] == protocolo.SEM_JETSON:
+            if agora - t_ini > espera_max_s:
+                imprimir("ERRO: a ESP32 nao aceita os comandos da Jetson (continua SEM_JETSON). Versao do "
+                         "protocolo diferente? Regrave o firmware robocar_esp32.")
+                return 2
         elif tel["estado"] == protocolo.PRONTO:
-            if armar and not pediu_armar:
+            if armar and (t_armar is None or agora - t_armar >= REENVIAR_ARMAR_S):
                 link.armar()
-                pediu_armar = True
+                t_armar = agora
             if not avisou:
                 imprimir("ESP32 pronta. Bateria: %.2f V" % tel["vbat"])
                 imprimir("Armando pela Jetson (--armar)..." if armar else "Aperte o botao de largada.")

@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Corrigido (24/11/2026, revisão do código)
+- `abrir_porta`: espera a ESP32 reiniciar (1,5 s) depois de cada reabertura; antes a conferência podia falhar com o link bom e a última tentativa voltava sem limpar o buffer.
+- `teste_movimento.py`: não fica preso para sempre se a ESP32 não aceitar comandos (SEM_JETSON) ou parar de mandar telemetria; com `--armar`, repete o `$A` a cada 0,5 s; recusa velocidades fora de 0–1 e tempos negativos. 4 testes novos.
+- Docs: o botão de largada é o GPIO4 (J14), não o GPIO23.
 ### Adicionado (24/11/2026)
 - `jetson/servico/` e `make servico`: início automático no boot (systemd). Abre o modo corrida e espera o botão de largada; espera a ESP32 aparecer, reinicia se o programa cair e para com SIGINT (desarma a ESP32). Unidade conferida com `systemd-analyze verify`; falta testar na Jetson.
 ### Corrigido (22/11/2026)

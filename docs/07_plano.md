@@ -23,7 +23,7 @@ Dá para avançar bastante só com Jetson, câmera e ESP32:
 3. **Calibração:** `make calibrar`. Comparar exposição automática com exposição fixa (`exposicao_ns`).
 4. **ESP32:** compilar e gravar o firmware ([firmware/README.md](../firmware/README.md)). Depois:
    * `make bancada PORTA=/dev/ttyUSB0` → conferir a telemetria;
-   * botão no GPIO23 → LARGADA;
+   * botão de largada no GPIO4 (J14) → LARGADA;
    * matar o programa → freia e desarma (T08, sem motores).
 5. **Latência** (T11): medir agora; o número define a velocidade possível.
 6. **CAD:** chassi e suporte de câmera com as dimensões de [03_hardware.md](03_hardware.md). Montar a **pista de teste**: R100, cruzamento de 90°, X, bifurcação e box.

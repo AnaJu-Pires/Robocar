@@ -46,26 +46,28 @@ def abrir_porta(porta, baud=115200, esperar_boot_s=1.5, tentativas=4):
     Abrir a porta em outra velocidade e voltar resolve: e o que se faz aqui antes de desistir.
     """
     import serial  # importado aqui: o resto do software funciona sem pyserial
-    ser = _abrir(serial, porta, baud)
-    time.sleep(esperar_boot_s)  # a placa pode reiniciar ao abrir a porta
+    ser = None
     for tentativa in range(1, tentativas + 1):
+        if tentativa > 1:
+            print("AVISO: nada legivel da ESP32 em %s; reabrindo a porta (%d/%d)..."
+                  % (porta, tentativa - 1, tentativas - 1))
+            ser.close()
+            outra = _abrir(serial, porta, 9600)  # forca o driver a reprogramar a velocidade do chip USB-serial
+            time.sleep(0.2)
+            outra.close()
+            ser = _abrir(serial, porta, baud)
+        else:
+            ser = _abrir(serial, porta, baud)
+        time.sleep(esperar_boot_s)  # abrir a porta pode reiniciar a ESP32 (ela volta em ~1 s)
         ser.reset_input_buffer()
         if recebe_linha_valida(ser):
             if tentativa > 1:
                 print("Porta serial OK depois de reabrir.")
             ser.reset_input_buffer()
             return ser
-        ser.close()
-        if tentativa == tentativas:
-            break
-        print("AVISO: nada legivel da ESP32 em %s; reabrindo a porta (%d/%d)..." % (porta, tentativa, tentativas - 1))
-        outra = _abrir(serial, porta, 9600)  # forca o driver a reprogramar a velocidade do chip USB-serial
-        time.sleep(0.2)
-        outra.close()
-        ser = _abrir(serial, porta, baud)
-        time.sleep(0.3)
     print("AVISO: a ESP32 nao mandou nada legivel. Confira se o firmware gravado e o robocar_esp32.")
-    return _abrir(serial, porta, baud)
+    ser.reset_input_buffer()
+    return ser
 
 
 class LinkESP32(object):

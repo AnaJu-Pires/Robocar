@@ -9,8 +9,12 @@ class ESP32Falsa(object):
     """Imita o firmware na porta serial: SEM_JETSON -> PRONTO com $M, ARMADO com $A, PRONTO com $S.
     Responde uma telemetria a cada leitura e conta encoders proporcionais ao comando."""
 
-    def __init__(self, responde=True, desarmar_no_ms=None):
+    def __init__(self, responde=True, desarmar_no_ms=None, ignorar_armar=0, aceita_comandos=True,
+                 para_no_ms=None):
         self.estado = protocolo.SEM_JETSON
+        self.ignorar_armar = ignorar_armar      # quantos $A ignorar (ex.: perdidos na serial)
+        self.aceita_comandos = aceita_comandos  # False: fica em SEM_JETSON (protocolo diferente)
+        self.para_no_ms = para_no_ms            # deixa de mandar telemetria (cabo solto)
         self.responde = responde
         self.desarmar_no_ms = desarmar_no_ms
         self.ms = 0
@@ -31,15 +35,20 @@ class ESP32Falsa(object):
                 _, _, e, d = corpo.split(",")
                 self.ultimo = (int(e), int(d))
                 self.recebidos.append((self.estado, int(e), int(d)))
-                if self.estado == protocolo.SEM_JETSON:
+                if self.estado == protocolo.SEM_JETSON and self.aceita_comandos:
                     self.estado = protocolo.PRONTO
             elif corpo[0] == "A" and self.estado == protocolo.PRONTO:
-                self.estado = protocolo.ARMADO
+                if self.ignorar_armar > 0:
+                    self.ignorar_armar -= 1
+                else:
+                    self.estado = protocolo.ARMADO
             elif corpo[0] == "S" and self.estado == protocolo.ARMADO:
                 self.estado = protocolo.PRONTO
 
     @property
     def in_waiting(self):
+        if self.para_no_ms is not None and self.ms >= self.para_no_ms:
+            return len(self.pendente)
         if not self.pendente and self.responde:
             self.ms += 20
             if self.desarmar_no_ms is not None and self.ms >= self.desarmar_no_ms:
@@ -133,6 +142,28 @@ class TestTesteMovimento(unittest.TestCase):
         self.assertEqual(codigo, 1)
         self.assertEqual(esp.ultimo, (0, 0))
         self.assertTrue(any(s.startswith("PARADO") for s in saida))
+
+    def test_reenvia_armar_se_o_primeiro_se_perder(self):
+        esp = ESP32Falsa(ignorar_armar=2)
+        codigo, _ = executar(esp)
+        self.assertEqual(codigo, 0)
+        self.assertGreaterEqual(esp.comandos.count("A"), 3)
+
+    def test_esp32_que_nao_aceita_comandos_da_erro(self):
+        codigo, saida = executar(ESP32Falsa(aceita_comandos=False))
+        self.assertEqual(codigo, 2)
+        self.assertIn("SEM_JETSON", saida[-1])
+
+    def test_telemetria_parada_esperando_o_botao_da_erro(self):
+        codigo, saida = executar(ESP32Falsa(para_no_ms=500), armar=False)
+        self.assertEqual(codigo, 2)
+        self.assertIn("parou de mandar telemetria", saida[-1])
+
+    def test_argumentos_invalidos(self):
+        for args in (["--vel", "1.5"], ["--vel-giro", "-0.1"], ["--giro", "-1"]):
+            with self.assertRaises(SystemExit):
+                teste_movimento.argumentos(args)
+        self.assertEqual(teste_movimento.argumentos(["--giro", "2.2"]).giro, 2.2)
 
     def test_sem_telemetria_desiste(self):
         codigo, saida = executar(ESP32Falsa(responde=False))
