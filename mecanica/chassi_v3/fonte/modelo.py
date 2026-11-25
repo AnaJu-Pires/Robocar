@@ -45,10 +45,12 @@ PADRAO = dict(
     CAM_C=-17.0,           # centro da camera abaixo do pivo (no referencial da camera)
     CHAVE_X=44.0,          # centro do recorte da chave geral na parede direita
     FUS_X0=70.0,           # placa do fusivel (x0) embaixo da Jetson, lado direito
+    PAREDE_DIR_X1=64.0,    # fim da parede direita da frente (deixa o fusivel e o microSD livres)
     XT60_X=133.5,          # centro do par XT60 (solto, deitado) na frente, entre os postes
     MESA=(390.0, 270.0),   # area util da chapa no laser (mm) -> folha A3 no PDF
     MIN_TEIA=2.0,          # material minimo entre furos e entre furo e borda
     MU=0.9,                # atrito pneu x tapete (hipotese; medir no T12)
+    LASTRO=None,           # (gramas, x, y, z): massa extra para testar lastro (e para os testes negativos)
     CABO_FOLGA=0.10,       # sobra de 10 % nos cabos
 )
 
@@ -345,7 +347,7 @@ def construir(P=None, verif=False):
         for xc in xs_tr:
             ff.append(rasgo(xc, sy_ * (Y_TRILHO + T / 2), 10, S, 'trilho'))
     X_PARF0, X_PARF1 = 26.0, 110.0
-    X_PARF1_DIR = 64.0                                 # parede direita so ate depois da chave: fusivel e microSD livres
+    X_PARF1_DIR = P['PAREDE_DIR_X1']                   # parede direita so ate depois da chave: fusivel e microSD livres
     xs_pf = [X_PARF0 + 9, 68.0, X_PARF1 - 9]
     xs_pf_dir = [X_PARF0 + 5, X_PARF1_DIR - 6]
     for sy_, xs_ in ((1, xs_pf), (-1, xs_pf_dir)):
@@ -489,8 +491,10 @@ def construir(P=None, verif=False):
     R_ARCO = 9.0
     ZT1, ZT2 = 62.0, 100.0                               # travessas
     TRVx = 120.0
+    z_a = max(Z2 + 5, min(78.0, PVz - 40))                # traseira do poste reta ate acima da Jetson, depois inclina
+    z_b = max(z_a + 5, PVz - 28)
     base_po = so.unary_union([
-        sg.Polygon([(PX0, Z2), (PX1, Z2), (PX1, PVz), (PVx - R_ARCO - 5, PVz), (PX0 - 5, 112), (PX0, 78)]),
+        sg.Polygon([(PX0, Z2), (PX1, Z2), (PX1, PVz), (PVx - R_ARCO - 5, PVz), (PX0 - 5, z_b), (PX0, z_a)]),
         sg.Point(PVx, PVz).buffer(10.5), sg.Point(PVx - R_ARCO, PVz).buffer(5.0)])
     abas_po = [ret_c(xc, Z2 - T / 2, 5, T) for xc in (PX0 + 3.5, PX1 - 3.5)]
     fpo = [circ(PVx, PVz, 3.4, 'pivo', 'pivo da camera (M3)'), circ(PVx - R_ARCO, PVz, 3.4, 'trava_angulo', 'trava do angulo (M3)'),
@@ -670,6 +674,9 @@ def massas(m):
         n = 2 if ('+' in cb['bitola'] or 'vias' in cb['bitola']) else 1
         out.append(('fio_' + cb['nome'], L / 1000 * g_m * n, tuple(pts.mean(axis=0))))
     out.append(('parafusos_porcas', 15.0, (0.0, 0.0, 30.0)))
+    if m.P.get('LASTRO'):
+        g, x, y, z = m.P['LASTRO']
+        out.append(('lastro', float(g), (float(x), float(y), float(z))))
     out.append(('cola_e_abracadeiras', 4.0, (0.0, 0.0, 30.0)))
     return out
 
