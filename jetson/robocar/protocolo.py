@@ -4,7 +4,7 @@ Qualquer mudanca aqui exige mudar JUNTO: firmware/robocar_esp32 (config.h + .ino
 docs/05_protocolo_serial.md e testes/test_protocolo.py, e incrementar VERSAO.
 """
 
-VERSAO = 1
+VERSAO = 2   # v2 (24/11/2026): flag DESLIGAR na telemetria
 
 # Estados informados pela ESP32 na telemetria
 SEM_JETSON = 0      # sem comandos validos recentes: motores desligados, nao arma
@@ -17,6 +17,7 @@ NOMES_ESTADO = {SEM_JETSON: "SEM_JETSON", PRONTO: "PRONTO", ARMADO: "ARMADO",
 # Bits do campo 'flags' da telemetria
 FLAG_WATCHDOG = 1   # armado, mas sem comando ha > 250 ms: freando
 FLAG_BATERIA_BAIXA = 2
+FLAG_DESLIGAR = 4   # botao segurado com o robo parado: a Jetson deve fazer shutdown
 
 
 def checksum(corpo):
@@ -75,7 +76,8 @@ def interpretar(corpo):
         except ValueError:
             return None
         return {"tipo": "T", "ms": ms, "enc_e": enc_e, "enc_d": enc_d, "vbat": vbat_mv / 1000.0,
-                "estado": estado, "armado": estado == ARMADO, "flags": flags}
+                "estado": estado, "armado": estado == ARMADO, "flags": flags,
+                "desligar": bool(flags & FLAG_DESLIGAR)}
     if partes[0] == "I":
         texto = ",".join(partes[1:])
         info = {"tipo": "I", "texto": texto, "versao": None}

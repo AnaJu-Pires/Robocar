@@ -25,6 +25,12 @@ class TestProtocolo(unittest.TestCase):
         self.assertEqual(t["enc_d"], -3)
         self.assertEqual(t["flags"] & protocolo.FLAG_WATCHDOG, protocolo.FLAG_WATCHDOG)
 
+    def test_flag_desligar(self):
+        msg = protocolo.interpretar(protocolo.validar(protocolo.montar("T,10,0,0,11800,1,4")))
+        self.assertTrue(msg["desligar"])
+        msg = protocolo.interpretar(protocolo.validar(protocolo.montar("T,10,0,0,11800,1,3")))
+        self.assertFalse(msg["desligar"])
+
     def test_pedido_de_versao(self):
         self.assertEqual(protocolo.validar(protocolo.cmd_versao()), "V")
 

@@ -93,5 +93,50 @@ class TestIluminacao(unittest.TestCase):
         self.assertAlmostEqual(r["erro"], -0.5, delta=0.05)
 
 
+class TestCalibracaoRuim(unittest.TestCase):
+    """Caso real de 22/11/2026: calibracao 106/66 (razao 0,81) e fita brilhante. Com um reflexo claro
+    na imagem, o limiar (81 % do "branco") ficava acima do chao: o chao virava "escuro" e a linha sumia."""
+
+    CAL_RUIM = {"branco": 106.0, "preto": 66.0, "limiar": 86.0, "razao": 0.81}
+
+    def _cena(self):
+        # chao 150, reflexo 200 na lateral direita (eleva o "branco"), fita acinzentada (90) em x = 120
+        return Cena(brilho=150).retangulo((260, 0), (319, H), cor=200).linha(vertical(120), cor=90).imagem()
+
+    def test_razao_da_calibracao_e_limitada(self):
+        det = DetectorLinha(config()["visao"], self.CAL_RUIM)
+        self.assertAlmostEqual(det.razao_calibrada, 0.81)
+        self.assertAlmostEqual(det.razao, 0.70)
+
+    def test_linha_encontrada_com_a_razao_limitada(self):
+        r = DetectorLinha(config()["visao"], self.CAL_RUIM).processar(self._cena())
+        self.assertIsNotNone(r["erro"])
+        self.assertAlmostEqual(r["erro"], -0.25, delta=0.05)
+        self.assertFalse(r["cruzamento"])
+
+    def test_sem_limite_o_chao_vira_linha(self):
+        det = DetectorLinha(config(razao_max=1.0)["visao"], self.CAL_RUIM)
+        r = det.processar(self._cena())
+        self.assertTrue(r["erro"] is None or r["cruzamento"] or abs(r["erro"] + 0.25) > 0.05)
+
+
+class TestSuavizacaoDoLimiar(unittest.TestCase):
+
+    def test_limiar_muda_aos_poucos(self):
+        det = detector()
+        claro = det.processar(Cena(brilho=200).linha(vertical(160)).imagem())["limiar"]
+        escuro = det.processar(Cena(brilho=120).linha(vertical(160)).imagem())["limiar"]
+        cru = detector().processar(Cena(brilho=120).linha(vertical(160)).imagem())["limiar"]
+        self.assertGreater(escuro, cru)       # nao pulou direto para o valor novo
+        self.assertLess(escuro, claro)        # mas ja andou na direcao certa
+
+    def test_sem_suavizacao(self):
+        det = detector(suavizar_limiar=1.0)
+        det.processar(Cena(brilho=200).linha(vertical(160)).imagem())
+        escuro = det.processar(Cena(brilho=120).linha(vertical(160)).imagem())["limiar"]
+        cru = detector().processar(Cena(brilho=120).linha(vertical(160)).imagem())["limiar"]
+        self.assertAlmostEqual(escuro, cru)
+
+
 if __name__ == "__main__":
     unittest.main()

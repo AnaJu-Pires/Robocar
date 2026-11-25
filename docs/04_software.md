@@ -72,6 +72,7 @@ jetson/
 |---|---|
 | Orientação, modo e exposição da câmera | `camera.flip_method`, `captura_*`, `fps`, `exposicao_ns`, `ganho` |
 | Região analisada e robustez | `visao.inicio_roi`, `n_faixas`, `limiar_modo`, `salto_max_frac`, `fator_largo` |
+| Limiar com calibração ruim ou luz variando | `visao.razao_min`, `razao_max`, `suavizar_limiar` |
 | Bifurcação e box | `visao.preferencia_bifurcacao`, `visao.marca_frac_escura`, `parada.*` |
 | Comportamento na pista | `controle.kp`, `kd`, `k_frente`, `v_max`, `v_min`, `severidade_max` |
 | Perda de linha | `controle.tempo_busca_s`, `v_busca` |

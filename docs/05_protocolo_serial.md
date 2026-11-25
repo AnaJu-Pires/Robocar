@@ -34,7 +34,8 @@ A Jetson envia `M` **a cada quadro**, inclusive zerado quando parada.
 
 * `encE`/`encD`: contagem acumulada em quadratura x4 (int32). A RoboCore indica ~140 pulsos/volta, mas não diz em qual modo: **calibrar** (teste T07).
 * `estado`: 0 `SEM_JETSON`, 1 `PRONTO`, 2 `ARMADO`, 3 `FALHA_BATERIA` ([02_arquitetura.md](02_arquitetura.md#3-estados)).
-* `flags`: bit 0 = watchdog (armado e sem comando há > 250 ms, freando); bit 1 = bateria baixa (< 3,3 V/célula).
+* `flags`: bit 0 = watchdog (armado e sem comando há > 250 ms, freando); bit 1 = bateria baixa (< 3,3 V/célula); bit 2 = **desligar** (v2: botão segurado 3 s com o robô parado; a Jetson faz `shutdown`).
+* Botão (v2): com o robô **armado**, apertar **para na hora**; parado, **apertar e soltar** arma; **segurar 3 s** liga a flag desligar por 3 s e não arma.
 
 ## Temporização e segurança
 * Sem `M` válido por **250 ms** com o robô ARMADO: alvos zerados (freio) e flag de watchdog ligada.

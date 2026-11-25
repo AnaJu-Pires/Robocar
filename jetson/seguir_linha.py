@@ -61,6 +61,20 @@ def fmt(x):
     return "--" if x is None else "%.3f" % x
 
 
+def desligar_jetson():
+    """Shutdown pedido pelo botao da ESP32 (segurado 3 s). Precisa da regra do sudo do 'make servico'."""
+    import subprocess
+    try:
+        r = subprocess.call(["sudo", "-n", "/sbin/shutdown", "-h", "now"])
+    except OSError as e:
+        r = e
+    if r != 0:
+        print("ERRO: nao consegui desligar (%s). Rode 'make servico' (libera o shutdown sem senha) "
+              "ou desligue com: sudo shutdown -h now" % r)
+        return 1
+    return 0
+
+
 def salvar_quadro(cinza, n):
     caminho = configuracao.arquivo_de_dados("capturas", "png", time.strftime("%Y%m%d_%H%M%S_") + str(n))
     cv2.imwrite(caminho, cinza)
@@ -86,6 +100,9 @@ def main():
     cam = Camera(cfg["camera"], args.fonte)
     print("Fonte:", cam.descricao)
     detector = DetectorLinha(cfg["visao"], calib)
+    if detector.razao != detector.razao_calibrada:
+        print("AVISO: calibracao com contraste baixo (razao %.2f); usando %.2f. Melhore a pista/luz e recalibre."
+              % (detector.razao_calibrada, detector.razao))
     ctrl = controle.Controlador(cfg["controle"], cfg["parada"])
     margem = cfg["controle"]["margem_centro"]
     janela = cfg["exibicao"]["janela"]
@@ -118,6 +135,7 @@ def main():
     estado_ant = ctrl.estado
     n, fps, proc_ms, falhas = 0, 0.0, 0.0, 0
     t_ant = t_print = time.time()
+    desligar = False
 
     try:
         while True:
@@ -143,6 +161,10 @@ def main():
             if link:
                 link.ler()
                 tel = link.telemetria
+                if tel and tel.get("desligar"):
+                    print(">>> DESLIGAR: botao segurado com o robo parado. Desligando a Jetson...")
+                    desligar = True
+                    break
                 if armar_pendente and tel and tel["estado"] == protocolo.PRONTO:
                     link.armar()
                     armar_pendente = False
@@ -226,6 +248,8 @@ def main():
             log.fechar()
         if janela:
             cv2.destroyAllWindows()
+    if desligar:
+        return desligar_jetson()
     return 0
 
 

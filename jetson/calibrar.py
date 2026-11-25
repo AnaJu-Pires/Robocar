@@ -21,7 +21,7 @@ import numpy as np
 from robocar import configuracao
 from robocar.camera import Camera
 
-CONTRASTE_MIN = 40.0
+CONTRASTE_MIN = 60.0   # abaixo disso a linha se confunde com o chao (22/11/2026: 106/66 falhou)
 ESCALA = 2
 
 

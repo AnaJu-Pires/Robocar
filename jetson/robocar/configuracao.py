@@ -37,6 +37,9 @@ PADRAO = {
         "limiar_modo": "adaptativo",  # "adaptativo" | "fixo" | "otsu"
         "limiar_fixo": 60.5,          # usado no modo "fixo" (valor do codigo original)
         "razao_limiar_padrao": 0.55,  # limiar/branco quando nao ha calibracao.json
+        "razao_min": 0.35,            # limites da razao vinda da calibracao: com contraste baixo
+        "razao_max": 0.70,            #   (ex.: 106/66 -> 0,81) quase tudo virava "escuro" (22/11/2026)
+        "suavizar_limiar": 0.3,       # fracao do limiar novo aceita por quadro (1 = sem suavizar)
         "percentil_branco": 90,       # percentil da ROI que mede o "branco" atual
         "limiar_min": 15,
         "limiar_max": 220,
@@ -57,8 +60,8 @@ PADRAO = {
         "v_max": 0.35,                # fracao do PWM maximo (conservador para os primeiros testes)
         "v_min": 0.2,
         "severidade_max": 0.6,        # erro a partir do qual a velocidade cai para v_min
-        "v_busca": 0.25,
-        "tempo_busca_s": 0.6,         # linha perdida por mais tempo -> PARADO
+        "v_busca": 0.45,              # giro no lugar ao perder a linha; 0,25 nao movia o carro no chao
+        "tempo_busca_s": 1.0,         # linha perdida por mais tempo -> PARADO
         "margem_centro": 0.12,        # so para o rotulo ESQUERDA/RETO/DIREITA
     },
     "parada": {

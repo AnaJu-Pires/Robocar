@@ -5,7 +5,7 @@
 #pragma once
 
 // ----- Protocolo (deve ser igual a jetson/robocar/protocolo.py: VERSAO) --------------
-#define PROTOCOLO_VERSAO 1
+#define PROTOCOLO_VERSAO 2   // v2: flag DESLIGAR (botao segurado) na telemetria
 
 // ----- Pinagem (ESP32 DevKit) -------------------------------------------------------
 // Placa v0.8 (hardware/placa_esp32, D-024): placa ESPELHADA. A coluna esquerda da ESP32 (EN...VIN)
@@ -26,7 +26,7 @@ const int PIN_ENC_E_B = 27;  //                                                 
 const int PIN_ENC_D_A = 17;  // encoder direito, idem                                 [pino 24]
 const int PIN_ENC_D_B = 16;  //                                                       [pino 25]
 const int PIN_VBAT   = 36;   // ADC1: divisor 220k (topo) / 47k (baixo)               [pino 2]
-const int PIN_BOTAO  = 4;    // largada: jumper (ou botao) para o GND, INPUT_PULLUP   [pino 26]
+const int PIN_BOTAO  = 4;    // largada: BOTAO para o GND, INPUT_PULLUP (jumper fixo nao: pediria desligar)   [pino 26]
 const int PIN_BUZZER = -1;   // sem buzzer na placa (-1 = desligado)
 const int PIN_LED    = 2;    // LED da propria DevKit
 
@@ -42,6 +42,8 @@ const int      RAMPA_POR_MS = 10;   // unidades (de 1000) por ms: 0 -> 100% em 1
 const uint32_t WATCHDOG_FREIO_MS   = 250;   // sem comando: freia (continua armado)
 const uint32_t WATCHDOG_DESARME_MS = 1000;  // sem comando: desarma (exige novo botao)
 const uint32_t TELEMETRIA_MS = 20;          // 50 Hz
+const uint32_t BOTAO_DESLIGAR_MS = 3000;    // botao segurado (com o robo parado): pede a Jetson para desligar
+const uint32_t DESLIGAR_AVISO_MS = 3000;    // por quanto tempo a flag DESLIGAR fica ligada na telemetria
 
 // ----- Bateria 3S -------------------------------------------------------------------
 const float DIVISOR_VBAT = (220.0f + 47.0f) / 47.0f;   // 12,6 V -> 2,22 V no pino

@@ -44,6 +44,7 @@ sudo systemctl stop robocar          # parar: libera a câmera e a porta para ma
 sudo systemctl disable --now robocar # desligar o início automático
 ```
 
+* **Botão de largada:** apertar e soltar = largada; apertar com o robô andando = para na hora; **segurar 3 s com o robô parado = desliga a Jetson com segurança** (o LED da ESP32 pisca muito rápido). Espere o LED verde da Jetson apagar antes de desligar a chave.
 * O robô **não anda ao ligar**: só depois do botão. Se a ESP32 não estiver conectada, o serviço tenta de novo a cada ~3 s.
 * Enquanto o serviço roda, **nenhum outro programa** abre a câmera ou a ESP32 (`make visao`, `calibrar`, `bancada`, `movimento`): pare o serviço antes.
 * Logs CSV de cada corrida em `dados/logs/`, como no `make carro`.

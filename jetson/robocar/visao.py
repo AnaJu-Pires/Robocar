@@ -50,6 +50,8 @@ class DetectorLinha(object):
         if calibracao:
             self.razao = float(calibracao.get("razao") or self.razao)
             self.limiar_fixo = float(calibracao.get("limiar") or self.limiar_fixo)
+        self.razao_calibrada = self.razao
+        self.razao = min(max(self.razao, float(cfg_visao["razao_min"])), float(cfg_visao["razao_max"]))
         self.kernel = np.ones((3, 3), np.uint8)
         self.resetar()
 
@@ -57,6 +59,7 @@ class DetectorLinha(object):
         self.x_ant = [None] * self.n
         self.largura_ref = [None] * self.n
         self.frames_sem_linha = 0
+        self.limiar_ant = None
 
     # ------------------------------------------------------------------ limiar
     def calcular_limiar(self, roi):
@@ -100,6 +103,10 @@ class DetectorLinha(object):
         roi = cinza[y0:H]
 
         limiar = self.calcular_limiar(roi)
+        a = float(cfg["suavizar_limiar"])
+        if self.limiar_ant is not None and cfg["limiar_modo"] != "fixo" and a < 1.0:
+            limiar = self.limiar_ant + a * (limiar - self.limiar_ant)  # evita saltos entre quadros
+        self.limiar_ant = limiar
         _, mascara = cv2.threshold(roi, limiar, 255, cv2.THRESH_BINARY_INV)
         if cfg["abertura"]:
             mascara = cv2.morphologyEx(mascara, cv2.MORPH_OPEN, self.kernel)

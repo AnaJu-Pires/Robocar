@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (25/11/2026, a partir dos logs do teste no chão de 22/11)
+- **Visão:** a razão do limiar vinda da calibração fica entre `razao_min` 0,35 e `razao_max` 0,70. A calibração de 22/11 (branco 106, preto 66) dava razão 0,81: o chão virava "escuro", e 46 % dos quadros acusavam cruzamento falso e a linha sumia. O limiar também é suavizado entre quadros (`suavizar_limiar` 0,3); no log ele pulava de 57 a 187. `calibrar.py` avisa contraste baixo abaixo de 60 (era 40). 5 testes novos, um deles reproduzindo o caso real.
+- **Controle:** `v_busca` 0,25 → 0,45 e `tempo_busca_s` 0,6 → 1,0. Com 0,25 o carro não girava no chão e parava por "linha perdida".
+- **Protocolo v2 / botão:** segurar o botão de largada 3 s com o robô parado liga a flag DESLIGAR na telemetria e a Jetson faz `shutdown` (regra do sudo instalada pelo `make servico`). A largada passa a ser ao **soltar** o botão; apertar com o robô armado continua parando na hora. LED pisca muito rápido ao desligar. Firmware e Jetson precisam ser atualizados juntos. Simulação do firmware: 26/26 (6 novas).
 ### Corrigido (24/11/2026, revisão do código)
 - `abrir_porta`: espera a ESP32 reiniciar (1,5 s) depois de cada reabertura; antes a conferência podia falhar com o link bom e a última tentativa voltava sem limpar o buffer.
 - `teste_movimento.py`: não fica preso para sempre se a ESP32 não aceitar comandos (SEM_JETSON) ou parar de mandar telemetria; com `--armar`, repete o `$A` a cada 0,5 s; recusa velocidades fora de 0–1 e tempos negativos. 4 testes novos.

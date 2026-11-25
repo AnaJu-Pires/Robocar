@@ -10,8 +10,9 @@
  * Placa: "ESP32 Dev Module" (Arduino-ESP32 core 2.x ou 3.x). Serial USB a 115200 baud.
  *
  * Maquina de estados:
- *   SEM_JETSON --(comando $M valido)--> PRONTO --(botao ou $A)--> ARMADO
- *   ARMADO --(botao ou $S)--> PRONTO
+ *   SEM_JETSON --(comando $M valido)--> PRONTO --(botao: apertar e soltar, ou $A)--> ARMADO
+ *   ARMADO --(botao: ao apertar, ou $S)--> PRONTO
+ *   PRONTO/SEM_JETSON --(botao segurado BOTAO_DESLIGAR_MS)--> flag DESLIGAR (a Jetson faz shutdown)
  *   ARMADO --(sem comando > 250 ms)--> freia (flag WATCHDOG) --(> 1000 ms)--> SEM_JETSON
  *   qualquer --(bateria < corte por 2 s)--> FALHA_BATERIA (trava ate reiniciar a placa)
  * Motores so recebem PWM em ARMADO; nos demais estados o driver dorme (nSLEEP baixo).
@@ -25,6 +26,7 @@
 enum Estado { SEM_JETSON = 0, PRONTO = 1, ARMADO = 2, FALHA_BATERIA = 3 };
 const int FLAG_WATCHDOG = 1;
 const int FLAG_BATERIA_BAIXA = 2;
+const int FLAG_DESLIGAR = 4;
 const int PWM_MAX = (1 << PWM_BITS) - 1;
 
 // ------------------------------------------------------------------ PWM (core 2.x e 3.x)
@@ -60,6 +62,7 @@ int flags = 0;
 int alvoE = 0, alvoD = 0;     // -1000..1000 vindos da Jetson
 int atualE = 0, atualD = 0;   // apos a rampa
 uint32_t ultimoComando = 0, ultimaTelemetria = 0, ultimoTick = 0, inicioVbatBaixa = 0;
+uint32_t pedidoDesligar = 0;  // millis() do pedido de desligar (0 = nenhum)
 bool recebeuComando = false;
 int vbat_mV = 0;
 
@@ -168,16 +171,29 @@ static void lerSerial() {
 }
 
 // ------------------------------------------------------------------ botao de largada
+// Armado: apertar PARA na hora. Parado: apertar e soltar (< BOTAO_DESLIGAR_MS) ARMA; segurar
+// BOTAO_DESLIGAR_MS pede a Jetson para desligar (flag DESLIGAR) e nao arma ao soltar.
 static void lerBotao() {
   static int estavel = HIGH, ultimoLido = HIGH;
-  static uint32_t tMudanca = 0;
+  static uint32_t tMudanca = 0, tApertou = 0;
+  static bool usado = true;             // este aperto ja teve efeito (parou ou pediu desligar)
+  uint32_t agora = millis();
   int lido = digitalRead(PIN_BOTAO);
-  if (lido != ultimoLido) { ultimoLido = lido; tMudanca = millis(); }
-  if (millis() - tMudanca > 40 && lido != estavel) {
+  if (lido != ultimoLido) { ultimoLido = lido; tMudanca = agora; }
+  if (agora - tMudanca > 40 && lido != estavel) {
     estavel = lido;
     if (estavel == LOW) {               // apertou
-      if (estado == ARMADO) pedirDesarmar(); else pedirArmar();
+      tApertou = agora;
+      usado = false;
+      if (estado == ARMADO) { pedirDesarmar(); usado = true; }   // parar nao espera soltar
+    } else if (!usado) {                // soltou um aperto curto: largada
+      usado = true;
+      pedirArmar();
     }
+  }
+  if (estavel == LOW && !usado && agora - tApertou >= BOTAO_DESLIGAR_MS) {
+    usado = true;
+    pedidoDesligar = agora ? agora : 1;
   }
 }
 
@@ -252,6 +268,8 @@ void loop() {
   if (agora - ultimaTelemetria >= TELEMETRIA_MS) {
     ultimaTelemetria = agora;
     lerBateria();
+    bool desligando = pedidoDesligar && agora - pedidoDesligar < DESLIGAR_AVISO_MS;
+    if (desligando) flags |= FLAG_DESLIGAR; else flags &= ~FLAG_DESLIGAR;
     char corpo[72];
     snprintf(corpo, sizeof(corpo), "T,%lu,%ld,%ld,%d,%d,%d", (unsigned long)agora,
              (long)encE, (long)encD, vbat_mV, (int)estado, flags);
@@ -259,7 +277,9 @@ void loop() {
     if (PIN_BUZZER >= 0)
       digitalWrite(PIN_BUZZER, ((flags & FLAG_BATERIA_BAIXA) && (agora / 250) % 2) ? HIGH : LOW);
     // LED: aceso = armado | piscando lento = pronto | piscando rapido = falha | apagado = sem Jetson
-    bool led = estado == ARMADO || (estado == PRONTO && (agora / 500) % 2) ||
+    // desligando: pisca muito rapido enquanto a flag DESLIGAR esta ligada
+    bool led = desligando ? (agora / 50) % 2 :
+               estado == ARMADO || (estado == PRONTO && (agora / 500) % 2) ||
                (estado == FALHA_BATERIA && (agora / 100) % 2);
     digitalWrite(PIN_LED, led ? HIGH : LOW);
   }

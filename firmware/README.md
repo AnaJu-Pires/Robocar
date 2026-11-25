@@ -20,7 +20,11 @@ Os estados estão em [docs/02_arquitetura.md](../docs/02_arquitetura.md#3-estado
 1. Arduino IDE → Gerenciador de placas → "esp32" (Espressif), versão 2.x ou 3.x.
 2. Abrir `robocar_esp32/robocar_esp32.ino`. A pasta precisa ter o mesmo nome do `.ino`.
 3. Placa "ESP32 Dev Module"; porta `/dev/ttyUSB0` (Linux) ou `COMx` (Windows); gravar.
-4. Monitor serial a 115200: aparece `$I,robocar_esp32,v1*..` e, a cada 20 ms, `$T,...`.
+4. Monitor serial a 115200: aparece `$I,robocar_esp32,v2*..` e, a cada 20 ms, `$T,...`.
+
+**Protocolo v2 (24/11/2026):** grave este firmware **junto** com a atualização da Jetson (`git pull`). Com versões diferentes, a Jetson avisa `ERRO: firmware usa protocolo v1`.
+
+**Botão de largada (J14):** apertar e soltar = largada; apertar com o robô armado = para na hora; segurar 3 s com o robô parado = pede à Jetson para desligar (LED pisca muito rápido). Não deixe um jumper fixo no J14.
 
 ## Primeiro teste, sem motores
 1. Só a ESP32 ligada ao PC: LED apagado = SEM_JETSON (sem comandos).

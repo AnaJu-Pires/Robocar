@@ -24,6 +24,16 @@ id -nG "$USUARIO" | grep -qw dialout || {
   usermod -aG dialout "$USUARIO"
 }
 
+# shutdown sem senha (so este comando): o botao da ESP32 segurado 3 s desliga a Jetson com seguranca
+REGRA=$(mktemp)
+echo "$USUARIO ALL=(root) NOPASSWD: /sbin/shutdown -h now" > "$REGRA"
+if visudo -cf "$REGRA" >/dev/null; then
+  install -m 0440 "$REGRA" /etc/sudoers.d/robocar-desligar
+else
+  echo "AVISO: regra do sudo invalida; o desligamento pelo botao nao vai funcionar."
+fi
+rm -f "$REGRA"
+
 sed -e "s|@USUARIO@|$USUARIO|g" -e "s|@REPO@|$REPO|g" -e "s|@PORTA@|$PORTA|g" \
   "$REPO/jetson/servico/robocar.service" > /etc/systemd/system/robocar.service
 systemctl daemon-reload
@@ -35,3 +45,4 @@ echo "  Iniciar agora:        sudo systemctl start robocar"
 echo "  Ver o que ele mostra: journalctl -u robocar -f"
 echo "  Parar (para usar make visao/calibrar/bancada): sudo systemctl stop robocar"
 echo "  Desligar o inicio automatico: sudo systemctl disable --now robocar"
+echo "  Desligar a Jetson sem SSH: com o robo parado, segure o botao de largada por 3 s (LED pisca rapido)."
