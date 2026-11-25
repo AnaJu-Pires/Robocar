@@ -10,10 +10,12 @@ Acrescentado:
   janela de mascara com o limiar atual e aviso de contraste baixo
 
 Uso: python3 calibrar.py [--fonte csi|0|video.avi]
+     python3 calibrar.py --auto     # sem janela (SSH): Otsu em varios quadros, salva e grava uma foto
 """
 
 import argparse
 import sys
+import time
 
 import cv2
 import numpy as np
@@ -21,6 +23,7 @@ import numpy as np
 from robocar import configuracao
 from robocar.camera import Camera
 
+SEPARACAO_MIN = 25.0   # abaixo disso o Otsu nao achou linha, so ruido do chao
 CONTRASTE_MIN = 60.0   # abaixo disso a linha se confunde com o chao (22/11/2026: 106/66 falhou)
 ESCALA = 2
 
@@ -40,7 +43,54 @@ def calibrar_otsu(pixels):
     claros, escuros = pixels[pixels > t], pixels[pixels <= t]
     if claros.size < 0.05 * pixels.size or escuros.size < 0.01 * pixels.size:
         return None  # nao ha linha E fundo suficientes na regiao
-    return float(np.median(claros)), float(np.median(escuros))
+    branco, preto = float(np.median(claros)), float(np.median(escuros))
+    if branco - preto < SEPARACAO_MIN:
+        return None  # so chao (ou so linha): o Otsu dividiu o proprio ruido em "claro" e "escuro"
+    return branco, preto
+
+
+def calibrar_quadros(rois, min_validos=0.5):
+    """Otsu em varios quadros (mediana dos resultados). Retorna (branco, preto, n_validos) ou None."""
+    resultados = [r for r in (calibrar_otsu(roi) for roi in rois) if r is not None]
+    if not rois or len(resultados) < min_validos * len(rois):
+        return None
+    return (float(np.median([r[0] for r in resultados])), float(np.median([r[1] for r in resultados])),
+            len(resultados))
+
+
+def calibrar_automatico(cam, cfg, quadros=30, descartar=30):
+    """Modo --auto (sem janela): espera a exposicao estabilizar, calibra e salva uma foto em dados/capturas/."""
+    rois, ultimo = [], None
+    for i in range(descartar + quadros):
+        ok, cinza = cam.ler()
+        if not ok:
+            print("ERRO: Nao foi possivel receber o frame.")
+            return 1
+        if i >= descartar:
+            ret = regiao(cinza, "inferior", cfg["visao"]["inicio_roi"])
+            rois.append(cinza[ret[1]:ret[3], ret[0]:ret[2]])
+            ultimo = cinza
+    r = calibrar_quadros(rois)
+    foto = configuracao.arquivo_de_dados("capturas", "png", time.strftime("calibracao_%Y%m%d_%H%M%S"))
+    if r is None:
+        cv2.imwrite(foto, ultimo)
+        print("Automatico falhou: a LINHA e o CHAO precisam aparecer na parte de baixo da imagem. Foto: %s" % foto)
+        return 1
+    branco, preto, n = r
+    dados = configuracao.salvar_calibracao(branco, preto, extras={"regiao": "inferior", "camera": cam.descricao,
+                                                                  "modo": "auto (%d quadros)" % n})
+    _, mascara = cv2.threshold(ultimo, dados["limiar"], 255, cv2.THRESH_BINARY_INV)
+    cv2.imwrite(foto, np.hstack([ultimo, mascara]))
+    print("Salvo em %s: branco=%.1f preto=%.1f limiar=%.1f razao=%.2f" % (
+        configuracao.ARQ_CALIBRACAO, branco, preto, dados["limiar"], dados["razao"]))
+    print("Foto (imagem | mascara, linha em branco): %s" % foto)
+    contraste = branco - preto
+    if contraste < CONTRASTE_MIN:
+        print("AVISO: contraste %.0f (bom: >= 80). Use fita preta fosca, chao branco e mais luz, e recalibre."
+              % contraste)
+    else:
+        print("Contraste %.0f: OK." % contraste)
+    return 0
 
 
 def desenhar(cinza, ret, intensidade, branco, preto, modo):
@@ -75,11 +125,18 @@ def desenhar(cinza, ret, intensidade, branco, preto, modo):
 def main():
     ap = argparse.ArgumentParser(description="Calibracao preto/branco - Robocar Blitz")
     ap.add_argument("--fonte")
+    ap.add_argument("--auto", action="store_true",
+                    help="sem janela: calibra sozinho (linha e chao visiveis embaixo) e salva")
     args = ap.parse_args()
 
     cfg = configuracao.carregar_config()
     cam = Camera(cfg["camera"], args.fonte)
     print("Fonte:", cam.descricao)
+    if args.auto:
+        try:
+            return calibrar_automatico(cam, cfg)
+        finally:
+            cam.liberar()
     anterior = configuracao.carregar_calibracao()
     branco = anterior["branco"] if anterior else None
     preto = anterior["preto"] if anterior else None

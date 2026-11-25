@@ -8,7 +8,7 @@ VIDEO  ?=
 OPCOES ?=
 JETSON := cd jetson &&
 
-.PHONY: sim-esp32 ajuda testes benchmark calibrar visao gravar video carro bancada movimento servico config placa drc limpar
+.PHONY: sim-esp32 ajuda testes benchmark calibrar visao gravar video carro bancada movimento servico diagnostico calibrar-auto config placa drc limpar
 
 ajuda:  ## lista os alvos
 	@echo "Alvos (make <alvo>):"
@@ -22,6 +22,9 @@ benchmark:  ## tempo do algoritmo atual x original nesta maquina
 
 calibrar:  ## calibracao preto/branco -> jetson/config/calibracao.json
 	$(JETSON) $(PYTHON) calibrar.py $(OPCOES)
+
+calibrar-auto:  ## calibracao sem janela (via SSH): linha e chao visiveis embaixo; salva e grava uma foto
+	$(JETSON) $(PYTHON) calibrar.py --auto $(OPCOES)
 
 visao:  ## camera ao vivo, so visualizacao (nao move motores)
 	$(JETSON) $(PYTHON) seguir_linha.py $(OPCOES)
@@ -47,6 +50,9 @@ movimento:  ## sem camera: frente, giro 360 e re pela ESP32 (largada no botao; O
 
 servico:  ## instala o inicio automatico no boot (modo carro; pede a senha do sudo)
 	sudo bash jetson/servico/instalar.sh $(PORTA)
+
+diagnostico:  ## junta logs, configuracao e fotos em ~/diagnostico_<data>.tar.gz
+	bash jetson/servico/diagnostico.sh
 
 config:  ## mostra os parametros efetivos (padrao + config.json)
 	$(JETSON) $(PYTHON) seguir_linha.py --mostrar-config

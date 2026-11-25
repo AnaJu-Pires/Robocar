@@ -3,6 +3,11 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Adicionado (25/11/2026)
+- `make calibrar-auto` (`calibrar.py --auto`): calibração sem janela pelo SSH (o `ssh -X` derrubava a câmera). Otsu em 30 quadros depois de a exposição estabilizar; salva e grava uma foto (imagem + máscara) em `dados/capturas/`.
+- `make diagnostico` (`jetson/servico/diagnostico.sh`): junta serviço, kernel, reinícios, configuração, logs CSV e fotos num `.tar.gz`.
+### Corrigido (25/11/2026)
+- Calibração automática (tecla A e `--auto`): com só o chão na imagem, o Otsu dividia o ruído em "branco" e "preto" (ex.: 204/195) e salvava uma calibração inútil; agora exige 25 de separação. 3 testes novos.
 ### Alterado (25/11/2026, a partir dos logs do teste no chão de 22/11)
 - **Visão:** a razão do limiar vinda da calibração fica entre `razao_min` 0,35 e `razao_max` 0,70. A calibração de 22/11 (branco 106, preto 66) dava razão 0,81: o chão virava "escuro", e 46 % dos quadros acusavam cruzamento falso e a linha sumia. O limiar também é suavizado entre quadros (`suavizar_limiar` 0,3); no log ele pulava de 57 a 187. `calibrar.py` avisa contraste baixo abaixo de 60 (era 40). 5 testes novos, um deles reproduzindo o caso real.
 - **Controle:** `v_busca` 0,25 → 0,45 e `tempo_busca_s` 0,6 → 1,0. Com 0,25 o carro não girava no chão e parava por "linha perdida".

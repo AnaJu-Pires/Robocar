@@ -20,7 +20,9 @@ Os comandos rodam na raiz do repositório (ver `make ajuda`):
 | Comando | O que faz |
 |---|---|
 | `make testes` | testes automáticos |
-| `make calibrar` | calibração preto/branco → `config/calibracao.json` |
+| `make calibrar` | calibração preto/branco → `config/calibracao.json` (com janela) |
+| `make calibrar-auto` | a mesma calibração **sem janela** (pelo SSH): linha e chão visíveis embaixo; salva e grava uma foto em `dados/capturas/` |
+| `make diagnostico` | junta logs, configuração e fotos em `~/diagnostico_<data>.tar.gz` para análise |
 | `make visao` | câmera ao vivo com janelas (não move motores) |
 | `make gravar` | idem, gravando vídeo em `dados/gravacoes/` |
 | `make video VIDEO=dados/gravacoes/x.avi` | reprocessa um vídeo |
