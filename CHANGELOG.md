@@ -3,6 +3,15 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Adicionado (25/11/2026, chassi v3)
+- `mecanica/chassi_v3/`: chassi definitivo em MDF 3 mm (D-026): Jetson baixa sobre a bateria (túnel com pino de trava, sai pela frente), caixa traseira com os 2 XL4016 e tampo removível com a placa da ESP32 sobre o eixo, quilha central, pisos sobrepostos que nivelam a esfera de 15 mm. 240 × 140 × 154 mm, 633 g, CG a 36 mm; 1 chapa de 390 × 270 mm.
+- Gerador `fonte/gerar.py` (`make chassi`): STEP montado, DXF, pente de teste com gabaritos de furação da Jetson, do XL4016 e da placa da ESP32, PDF 1:1 em A3 com régua, imagens, `verificacao.md` (cabos com comprimento de corte, massas, fixadores) e `resumo.json`.
+- 52 verificações automáticas que param o `make` (regulamento, interferência com volumes de acesso, câmera em toda a faixa de ângulo e o que ela vê do carro, material mínimo/entalhe/peça solta/gravação, CG e tombamento, cabos, e a releitura do DXF gravado) e 28 testes negativos (`make chassi-negativos`); `make chassi-cortar` barra o corte com medida estimada.
+- `fonte/analise.py`: 3 arquiteturas e 4 rodas no mesmo modelo de volta; rodas de 42 mm mantidas (D-027).
+- Botão de desligar a Jetson no J41 com LED "pode desligar a chave" (D-028): `hardware/placa_desligar/`, `jetson/robocar/botao_desligar.py`, `jetson/servico/botao_desligar.py` e `botao-desligar.service` (instalado por `make servico`); 8 testes.
+- `docs/06_testes.md`: T15 (desligar), T16 (temperatura), T17 (massa e CG), T18 (chassi v3).
+### Alterado (25/11/2026)
+- Controle: `acel_max` = 2,0/s limita só a subida da velocidade (o chassi v3 empina acima de ~0,47 g; D-030). 2 testes novos; a simulação do firmware confere o PWM depois da rampa (26/26).
 ### Adicionado (25/11/2026)
 - `make calibrar-auto` (`calibrar.py --auto`): calibração sem janela pelo SSH (o `ssh -X` derrubava a câmera). Otsu em 30 quadros depois de a exposição estabilizar; salva e grava uma foto (imagem + máscara) em `dados/capturas/`.
 - `make diagnostico` (`jetson/servico/diagnostico.sh`): junta serviço, kernel, reinícios, configuração, logs CSV e fotos num `.tar.gz`.

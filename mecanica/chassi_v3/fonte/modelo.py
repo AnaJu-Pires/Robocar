@@ -312,10 +312,10 @@ def construir(P=None, verif=False):
     # sobreposicao: 2 parafusos M3 + os 2 espacadores de tras da Jetson atravessam os dois pisos
     lap_paraf = [(27.0, 20.0), (27.0, -20.0)]
     for (x, y) in lap_paraf:
-        ft.append(circ(x, y, 3.4, 'parafuso_pisos', 'parafuso M3 que une os pisos'))
+        ft.append(circ(x, y, 3.4, 'parafuso_pisos', 'passagem (o mesmo parafuso do piso dianteiro)'))
     for (x, y) in m.jet_furos:
         if x < X_LAP1 - 3:
-            ft.append(circ(x, y, 2.9, 'jetson', 'parafuso M2.5 do espacador da Jetson'))
+            ft.append(circ(x, y, 2.9, 'jetson', 'passagem (o mesmo parafuso do piso dianteiro)'))
     # abracadeiras (pares de rasgos 1,5 x 3,5) nos pontos de apoio dos cabos
     def abracadeira(lista, nome, x, y, ang=0, dist=6.0):
         c, s_ = math.cos(math.radians(ang)), math.sin(math.radians(ang))

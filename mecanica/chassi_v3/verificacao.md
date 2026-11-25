@@ -60,6 +60,12 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (56 ok, 0 falhas).
 | ok | medidas | conferir antes de cortar: xl_furos | centros dos 4 furos M3 |
 | ok | medidas | conferir antes de cortar: xl_trimpots | parafusos dos trimpots (l, w), regulagem por CIMA |
 | ok | medidas | conferir antes de cortar: chave_recorte | KCD1-101: recorte 19 x 13; conferir a sua |
+| ok | dxf | furos da Jetson no DXF | 85.30 x 57.30 mm (1 esperado) |
+| ok | dxf | furos da placa da ESP32 no DXF | 73.0 x 66.0 mm (1 esperado) |
+| ok | dxf | furos dos 2 XL4016 no DXF | 57.0 x 40.0 mm (2 esperados) |
+| ok | dxf | furos da camera no DXF | 21.0 x 12.5 mm |
+| ok | dxf | furos da esfera no DXF | 16.0 mm |
+| ok | dxf | furos do pino de trava no DXF | 2 trilhos + 2 postes |
 
 ## Cabos: rota e comprimento de corte
 
@@ -153,14 +159,14 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 
 | item | qtd |
 |---|---|
-| Espacador M2.5 x 20 mm (femea-femea) + parafuso M2.5 x 6 embaixo e em cima | 3 |
+| Espacador M2.5 x 20 mm (femea-femea) + parafuso M2.5 x 6 em cima + M2.5 x 10 embaixo | 4 |
 | Parafuso M2 x 16 + porca (vem com o suporte do N20) | 4 |
 | Parafuso M2 x 8 + porca + arruela fina (camera) | 4 |
 | Parafuso M2.5 x 8 CABECA CHATA (escareado) por cima + porca embaixo; escarear o furo a mao | 2 |
 | Parafuso M3 x 10 + espacador M3 x 3 mm + porca | 2 |
 | Parafuso M3 x 10 + espacador nylon M3 x 5 mm + porca | 4 |
-| Parafuso M3 x 10 + porca | 4 |
 | Parafuso M3 x 10 + porca (pivo da camera, um de cada lado) | 2 |
+| Parafuso M3 x 10 + porca (une os 2 pisos) | 2 |
 | Parafuso M3 x 10 + porca borboleta (trava do angulo, um de cada lado) | 2 |
 | Parafuso M3 x 12 + porca + espacador nylon M3 x 4 mm (ou 2 porcas) | 8 |
 | Parafuso M3 x 12 + porca M3 presa no bolso da parede | 4 |

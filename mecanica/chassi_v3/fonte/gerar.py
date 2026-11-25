@@ -50,16 +50,16 @@ def pecas_teste(m):
     jf = [(J_W - (x - m.P['J0']) , 40 - y) for (x, y) in m.jet_furos]      # de volta para (u, v)
     jet = Chapa('gabarito_jetson', ret(0, 0, J_W, J_D), [circ(u, vv, 2.9, 'jetson') for u, vv in jf] +
                 [Furo(ret(16, 6, J_W - 16, J_D - 6), 'miolo', funcao='vazado')],
-                textos=[('JETSON  portas v', 50, 3, 2.0), ('P4', 8, 3, 1.6)], qtd=1, descricao='furos da Jetson (u, v)')
+                textos=[('JETSON vista de cima  portas v', 50, 3, 2.0), ('P4', 8, 3, 1.6)], qtd=1, descricao='furos da Jetson (u, v)')
     out.append(jet)
     XL_L, XL_W = v('xl')
     out.append(Chapa('gabarito_xl4016', ret(0, 0, XL_L, XL_W), [circ(l, w, 3.4, 'xl') for l, w in v('xl_furos')] +
                      [Furo(ret(9, 9, XL_L - 9, XL_W - 9), 'miolo', funcao='vazado')] +
                      [circ(l, w, 7.0, 'trimpot') for l, w in v('xl_trimpots')],
-                     textos=[('BORNES', 4.5, 24, 1.6), ('XL4016', 32, 4.5, 1.8)], qtd=1))
+                     textos=[('BORNES', 4.5, 24, 1.6), ('XL4016 vista de cima', 32, 4.5, 1.6)], qtd=1))
     EW, EL, _ = v('esp_placa')
     out.append(Chapa('gabarito_esp32', ret(0, 0, EW, EL), [circ(u, vv, 3.4, 'esp32') for u, vv in v('esp_furos')] +
-                     [Furo(ret(8, 8, EW - 8, EL - 8), 'miolo', funcao='vazado')], textos=[('ESP32 frente ^', 40, EL - 4, 1.8)], qtd=1))
+                     [Furo(ret(8, 8, EW - 8, EL - 8), 'miolo', funcao='vazado')], textos=[('ESP32 (vista de cima)', 40, EL - 4, 1.8)], qtd=1))
     cr = v('chave_recorte')
     out.append(Chapa('teste_chave', ret(0, 0, cr[0] + 8, cr[1] + 9), [Furo(ret_c((cr[0] + 8) / 2, (cr[1] + 9) / 2 + 1, *cr), 'chave')],
                      textos=[('CHAVE', (cr[0] + 8) / 2, 2.2, 1.5)], qtd=1))
@@ -271,8 +271,8 @@ def figura_camera(m, arq):
 FIXADORES = {
     'parafuso M2 do suporte': ('Parafuso M2 x 16 + porca (vem com o suporte do N20)', 1),
     'parafuso M3 do XL4016': ('Parafuso M3 x 12 + porca + espacador nylon M3 x 4 mm (ou 2 porcas)', 1),
-    'parafuso M3 que une os pisos': ('Parafuso M3 x 10 + porca', 1),
-    'parafuso M2.5 do espacador da Jetson': ('Espacador M2.5 x 20 mm (femea-femea) + parafuso M2.5 x 6 embaixo e em cima', 0.5),
+    'parafuso M3 que une os pisos': ('Parafuso M3 x 10 + porca (une os 2 pisos)', 1),
+    'parafuso M2.5 do espacador da Jetson': ('Espacador M2.5 x 20 mm (femea-femea) + parafuso M2.5 x 6 em cima + M2.5 x 10 embaixo', 1),
     'parafuso M2.5 da esfera': ('Parafuso M2.5 x 8 CABECA CHATA (escareado) por cima + porca embaixo; escarear o furo a mao', 1),
     'parafuso M3 da placa da ESP32': ('Parafuso M3 x 10 + espacador nylon M3 x 5 mm + porca', 1),
     'parafuso M3 da placa de desligar': ('Parafuso M3 x 10 + espacador M3 x 3 mm + porca', 1),
@@ -291,6 +291,38 @@ def lista_fixadores(m):
                 item, k = FIXADORES[f.funcao]
                 cont[item] = cont.get(item, 0) + k * c.qtd
     return sorted(((k, int(math.ceil(q))) for k, q in cont.items()), key=lambda x: x[0])
+
+# ------------------------------------------------------------------------------------------- auditoria do DXF
+def auditar_dxf(arq, m):
+    """Le o DXF gravado e confere que as furacoes das pecas compradas estao la, nas medidas de pecas.py."""
+    import itertools
+    doc = ezdxf.readfile(arq)
+    circ = [(round(e.dxf.radius * 2, 2), np.array([e.dxf.center.x, e.dxf.center.y])) for e in doc.modelspace()
+            if e.dxftype() == 'CIRCLE']
+    def retangulos(d, a, b, tol=0.05):
+        pts = [c for dd, c in circ if abs(dd - d) < 0.01]
+        alvo = sorted([a, a, b, b, math.hypot(a, b), math.hypot(a, b)])
+        n = 0
+        for q in itertools.combinations(pts, 4):
+            ds = sorted(float(np.linalg.norm(x - y)) for x, y in itertools.combinations(q, 2))
+            n += all(abs(x - y) < tol for x, y in zip(ds, alvo))
+        return n
+    def pares(d, dist, tol=0.05):
+        pts = [c for dd, c in circ if abs(dd - d) < 0.01]
+        return sum(abs(float(np.linalg.norm(x - y)) - dist) < tol for x, y in itertools.combinations(pts, 2))
+    jb, jd = v('jet_furos_borda'), v('jet_furo_d')
+    (xl0, xl1) = (v('xl_furos')[0], v('xl_furos')[2])
+    ef = v('esp_furos'); cf = v('cam_furos')
+    R = [V.Resultado(retangulos(2.9, jb[0] - jd, jb[1] - jd) == 1, 'dxf', 'furos da Jetson no DXF',
+                     f'{jb[0] - jd:.2f} x {jb[1] - jd:.2f} mm (1 esperado)'),
+         V.Resultado(retangulos(3.4, ef[1][0] - ef[0][0], ef[2][1] - ef[1][1]) == 1, 'dxf', 'furos da placa da ESP32 no DXF',
+                     f'{ef[1][0] - ef[0][0]:.1f} x {ef[2][1] - ef[1][1]:.1f} mm (1 esperado)'),
+         V.Resultado(retangulos(3.4, abs(xl1[0] - xl0[0]), abs(xl1[1] - xl0[1])) == 2, 'dxf', 'furos dos 2 XL4016 no DXF',
+                     f'{abs(xl1[0] - xl0[0]):.1f} x {abs(xl1[1] - xl0[1]):.1f} mm (2 esperados)'),
+         V.Resultado(retangulos(2.2, cf[0], cf[1]) == 1, 'dxf', 'furos da camera no DXF', f'{cf[0]} x {cf[1]} mm'),
+         V.Resultado(pares(2.8, v('esfera_furos')) == 1, 'dxf', 'furos da esfera no DXF', f'{v("esfera_furos")} mm'),
+         V.Resultado(sum(abs(dd - 3.3) < 0.01 for dd, _ in circ) == 4, 'dxf', 'furos do pino de trava no DXF', '2 trilhos + 2 postes')]
+    return R
 
 # ------------------------------------------------------------------------------------------- principal
 def principal():
@@ -364,6 +396,17 @@ def principal():
         escrever_dxf(f, os.path.join(pasta_c, f'chapa_{k + 1}.dxf'))
         tit.append(f'Robocar Blitz v3 - chapa {k + 1} de {len(folhas)} ({mesa[0]:.0f} x {mesa[1]:.0f} mm)')
     pdf_1x1(folhas, os.path.join(pasta_c, 'chapas_1x1_A3.pdf'), tit, mesa, nota)
+    if len(folhas) == 1:
+        Rd = auditar_dxf(os.path.join(pasta_c, 'chapa_1.dxf'), m)
+        falhas += [r for r in Rd if not r.ok]
+        with open(os.path.join(out, 'verificacao.md')) as f_:
+            txt = f_.read()
+        linhas_d = ''.join(f"| {'ok' if r.ok else '**FALHOU**'} | {r.grupo} | {r.nome} | {r.detalhe} |\n" for r in Rd)
+        txt = txt.replace('\n\n## Cabos', '\n' + linhas_d + '\n## Cabos', 1)
+        open(os.path.join(out, 'verificacao.md'), 'w').write(txt)
+        for r in Rd:
+            if not r.ok:
+                print('  FALHOU', r)
     teste = arranjar(expandir(pecas_teste(m)), (270.0, 180.0))
     escrever_dxf(teste[0], os.path.join(pasta_c, 'TESTE_cortar_primeiro.dxf'))
     pdf_1x1(teste, os.path.join(pasta_c, 'TESTE_cortar_primeiro_1x1_A3.pdf'), ['Robocar Blitz v3 - CORTAR PRIMEIRO: pente, furos e gabaritos'],

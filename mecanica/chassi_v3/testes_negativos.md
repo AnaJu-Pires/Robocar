@@ -32,5 +32,6 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 | cabos: abracadeira do passa-fio apagada | cabos | sim | vm_e: apoio "pf_vm_e" nao existe nas chapas; trecho solto de 114 mm (max 110: falta abracadeira) |
 | cabos: cabo USB de 150 mm | cabos | sim | usb_jetson_esp32: precisa de 198 mm e tem 150 mm |
 | medidas: --para-cortar com medidas estimadas | medidas | sim | conferir antes de cortar: jet_furo_d: diametro do furo (M2.5); define centros = borda - d |
+| dxf: DXF gravado com a Jetson 1 mm diferente da medida | dxf | sim | furos da Jetson no DXF: 86.30 x 57.30 mm (1 esperado) |
 
-Tempo: 113 s.
+Tempo: 115 s.

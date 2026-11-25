@@ -51,6 +51,8 @@ GND comum: a corrente dos motores volta pelos fios pretos de J2/J3 até o XL4016
 
 ## 4. Massa
 
+**Chassi v3:** massa, CG e tombamento calculados peça a peça pelo modelo ([mecanica/chassi_v3/verificacao.md](../mecanica/chassi_v3/verificacao.md#massas-para-refazer-o-cg-depois-de-pesar)): **633 g**, CG a 16,8 mm à frente do eixo e 36,1 mm de altura. A tabela abaixo é a estimativa inicial da planilha.
+
 Planilha da equipe (aba MASSA E DINAMICA), ajustada para a lista atual.
 
 | Item | Mín. (g) | Base (g) | Máx. (g) | Origem |

@@ -175,3 +175,66 @@ O roteamento foi automático e conferido pelo DRC do KiCad (com paridade com o e
 **Contexto:** no ajuste da equipe, o GND dos módulos DRV8833 foi ligado ao plano por um toco de trilha (o pino fica entre VCC e IN3 e não recebe 2 raios de alívio térmico). Medido no plano, o caminho do driver até o fio de GND e o 470 µF ficava com 0,4–0,5 mm de largura no trecho mais estreito.
 **Decisão:** o GND de cada driver é uma trilha de 1,5 mm até o 470 µF e o fio de GND do XL4016, por fora do VM. O plano volta para folga de 0,6 mm, largura mínima de 1,0 mm e raios de 1,0 mm. Mantidos os outros ajustes da equipe (80 × 73 mm, Y do motor, resistores no meio da ESP32, J2 alinhado com o C1).
 **Consequências:** a corrente do motor (até 1,9 A) volta direto ao fio sem passar pelo plano embaixo da ESP32. O trecho mais estreito do GND, do driver até o fio, ficou com 1,5 mm. DRC 0 e paridade OK. Esquemático com PWR_FLAG em VM_E, VM_D e GND e tudo na grade de 1,27 mm (ERC do KiCad 10 sem os 3 erros e os 98 avisos; rodar de novo para confirmar).
+
+### D-026 — Chassi v3: Jetson baixa sobre a bateria, caixa traseira com tampo da ESP32 e quilha central
+*25/11/2026 · aceita* (substitui o arranjo da v1 em `mecanica/chassi/`; o estudo v2.2 não está no repositório)
+**Contexto:** a v1 ficou bamba (paredes paralelas sem travessa, sem parafuso embaixo, rasgo folgado), maior que o
+necessário e com furos errados; a Jetson (141 g, a peça mais pesada) ia no 2º andar. Com apoio em 3 pontos, o carro
+tomba em torno da linha roda–esfera: a ~46 mm de altura de CG, ele tombaria (0,97 g) antes de escorregar (μ ≈ 0,9)
+numa curva de R100 feita rápido demais.
+**Decisão:** ([mecanica/chassi_v3/](../mecanica/chassi_v3/))
+* Jetson baixa (placa a 38 mm do chão), à frente do eixo, com os 100 mm no sentido do carro e as portas para a esquerda;
+* bateria embaixo da Jetson, num túnel que sai pela frente, travada por um pino;
+* caixa traseira fechada com os 2 XL4016 no chão (bornes para o eixo, trimpots reguláveis por cima através do tampo)
+  e tampo removível com a placa da ESP32 sobre o eixo e a placa de desligar;
+* quilha central (espinha de MDF em pé) ligando a caixa ao piso da frente; pisos sobrepostos (traseiro z 12–15,
+  dianteiro z 15–18) que nivelam o carro com a esfera de 15 mm;
+* fusível logo depois do XT60 (na frente) e chave na parede direita; o XT60 do chassi fica num pigtail curto (par solto).
+**Alternativas comparadas** (mesmas peças e massas, `fonte/analise.py`): Jetson no andar de cima (CG 45,5 mm, tomba
+com 0,97 g, 246 mm) e Jetson no piso com a bateria atravessada na frente (CG 33,1 mm, mas 252 mm > 250).
+**Consequências:** 240 × 140 × 154 mm, 633 g estimados, CG a 36 mm, 86 % do peso nas rodas, tomba só com 1,11 g.
+Empina acima de 0,47 g (D-030). 52 verificações automáticas e 28 testes negativos. Cortar o pente primeiro: 10
+medidas estimadas ainda mudam o corte (`make chassi-cortar` barra até serem conferidas).
+
+### D-027 — Rodas de 42 mm mantidas; bitola de 104 mm
+*25/11/2026 · aceita*
+**Contexto:** foi pedido rever a roda (velocidade, torque, vão livre, aderência, esfera, limite em curva).
+**Decisão:** manter as 42 × 19 mm (já compradas) e a bitola de 104 mm.
+**Por quê:** em R100 o limite é o pneu no tapete (~0,94 m/s com μ = 0,9), não o motor; a de 42 mm dá 1,98 m/s em vazio
+e 19 N de partida (4× o que o pneu passa ao chão). A de 32 mm (StickyMAX) fica limitada pelo diferencial (0,96 m/s em
+R100) e deixa a esfera de 15 mm 5 mm alta; a de 48 mm só ganha nas retas acima de ~1,6 m/s (hoje o controle roda a ~0,7 m/s)
+e a de 65 mm passa a tombar antes de escorregar. Pneu mais aderente (μ > 1,0) também faria tombar antes de escorregar.
+**Consequências:** nada a comprar. Se o T12 medir μ > 1,0, limitar a velocidade na curva por software (~0,9 m/s em R100).
+
+### D-028 — Botão de desligar a Jetson no J41 e LED "pode desligar a chave"
+*25/11/2026 · aceita*
+**Contexto:** o desligamento pela largada segurada 3 s depende do `seguir_linha.py` e do USB da ESP32; nenhum LED
+indica com certeza que a Jetson terminou (o LED verde da Jetson fica no 5 V; a ESP32 segue alimentada pelo USB).
+Desligar a chave cedo demais corrompe o microSD.
+**Decisão:** placa extra pequena ([hardware/placa_desligar/](../hardware/placa_desligar/)) no tampo: botão no J41 pino 18
+(gpio15, pull-up externo) e LED vermelho por BC337 no pino 16 (gpio232). Serviço próprio `botao-desligar.service`
+(root, sysfs): segurar 2 s → `poweroff`. O LED acende quando o Linux sobe e **nunca é apagado por software**: só apaga
+quando o módulo corta a própria energia → "apagou = pode desligar a chave". Só arma depois de ver o botão solto 0,5 s
+(fio em curto não desliga a Jetson no boot). A largada segurada 3 s continua como reserva.
+**Descartadas:** header J50 (pinagem da B01 não confirmada; fica embaixo do módulo), botão extra na ESP32 (mudaria a
+placa v0.8, que fica como está).
+**Consequências:** 8 testes automáticos com GPIO falso; `make servico` instala os dois serviços. Falta o teste na Jetson (T15).
+
+### D-029 — Temperatura: sem ventoinha por padrão; decidir pelo `tegrastats`
+*25/11/2026 · aceita*
+**Contexto:** dissipador passivo da Jetson aguenta 10 W a 25 °C; o pipeline atual gasta ~4 ms por quadro. XL4016 #1
+perde ~1,4 W a 2 A.
+**Decisão:** nada em cima do dissipador (25 mm livres, verificado); MAXN se o `tegrastats` ficar ≤ 70 °C em 15 min de
+`make carro`; senão medir o modo 5 W e, só se não servir, ventoinha 4010 de 5 V no J15. Caixa dos XL4016 com entrada de
+ar pela frente e saída pelas 2 janelas da parede traseira (as únicas aberturas "de ar" do chassi).
+**Consequências:** teste T16. A ventoinha não exige mudar o chassi.
+
+### D-030 — Limite de aceleração na Jetson (`controle.acel_max`)
+*25/11/2026 · aceita*
+**Contexto:** com o CG do v3 (x 16,8 mm à frente do eixo, z 36,1 mm) a esfera sai do chão acima de 0,47 g; a largada
+pedia 0 → `v_max` num quadro (tração limitada a ~0,77 g).
+**Decisão:** limitar só a **subida** da velocidade comum no controlador: `acel_max` = 2,0 por segundo (≈ 0,4 g com a roda
+de 42 mm). Frear e virar continuam imediatos. A rampa do firmware (por roda) não foi mexida: apertá-la deixaria a
+direção lenta.
+**Consequências:** na largada, 0 → 0,35 leva 0,18 s. 2 testes novos; a simulação do firmware passa a conferir o PWM depois
+da rampa. Se a pesagem mudar o CG, recalcular (`make chassi-verificar` mostra o "empina com").

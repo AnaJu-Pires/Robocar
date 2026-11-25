@@ -39,6 +39,10 @@ Em cada ensaio, medir tensão, corrente e temperatura. Não ligar o robô comple
 | T12 | Controle | Pista com R100, cruzamento de 90°, X e bifurcação, em velocidade crescente | Não perde a linha; anotar velocidade máxima e μ estimado | — |
 | T13 | Box | Marca de box de teste e linha terminando no box | Para dentro do box em **100 %** das tentativas | — |
 | T14 | Competição | 20 voltas seguidas sem intervenção | Zero reinícios e zero erros em cruzamento; anotar tempo médio e melhor volta | — |
+| T15 | Desligar | Botão de desligar (placa extra, [roteiro](../hardware/placa_desligar/README.md#instalar-e-testar)): `--teste`, depois de verdade; aperto curto; ligar com o botão apertado; com o `robocar.service` parado | Segurar 2 s desliga; LED pisca, fica aceso e **apaga** quando terminou (anotar o tempo); `journalctl -b -1` limpo; aperto curto e botão preso no boot não desligam | Só desligar a chave depois que o LED apagar |
+| T16 | Temperatura | `sudo tegrastats --interval 1000 --logfile ~/teg.log` em 15 min de `make carro` (rodas suspensas), MAXN; dedo/termômetro nos XL4016, DRV8833 e bateria depois | CPU/GPU ≤ 70 °C a ~25 °C; XL4016 ≤ 60 °C; bateria ≤ 40 °C ([D-029](decisoes.md)) | Se passar: medir o modo 5 W antes de pôr ventoinha |
+| T17 | Massa e CG | Pesar XL4016 (cada), placa da ESP32 montada e as peças do pente; atualizar `mecanica/chassi_v3/fonte/pecas.py`; `make chassi-verificar` | Verificação de CG sem falha; anotar massa, CG, "tomba com" e "empina com" | — |
+| T18 | Chassi v3 | Pente e gabaritos ([MONTAGEM.md](../mecanica/chassi_v3/MONTAGEM.md#3-ordem-de-montagem)); depois do corte: medidas, folgas, troca de bateria, trimpot e microSD com o carro montado; câmera de 25° a 65° | Peças reais encaixam nos gabaritos; ≤ 250 × 150 mm medido; troca de bateria < 20 s; nada encosta | `make chassi-cortar` sem erro antes de cortar a chapa |
 
 **Medir a latência (T11):** com a câmera apontada para o LED da ESP32, enviar o comando que acende o LED e contar quantos quadros se passam até a imagem mostrar o LED aceso. Outra forma: filmar o robô e a tela juntos com um celular em câmera lenta.
 

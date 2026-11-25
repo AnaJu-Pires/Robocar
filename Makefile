@@ -8,11 +8,11 @@ VIDEO  ?=
 OPCOES ?=
 JETSON := cd jetson &&
 
-.PHONY: sim-esp32 ajuda testes benchmark calibrar visao gravar video carro bancada movimento servico diagnostico calibrar-auto config placa drc limpar
+.PHONY: chassi chassi-verificar chassi-cortar chassi-negativos sim-esp32 ajuda testes benchmark calibrar visao gravar video carro bancada movimento servico diagnostico calibrar-auto config placa drc limpar
 
 ajuda:  ## lista os alvos
 	@echo "Alvos (make <alvo>):"
-	@grep -E '^[a-z]+:.*## ' $(MAKEFILE_LIST) | sed -E 's/:.*## /\t/' | expand -t 14
+	@grep -E '^[a-z0-9-]+:.*## ' $(MAKEFILE_LIST) | sed -E 's/:.*## /\t/' | expand -t 18
 
 testes:  ## testes automaticos (sem camera e sem ESP32)
 	$(JETSON) $(PYTHON) -m unittest discover -s testes -t . -v
@@ -62,6 +62,18 @@ placa:  ## regenera as saidas da placa da ESP32 (PDFs 1:1, furacao, STEP, imagen
 
 drc:  ## placa da ESP32: DRC + so B.Cu + paridade esquema x placa (precisa do Python do KiCad)
 	$(PYTHON) hardware/placa_esp32/verificar.py
+
+chassi:  ## chassi v3: verifica e gera DXF, PDF 1:1, STEP, imagens (T=espessura FOLGA=folga do rasgo)
+	cd mecanica/chassi_v3/fonte && $(PYTHON) gerar.py
+
+chassi-verificar:  ## chassi v3: so as verificacoes (massa, CG, tombamento, interferencia, cabos...)
+	cd mecanica/chassi_v3/fonte && $(PYTHON) gerar.py --so-verificar
+
+chassi-cortar:  ## chassi v3: como chassi-verificar, mas medida estimada que muda o corte vira ERRO
+	cd mecanica/chassi_v3/fonte && $(PYTHON) gerar.py --so-verificar --para-cortar
+
+chassi-negativos:  ## chassi v3: prova que cada verificacao pega um defeito plantado (~2 min)
+	cd mecanica/chassi_v3/fonte && $(PYTHON) testes_negativos.py
 
 limpar:  ## remove caches do Python
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +

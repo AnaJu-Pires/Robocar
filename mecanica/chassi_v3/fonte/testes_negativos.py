@@ -78,7 +78,22 @@ CASOS = [
     caso('cabos: abracadeira do passa-fio apagada', 'cabos', mutar=lambda m: m.apoios.pop('pf_vm_e'), contendo='nao existe'),
     caso('cabos: cabo USB de 150 mm', 'cabos', medida=('usb_cabo', 150.0), contendo='precisa'),
     caso('medidas: --para-cortar com medidas estimadas', 'medidas', contendo='conferir'),
+    caso('dxf: DXF gravado com a Jetson 1 mm diferente da medida', 'dxf', contendo='Jetson'),
 ]
+
+def _dxf_desatualizado():
+    """Grava o DXF com as medidas atuais e depois 'mede' a Jetson 1 mm maior: o DXF nao confere mais."""
+    import tempfile, gerar
+    m = modelo.construir()
+    folhas = gerar.arranjar(gerar.expandir(m.chapas), m.P['MESA'])
+    arq = os.path.join(tempfile.mkdtemp(), 'chapa.dxf')
+    gerar.escrever_dxf(folhas[0], arq)
+    antes, depois = com_medida('jet_furos_borda', (89.0, 60.0))
+    antes()
+    try:
+        return gerar.auditar_dxf(arq, m)
+    finally:
+        depois()
 
 def rodar(c):
     antes = depois = None
@@ -94,7 +109,7 @@ def rodar(c):
                 c['mutar'](m)
         f = {'regulamento': V.regulamento, 'interferencia': V.interferencia, 'camera': V.camera, 'material': V.material,
              'cg': V.cg, 'cabos': lambda m_: V.cabos(m_)[0] if not c['mutar'] else _cabos_mutado(m_, c['mutar']),
-             'medidas': lambda m_: V.medidas(para_cortar=True)}[c['verif']]
+             'medidas': lambda m_: V.medidas(para_cortar=True), 'dxf': lambda m_: _dxf_desatualizado()}[c['verif']]
         return f(m)
     finally:
         if depois:
