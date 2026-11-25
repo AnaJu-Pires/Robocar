@@ -2,7 +2,7 @@
 
 Ligacao (placa extra hardware/placa_desligar):
   J41 pino 18 (gpio15)  <- botao para o GND, pull-up de 10k para o 3V3 (pino 17) e 1k em serie
-  J41 pino 16 (gpio232) -> 10k -> base do BC337 -> LED verde (100 ohm, do 3V3) acende
+  J41 pino 16 (gpio232) -> 10k -> base do BC337 -> LED vermelho (150 ohm, do 3V3) acende
 LED aceso = Linux rodando. Ao desligar, o LED continua aceso ate o modulo cortar a propria energia;
 APAGOU (com a chave ainda ligada) = pode desligar a chave. Nunca apagamos o LED por software.
 

@@ -60,6 +60,8 @@ PADRAO = {
         "v_max": 0.35,                # fracao do PWM maximo (conservador para os primeiros testes)
         "v_min": 0.2,
         "severidade_max": 0.6,        # erro a partir do qual a velocidade cai para v_min
+        "acel_max": 2.0,              # subida maxima da velocidade comum (fracao do PWM por s; 0 = sem limite).
+                                      # 2,0/s ~ 0,4 g com a roda de 42 mm: abaixo de 0,47 g, onde o chassi v3 empina
         "v_busca": 0.45,              # giro no lugar ao perder a linha; 0,25 nao movia o carro no chao
         "tempo_busca_s": 1.0,         # linha perdida por mais tempo -> PARADO
         "margem_centro": 0.12,        # so para o rotulo ESQUERDA/RETO/DIREITA

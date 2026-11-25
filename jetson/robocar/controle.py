@@ -37,10 +37,13 @@ class Controlador(object):
         self.t_perdeu = None
         self.cont_marca = 0
         self.t_marca = None
+        self.v_ant = 0.0     # ultima velocidade comum aplicada (para limitar a subida: acel_max)
+        self.t_v = None
 
     def iniciar(self, t):
         self._zerar()
         self.t_inicio = t
+        self.t_v = t
         self.estado = SEGUINDO
         self.motivo = ""
 
@@ -78,6 +81,11 @@ class Controlador(object):
         # reduz a velocidade quando a linha esta deslocada perto OU longe (curva a frente)
         severidade = max(abs(erro), abs(erro_longe))
         v = c["v_max"] - (c["v_max"] - c["v_min"]) * min(1.0, severidade / c["severidade_max"])
+        # so a SUBIDA da velocidade comum e limitada (o chassi v3 empina acima de ~0,47 g); frear e virar nao
+        a = c.get("acel_max", 0.0)
+        if a > 0 and self.t_v is not None and v > self.v_ant:
+            v = min(v, self.v_ant + a * max(0.0, t - self.t_v))
+        self.v_ant, self.t_v = v, t
 
         lado = erro if abs(erro) > 0.02 else erro_longe
         if abs(lado) > 0.02:
@@ -107,5 +115,6 @@ class Controlador(object):
             self.parar("linha perdida")
             return 0.0, 0.0, info
         self.e_ant = None
+        self.v_ant, self.t_v = 0.0, t      # girando no lugar: ao achar a linha, volta a acelerar de 0
         vb = self.c["v_busca"]
         return (vb, -vb, info) if self.ultimo_lado > 0 else (-vb, vb, info)

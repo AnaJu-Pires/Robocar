@@ -57,6 +57,7 @@ jetson/
 * `u = kp·erro + kd·d(erro)/dt + k_frente·erro_longe`, limitado a [−1, 1]. A derivada passa por um filtro passa-baixa.
 * Velocidade: `v = v_max − (v_max − v_min) · min(1, max(|erro|, |erro_longe|) / severidade_max)`. O robô freia **antes** da curva.
 * Rodas: `esquerda = v + u`, `direita = v − u`, normalizadas para que nenhuma passe de 1.
+* Subida de `v` limitada a `acel_max` (fração do PWM por segundo, padrão 2,0 ≈ 0,4 g): o chassi v3 levanta a esfera acima de ~0,47 g ([D-030](decisoes.md)). Só a subida: frear e virar continuam imediatos. Na largada, 0 → 0,35 leva 0,18 s.
 * Linha perdida: gira para o último lado visto por até `tempo_busca_s`; depois PARADO. Isso também cobre o caso de a linha terminar dentro do box.
 * Marca do box (opcional): parada após `tempo_minimo_s` e `frames_confirmacao` quadros seguidos.
 * Os ganhos atuais (`kp` 0,6, `kd` 0,05, `k_frente` 0,3, `v_max` 0,35) são **iniciais e conservadores**. O ajuste é feito na pista com os logs.
@@ -74,7 +75,7 @@ jetson/
 | Região analisada e robustez | `visao.inicio_roi`, `n_faixas`, `limiar_modo`, `salto_max_frac`, `fator_largo` |
 | Limiar com calibração ruim ou luz variando | `visao.razao_min`, `razao_max`, `suavizar_limiar` |
 | Bifurcação e box | `visao.preferencia_bifurcacao`, `visao.marca_frac_escura`, `parada.*` |
-| Comportamento na pista | `controle.kp`, `kd`, `k_frente`, `v_max`, `v_min`, `severidade_max` |
+| Comportamento na pista | `controle.kp`, `kd`, `k_frente`, `v_max`, `v_min`, `severidade_max`, `acel_max` |
 | Perda de linha | `controle.tempo_busca_s`, `v_busca` |
 
 ## 6. Dados de teste

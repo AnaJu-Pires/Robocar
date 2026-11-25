@@ -30,9 +30,26 @@ class TestControlador(unittest.TestCase):
 
     def test_reduz_velocidade_em_curva(self):
         self.c.iniciar(0.0)
-        _, _, reta = self.c.atualizar(det(0.0, 0.0), 0.02)
-        _, _, curva = self.c.atualizar(det(0.0, 0.6), 0.04)
+        _, _, reta = self.c.atualizar(det(0.0, 0.0), 1.0)     # depois da rampa de largada
+        _, _, curva = self.c.atualizar(det(0.0, 0.6), 1.02)
         self.assertLess(curva["v"], reta["v"])
+
+    def test_acelera_aos_poucos_e_freia_na_hora(self):
+        a = self.cfg["controle"]["acel_max"]
+        self.c.iniciar(0.0)
+        _, _, i1 = self.c.atualizar(det(0.0, 0.0), 0.05)
+        self.assertAlmostEqual(i1["v"], min(self.cfg["controle"]["v_max"], a * 0.05), places=6)
+        _, _, i2 = self.c.atualizar(det(0.0, 0.0), 2.0)
+        self.assertAlmostEqual(i2["v"], self.cfg["controle"]["v_max"], places=6)
+        _, _, i3 = self.c.atualizar(det(0.0, 0.6), 2.02)          # curva: cai direto para v_min
+        self.assertAlmostEqual(i3["v"], self.cfg["controle"]["v_min"], places=6)
+
+    def test_sem_limite_de_aceleracao(self):
+        self.cfg["controle"]["acel_max"] = 0.0
+        self.c = controle.Controlador(self.cfg["controle"], self.cfg["parada"])
+        self.c.iniciar(0.0)
+        _, _, i = self.c.atualizar(det(0.0, 0.0), 0.02)
+        self.assertAlmostEqual(i["v"], self.cfg["controle"]["v_max"], places=6)
 
     def test_linha_perdida_busca_e_depois_para(self):
         self.c.iniciar(0.0)

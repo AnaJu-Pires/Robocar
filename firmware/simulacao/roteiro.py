@@ -76,13 +76,13 @@ check('ARMADO acorda os dois drivers (GPIO32 e GPIO18 em 1)', nivel(32) == 1 and
 cfg = configuracao.carregar_config(None, {})
 ctrl = Controlador(cfg['controle'], cfg['parada']); ctrl.iniciar(time.time())
 det = {'erro': 0.0, 'erro_longe': 0.0, 'marca': False}
-e, d, info = ctrl.atualizar(det, time.time())
+e, d, info = ctrl.atualizar(det, time.time() + 1.0)   # depois da rampa de largada (controle.acel_max)
 check('controle com a linha no centro -> as duas rodas para frente iguais', e > 0 and abs(e - d) < 1e-9, '(%.2f, %.2f)' % (e, d))
 t = rodar(0.4, (e, d))
 pw = ultimo_pwm(); duty = int(round(e * 1000)) * 1023 // 1000
 check('motor esquerdo (INVERTER_E): GPIO25=1023 e GPIO33 com PWM (frente)', pw[25] == 1023 and pw[33] == 1023 - duty, pw)
 check('motor direito: GPIO19=1023 e GPIO21 com PWM', pw[19] == 1023 and pw[21] == 1023 - duty, pw)
-e, d, _ = ctrl.atualizar({'erro': 0.5, 'erro_longe': 0.5, 'marca': False}, time.time() + 0.05)
+e, d, _ = ctrl.atualizar({'erro': 0.5, 'erro_longe': 0.5, 'marca': False}, time.time() + 1.05)
 check('linha a direita -> roda esquerda mais rapida', e > d, '(%.2f, %.2f)' % (e, d))
 # encoders
 setf('enc_e', 140); setf('enc_d', -140); t = rodar(0.2, (e, d))
