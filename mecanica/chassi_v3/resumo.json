@@ -1,0 +1,144 @@
+{
+ "T": 3.0,
+ "rasgo": 2.9,
+ "comprimento_mm": 240.2,
+ "largura_mm": 139.5,
+ "altura_mm": 154.0,
+ "x_min_max": [
+  -98.9,
+  141.2
+ ],
+ "y_min_max": [
+  -61.5,
+  78.0
+ ],
+ "massa_g": 633,
+ "cg_mm": [
+  16.8,
+  -1.0,
+  36.1
+ ],
+ "peso_nas_rodas": 0.861,
+ "tomba_g": 1.11,
+ "empina_g": 0.47,
+ "z": {
+  "piso_traseiro": [
+   12.0,
+   15.0
+  ],
+  "piso_dianteiro": [
+   15.0,
+   18.0
+  ],
+  "tampo": [
+   49.0,
+   52.0
+  ],
+  "jetson_placa": 38.0,
+  "esp32_placa": 57.0
+ },
+ "verificacoes": {
+  "total": 56,
+  "falhas": 0
+ },
+ "pecas": [
+  {
+   "nome": "piso_traseiro",
+   "qtd": 1,
+   "area_mm2": 13199,
+   "massa_g": 29.7,
+   "descricao": "motores, XL4016, caixa traseira"
+  },
+  {
+   "nome": "piso_dianteiro",
+   "qtd": 1,
+   "area_mm2": 12577,
+   "massa_g": 28.3,
+   "descricao": "Jetson, tunel da bateria, mastro, esfera"
+  },
+  {
+   "nome": "tampo",
+   "qtd": 1,
+   "area_mm2": 11144,
+   "massa_g": 25.1,
+   "descricao": "placa da ESP32 e placa de desligar; sai com 4 parafusos"
+  },
+  {
+   "nome": "parede_lateral",
+   "qtd": 2,
+   "area_mm2": 2370,
+   "massa_g": 5.3,
+   "descricao": "caixa traseira (2x)"
+  },
+  {
+   "nome": "parede_traseira",
+   "qtd": 1,
+   "area_mm2": 3343,
+   "massa_g": 7.5,
+   "descricao": "fecha a caixa; janelas = saida de ar dos XL4016"
+  },
+  {
+   "nome": "quilha",
+   "qtd": 1,
+   "area_mm2": 3377,
+   "massa_g": 7.6,
+   "descricao": "espinha central: liga a caixa traseira ao piso da frente"
+  },
+  {
+   "nome": "trilho_bateria",
+   "qtd": 2,
+   "area_mm2": 1745,
+   "massa_g": 3.9,
+   "descricao": "guia da bateria; nervura do piso da frente (2x)"
+  },
+  {
+   "nome": "batente_bateria",
+   "qtd": 1,
+   "area_mm2": 342,
+   "massa_g": 0.8,
+   "descricao": "para a bateria atras"
+  },
+  {
+   "nome": "parede_frente_esq",
+   "qtd": 1,
+   "area_mm2": 1602,
+   "massa_g": 3.6,
+   "descricao": "lateral da frente"
+  },
+  {
+   "nome": "parede_frente_dir",
+   "qtd": 1,
+   "area_mm2": 486,
+   "massa_g": 1.1,
+   "descricao": "lateral da frente com a chave geral"
+  },
+  {
+   "nome": "poste_mastro",
+   "qtd": 2,
+   "area_mm2": 2124,
+   "massa_g": 4.8,
+   "descricao": "mastro da camera (2x)"
+  },
+  {
+   "nome": "travessa_mastro",
+   "qtd": 2,
+   "area_mm2": 320,
+   "massa_g": 0.7,
+   "descricao": "degraus do mastro (2x)"
+  },
+  {
+   "nome": "orelha_camera",
+   "qtd": 2,
+   "area_mm2": 711,
+   "massa_g": 1.6,
+   "descricao": "suporte giratorio (2x)"
+  },
+  {
+   "nome": "placa_camera",
+   "qtd": 1,
+   "area_mm2": 708,
+   "massa_g": 1.6,
+   "descricao": "camera presa por tras, lente para a frente"
+  }
+ ]
+}
