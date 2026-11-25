@@ -1,0 +1,19 @@
+# Robocar Blitz - botao de desligar a Jetson (J41 pino 18) e LED "pode desligar a chave" (J41 pino 16).
+# NAO copie este arquivo a mao: instale com  sudo bash jetson/servico/instalar.sh
+# Roda como root (GPIO pelo sysfs) e nao depende do robocar.service nem da ESP32.
+
+[Unit]
+Description=Robocar Blitz - botao de desligar e LED pode-desligar (J41)
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -u @REPO@/jetson/servico/botao_desligar.py
+Restart=always
+RestartSec=2
+# ao parar, o programa deixa o LED ACESO; quem apaga e o corte de energia do modulo
+KillSignal=SIGTERM
+TimeoutStopSec=3
+
+[Install]
+WantedBy=multi-user.target

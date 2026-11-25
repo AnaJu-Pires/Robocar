@@ -36,8 +36,11 @@ rm -f "$REGRA"
 
 sed -e "s|@USUARIO@|$USUARIO|g" -e "s|@REPO@|$REPO|g" -e "s|@PORTA@|$PORTA|g" \
   "$REPO/jetson/servico/robocar.service" > /etc/systemd/system/robocar.service
+# botao de desligar no J41 (pino 18) + LED "pode desligar a chave" (pino 16): servico proprio, como root (D-028)
+sed -e "s|@REPO@|$REPO|g" "$REPO/jetson/servico/botao-desligar.service" > /etc/systemd/system/botao-desligar.service
 systemctl daemon-reload
 systemctl enable robocar.service
+systemctl enable --now botao-desligar.service
 
 echo
 echo "Servico instalado: liga sozinho no proximo boot (usuario $USUARIO, porta $PORTA)."
@@ -45,4 +48,7 @@ echo "  Iniciar agora:        sudo systemctl start robocar"
 echo "  Ver o que ele mostra: journalctl -u robocar -f"
 echo "  Parar (para usar make visao/calibrar/bancada): sudo systemctl stop robocar"
 echo "  Desligar o inicio automatico: sudo systemctl disable --now robocar"
-echo "  Desligar a Jetson sem SSH: com o robo parado, segure o botao de largada por 3 s (LED pisca rapido)."
+echo "  Desligar a Jetson sem SSH: segure o botao de DESLIGAR (tampo, lado direito) por 2 s;"
+echo "    o LED verde pisca, fica aceso e APAGA quando a Jetson terminou: so entao desligue a chave."
+echo "    Reserva: com o robo parado, segure o botao de largada por 3 s (LED da ESP32 pisca rapido)."
+echo "  Testar o botao sem desligar: sudo systemctl stop botao-desligar && sudo python3 jetson/servico/botao_desligar.py --teste"
