@@ -1,0 +1,148 @@
+{
+ "T": 3.0,
+ "rasgo": 2.9,
+ "comprimento_mm": 161.6,
+ "largura_mm": 143.0,
+ "altura_mm": 160.0,
+ "x_min_max": [
+  -55.8,
+  105.9
+ ],
+ "y_min_max": [
+  -71.5,
+  71.5
+ ],
+ "massa_g": 657,
+ "cg_mm": [
+  21.7,
+  -1.6,
+  49.8
+ ],
+ "peso_nas_rodas": 0.769,
+ "tomba_g": 0.77,
+ "empina_g": 0.44,
+ "z": {
+  "piso_traseiro": [
+   12.0,
+   15.0
+  ],
+  "piso_dianteiro": [
+   15.0,
+   18.0
+  ],
+  "andar2": [
+   50.0,
+   53.0
+  ],
+  "andar3": [
+   99.0,
+   102.0
+  ],
+  "jetson_placa": 58.0,
+  "esp32_placa": 107.0
+ },
+ "verificacoes": {
+  "total": 55,
+  "falhas": 0
+ },
+ "pecas": [
+  {
+   "nome": "piso_traseiro",
+   "qtd": 1,
+   "area_mm2": 8747,
+   "massa_g": 19.7,
+   "descricao": "motores e berco da bateria"
+  },
+  {
+   "nome": "piso_dianteiro",
+   "qtd": 1,
+   "area_mm2": 10398,
+   "massa_g": 23.4,
+   "descricao": "XL4016 e esfera"
+  },
+  {
+   "nome": "parede_berco_tras",
+   "qtd": 1,
+   "area_mm2": 4130,
+   "massa_g": 9.3,
+   "descricao": "berco da bateria e apoio do andar 2"
+  },
+  {
+   "nome": "parede_berco_frente",
+   "qtd": 1,
+   "area_mm2": 3753,
+   "massa_g": 8.4,
+   "descricao": "berco da bateria e apoio do andar 2"
+  },
+  {
+   "nome": "parede_berco_esq",
+   "qtd": 1,
+   "area_mm2": 802,
+   "massa_g": 1.8,
+   "descricao": "batente esquerdo da bateria"
+  },
+  {
+   "nome": "parede_frente",
+   "qtd": 2,
+   "area_mm2": 2175,
+   "massa_g": 4.9,
+   "descricao": "laterais do andar 1 (2x); porcas presas do andar 2"
+  },
+  {
+   "nome": "andar2",
+   "qtd": 1,
+   "area_mm2": 17751,
+   "massa_g": 39.9,
+   "descricao": "Jetson, chave, fusivel, placa de desligar; sai com 4 parafusos"
+  },
+  {
+   "nome": "pilar_tras",
+   "qtd": 2,
+   "area_mm2": 914,
+   "massa_g": 2.1,
+   "descricao": "sustenta o andar 3 (2x); porca presa em cima"
+  },
+  {
+   "nome": "pilar_frente",
+   "qtd": 2,
+   "area_mm2": 914,
+   "massa_g": 2.1,
+   "descricao": "sustenta o andar 3 (2x); porca presa em cima"
+  },
+  {
+   "nome": "andar3",
+   "qtd": 1,
+   "area_mm2": 11545,
+   "massa_g": 26.0,
+   "descricao": "placa da ESP32 e mastro da camera; sai com 4 parafusos"
+  },
+  {
+   "nome": "poste_mastro",
+   "qtd": 2,
+   "area_mm2": 1353,
+   "massa_g": 3.0,
+   "descricao": "mastro curto da camera (2x)"
+  },
+  {
+   "nome": "travessa_mastro",
+   "qtd": 1,
+   "area_mm2": 320,
+   "massa_g": 0.7,
+   "descricao": "trava os postes"
+  },
+  {
+   "nome": "orelha_camera",
+   "qtd": 2,
+   "area_mm2": 711,
+   "massa_g": 1.6,
+   "descricao": "suporte giratorio (2x)"
+  },
+  {
+   "nome": "placa_camera",
+   "qtd": 1,
+   "area_mm2": 708,
+   "massa_g": 1.6,
+   "descricao": "camera presa por tras, lente para a frente"
+  }
+ ]
+}
