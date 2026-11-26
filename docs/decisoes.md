@@ -177,7 +177,7 @@ O roteamento foi automático e conferido pelo DRC do KiCad (com paridade com o e
 **Consequências:** a corrente do motor (até 1,9 A) volta direto ao fio sem passar pelo plano embaixo da ESP32. O trecho mais estreito do GND, do driver até o fio, ficou com 1,5 mm. DRC 0 e paridade OK. Esquemático com PWR_FLAG em VM_E, VM_D e GND e tudo na grade de 1,27 mm (ERC do KiCad 10 sem os 3 erros e os 98 avisos; rodar de novo para confirmar).
 
 ### D-026 — Chassi v3: Jetson baixa sobre a bateria, caixa traseira com tampo da ESP32 e quilha central
-*25/11/2026 · aceita* (substitui o arranjo da v1 em `mecanica/chassi/`; o estudo v2.2 não está no repositório)
+*25/11/2026 · substituída por D-031* (substitui o arranjo da v1 em `mecanica/chassi/`; o estudo v2.2 não está no repositório)
 **Contexto:** a v1 ficou bamba (paredes paralelas sem travessa, sem parafuso embaixo, rasgo folgado), maior que o
 necessário e com furos errados; a Jetson (141 g, a peça mais pesada) ia no 2º andar. Com apoio em 3 pontos, o carro
 tomba em torno da linha roda–esfera: a ~46 mm de altura de CG, ele tombaria (0,97 g) antes de escorregar (μ ≈ 0,9)
@@ -238,3 +238,32 @@ de 42 mm). Frear e virar continuam imediatos. A rampa do firmware (por roda) nã
 direção lenta.
 **Consequências:** na largada, 0 → 0,35 leva 0,18 s. 2 testes novos; a simulação do firmware passa a conferir o PWM depois
 da rampa. Se a pesagem mudar o CG, recalcular (`make chassi-verificar` mostra o "empina com").
+
+### D-031 — Chassi v4: 3 andares (XL4016 e bateria / Jetson / ESP32)
+*26/11/2026 · aceita* (substitui a D-026; a bitola da D-027 passa de 104 para 124 mm)
+**Contexto:** o v3 media 240 mm, de novo perto do limite de 250 (problema que a equipe já tinha com o modelo antigo).
+A equipe pediu 3 andares: a Jetson num, os XL4016 noutro e a ESP32 noutro.
+**Decisão:** ([mecanica/chassi_v4/](../mecanica/chassi_v4/))
+* andar 1: motores, os 2 XL4016 à frente do eixo (bornes para o eixo, trimpots para a frente sob furos de 7 mm do
+  andar 2) e a bateria atravessada atrás da roda, saindo pela direita (pino de trava por trás, XT60 em pé na ponta);
+* andar 2: Jetson de través (100 mm na largura), portas para trás: os plugues P4 e USB ficam dentro do comprimento;
+  placa do fusível atrás dela; o andar sai com a Jetson parafusada (4 M3, porcas presas);
+* andar 3: placa da ESP32 (largada, LED, USB e EN/BOOT por cima), placa de desligar ao lado e mastro curto da câmera
+  na frente; sai com 4 M3 sem mexer na Jetson;
+* chave na parede de trás do berço; bitola de 124 mm (a largura passa a ser definida só pelas rodas: 143 mm).
+**Alternativas** (mesmas peças, `analise.md`): Jetson no 3º andar (CG 57 mm, tomba com 0,67 g, largada embaixo da
+Jetson); Jetson no piso e XL4016 no 2º (tomba com 0,87 g, mas +15 mm e XL4016 aquecendo em cima do dissipador).
+**Consequências:** 162 × 143 × 160 mm (−78 mm), 657 g, CG a 49,8 mm, tomba com 0,77 g (D-032). 51 verificações e
+30 testes negativos; 2 chapas de 390 × 270. Os fios do VM já soldados precisam de ≥ 210 / 150 mm; o cabo dos motores
+precisa de ~125 mm (medir).
+
+### D-032 — Curva limitada a 0,65 g (R100 a no máximo 0,80 m/s)
+*26/11/2026 · aceita*
+**Contexto:** com 3 andares o carro tomba (levanta a roda de dentro) com 0,77 g, antes de escorregar (~0,9 g). Uma
+curva de R100 feita a 0,94 m/s (o limite do pneu) tombaria o carro.
+**Decisão:** a aceleração lateral máxima é limitada pelo software a 0,65 g (`A_LAT_MAX` no modelo; a verificação exige
+tombar só acima de 1,15 × esse valor). Na pista: **R100 a no máximo 0,80 m/s**, ou seja, `v` ≤ ~0,40 na escala do
+controle (1,0 ≈ 1,98 m/s) quando a linha está curva. Hoje `v_max` = 0,35 (≈ 0,7 m/s), dentro do limite. Ao subir
+`v_max` acima de 0,40, manter `v_min` ≤ 0,40 e conferir no T12 que a roda de dentro não levanta.
+**Consequências:** na pista sintética a volta fica ~1 s mais lenta que a do v3 sem teto de controle (13,6 × 12,6 s); com
+o teto real do controle (~1,2 m/s) a diferença some. Se a pesagem subir o CG, o limite cai junto (`make chassi-verificar`).

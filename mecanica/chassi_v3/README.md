@@ -1,4 +1,6 @@
-# Robocar Blitz — chassi v3 (definitivo)
+# Robocar Blitz — chassi v3 (substituído pelo [v4, 3 andares](../chassi_v4/))
+
+> **Não cortar este.** O v3 media 240 mm (perto do limite de 250); o [v4](../chassi_v4/) tem 162 mm. Este fica como referência: análise, botão de desligar e o roteiro de montagem continuam valendo onde o v4 aponta para cá.
 
 MDF 3 mm cortado a laser, **uma chapa de 390 × 270 mm**. Tudo sai de `fonte/` (Python + CadQuery + ezdxf): o
 `make chassi` gera os arquivos e **para com erro se qualquer verificação falhar**.

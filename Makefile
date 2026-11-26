@@ -63,17 +63,17 @@ placa:  ## regenera as saidas da placa da ESP32 (PDFs 1:1, furacao, STEP, imagen
 drc:  ## placa da ESP32: DRC + so B.Cu + paridade esquema x placa (precisa do Python do KiCad)
 	$(PYTHON) hardware/placa_esp32/verificar.py
 
-chassi:  ## chassi v3: verifica e gera DXF, PDF 1:1, STEP, imagens (T=espessura FOLGA=folga do rasgo)
-	cd mecanica/chassi_v3/fonte && $(PYTHON) gerar.py
+chassi:  ## chassi v4 (3 andares): verifica e gera DXF, PDF 1:1, STEP, imagens (T=espessura FOLGA=folga do rasgo)
+	cd mecanica/chassi_v4/fonte && $(PYTHON) gerar.py
 
-chassi-verificar:  ## chassi v3: so as verificacoes (massa, CG, tombamento, interferencia, cabos...)
-	cd mecanica/chassi_v3/fonte && $(PYTHON) gerar.py --so-verificar
+chassi-verificar:  ## chassi v4 (3 andares): so as verificacoes (massa, CG, tombamento, interferencia, cabos...)
+	cd mecanica/chassi_v4/fonte && $(PYTHON) gerar.py --so-verificar
 
-chassi-cortar:  ## chassi v3: como chassi-verificar, mas medida estimada que muda o corte vira ERRO
-	cd mecanica/chassi_v3/fonte && $(PYTHON) gerar.py --so-verificar --para-cortar
+chassi-cortar:  ## chassi v4 (3 andares): como chassi-verificar, mas medida estimada que muda o corte vira ERRO
+	cd mecanica/chassi_v4/fonte && $(PYTHON) gerar.py --so-verificar --para-cortar
 
-chassi-negativos:  ## chassi v3: prova que cada verificacao pega um defeito plantado (~2 min)
-	cd mecanica/chassi_v3/fonte && $(PYTHON) testes_negativos.py
+chassi-negativos:  ## chassi v4 (3 andares): prova que cada verificacao pega um defeito plantado (~2 min)
+	cd mecanica/chassi_v4/fonte && $(PYTHON) testes_negativos.py
 
 limpar:  ## remove caches do Python
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +

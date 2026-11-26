@@ -13,7 +13,7 @@ Inspeção e treino em **04/12/2026**; torneio em **05/12/2026** (SENAC Santo Am
 | Firmware da ESP32 | Implementado; **só checagem de sintaxe**, falta compilar e gravar |
 | Hardware | Compras definidas (R$ 694,02 com fretes, dentro dos R$ 800); **pedidos a fazer** |
 | Placa da ESP32 | **v0.8 espelhada** (motor esquerdo à esquerda, direito à direita; ESP32 no meio, USB para trás): 80 × 73 mm com furos M3 nos cantos, face simples (só B.Cu, sem vias), trilhas de 1,0/1,5 mm com gotas, **3 jumpers**; DRC 0 violações e paridade esquema × placa OK (`make drc`); **falta comprar barras fêmea e fenolite** ([lista de soldagem](hardware/placa_esp32/LISTA_DE_SOLDAGEM.md)), medir as peças, corroer e montar; chassi ainda na v0.7 ([hardware/placa_esp32/](hardware/placa_esp32/)) |
-| Mecânica | **Chassi v3** (25/11): MDF 3 mm, 1 chapa de 390 × 270 mm, 240 × 140 mm, Jetson baixa sobre a bateria, caixa traseira com os XL4016 e tampo com a placa da ESP32; 52 verificações automáticas (`make chassi`); **cortar o pente primeiro** e conferir as medidas estimadas ([mecanica/chassi_v3/](mecanica/chassi_v3/)). Botão de desligar com LED ([hardware/placa_desligar/](hardware/placa_desligar/)) |
+| Mecânica | **Chassi v4, 3 andares** (26/11): MDF 3 mm, 2 chapas de 390 × 270 mm, **162 × 143 × 160 mm**; XL4016 e bateria no piso, Jetson no 2º andar (portas para trás), ESP32 no 3º; 51 verificações automáticas (`make chassi`); curva R100 a no máximo 0,80 m/s (D-032); **cortar o pente primeiro** e conferir as medidas estimadas ([mecanica/chassi_v4/](mecanica/chassi_v4/)). Botão de desligar com LED ([hardware/placa_desligar/](hardware/placa_desligar/)) |
 
 Próximos passos e cronograma: [docs/07_plano.md](docs/07_plano.md).
 
@@ -36,7 +36,7 @@ Instalação na Jetson: [jetson/README.md](jetson/README.md). Gravação da ESP3
 | ver componentes, elétrica, **pinagem**, massa e cálculos | [docs/03_hardware.md](docs/03_hardware.md) |
 | entender ou alterar o código | [docs/04_software.md](docs/04_software.md) · [jetson/](jetson/) |
 | ver o esquemático e a placa (PCB) da ESP32 | [hardware/placa_esp32/](hardware/placa_esp32/) |
-| cortar e montar o chassi, fiação, inspeção | [mecanica/chassi_v3/](mecanica/chassi_v3/) |
+| cortar e montar o chassi, fiação, inspeção | [mecanica/chassi_v4/](mecanica/chassi_v4/) |
 | ver o protocolo Jetson ↔ ESP32 | [docs/05_protocolo_serial.md](docs/05_protocolo_serial.md) |
 | testar (bancada e pista) e registrar resultados | [docs/06_testes.md](docs/06_testes.md) |
 | comprar / ver orçamento e fretes | [compras/README.md](compras/README.md) |

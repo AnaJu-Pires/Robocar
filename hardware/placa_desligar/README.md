@@ -1,7 +1,7 @@
 # Placa de desligar a Jetson (placa extra, 30 × 18 mm)
 
-Botão para desligar a Jetson com segurança e LED que diz **quando pode desligar a chave geral**. Fica no **tampo**,
-do lado direito da placa da ESP32, com 2 parafusos M3 (furos já no tampo do chassi v3). A placa da ESP32 v0.8
+Botão para desligar a Jetson com segurança e LED que diz **quando pode desligar a chave geral**. Fica no **andar 3**
+do chassi v4, à direita da placa da ESP32, com 2 parafusos M3 (furos já no andar 3). A placa da ESP32 v0.8
 **não muda**. Decisão: [D-028](../../docs/decisoes.md).
 
 | LED vermelho | Significa |

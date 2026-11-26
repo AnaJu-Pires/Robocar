@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Adicionado (26/11/2026, chassi v4)
+- `mecanica/chassi_v4/`: chassi de **3 andares** (D-031), 162 × 143 × 160 mm (o v3 tinha 240): XL4016 e bateria no piso (bateria atravessada, sai pela direita), Jetson de través no 2º andar com as portas para trás, placa da ESP32, placa de desligar e mastro curto da câmera no 3º. Bitola 124 mm. Andares 2 e 3 removíveis com porcas presas.
+- Curva limitada a 0,65 g (R100 a ≤ 0,80 m/s; D-032): o carro tomba com 0,77 g. A verificação de CG passa a comparar o tombamento com esse limite.
+- 51 verificações e 30 testes negativos (novos: bateria saindo pela roda, ar em cima do dissipador, pilar sobre a porca, limite de curva); auditoria do DXF em todas as chapas. `make chassi*` passa a usar o v4; o v3 fica como referência.
 ### Adicionado (25/11/2026, chassi v3)
 - `mecanica/chassi_v3/`: chassi definitivo em MDF 3 mm (D-026): Jetson baixa sobre a bateria (túnel com pino de trava, sai pela frente), caixa traseira com os 2 XL4016 e tampo removível com a placa da ESP32 sobre o eixo, quilha central, pisos sobrepostos que nivelam a esfera de 15 mm. 240 × 140 × 154 mm, 633 g, CG a 36 mm; 1 chapa de 390 × 270 mm.
 - Gerador `fonte/gerar.py` (`make chassi`): STEP montado, DXF, pente de teste com gabaritos de furação da Jetson, do XL4016 e da placa da ESP32, PDF 1:1 em A3 com régua, imagens, `verificacao.md` (cabos com comprimento de corte, massas, fixadores) e `resumo.json`.
