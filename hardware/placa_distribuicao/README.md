@@ -41,11 +41,16 @@ entre o plugue USB e o P4, em **2 espaçadores M3 de 10 mm**. Decisão: [D-036](
 
 ## Peças (todas da lista de compras, exceto D1, LED e R1, do laboratório)
 
+> **NUNCA use 1N4728 no D1.** O 1N4728 é um **zener de 3,3 V**, não um diodo retificador. No lugar do D1 ele
+> conduz com qualquer tensão acima de 3,3 V: com a bateria (11–12,6 V) vira um **curto**, e o fusível queima (ou o
+> zener esquenta até estourar) assim que a chave liga. Sem 1N5408 ou 1N400x, deixe o D1 vazio: a placa funciona igual,
+> só sem a proteção contra bateria invertida (o XT60 já não encaixa ao contrário).
+
 | Ref | Peça | Item da lista |
 |---|---|---|
 | F1 | fusível de vidro **5 × 20 mm 7 A** + 2 **terminais porta-fusível 5 × 20** (clipes para soldar) | 14 e 15 |
 | — | chave gangorra **KCD1-101 2T** (na parede do berço da bateria, não na placa) | 16 |
-| D1 | diodo **1N5408** (ou 1N4007; ver acima) | laboratório |
+| D1 | diodo **1N5408** (ou 1N4007; ver acima). **Sem eles, deixe o D1 vazio.** | laboratório / ~R$ 0,50 |
 | D2 | LED verde 3 mm | laboratório |
 | R1 | resistor 4,7 kΩ (3,3k a 10k servem) | laboratório |
 | — | cabinho 0,75 mm² vermelho e preto | 19 e 20 |

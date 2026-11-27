@@ -185,6 +185,9 @@ def montar(pecas=PECAS, ilhas=ILHAS, fix=FIX, trilhas=TRILHAS, sem_cobre=()):
         t = pcbnew.PCB_TEXT(b); t.SetText(net); t.SetLayer(pcbnew.F_Fab)
         t.SetPosition(P((x0 + x1) / 2 - 2.5, (y0 + y1) / 2)); t.SetTextSize(pcbnew.VECTOR2I(FM(1.6), FM(1.6)))
         t.SetTextThickness(FM(0.3)); b.Add(t)
+    for txt, x, y in (('D1: 1N5408 ou VAZIO', 9.5, 44.8), ('NUNCA 1N4728 (zener)', 9.5, 46.4)):
+        t = pcbnew.PCB_TEXT(b); t.SetText(txt); t.SetLayer(pcbnew.F_Fab); t.SetPosition(P(x, y))
+        t.SetTextSize(pcbnew.VECTOR2I(FM(1.0), FM(1.0))); t.SetTextThickness(FM(0.18)); b.Add(t)
     # sem cobre a menos de 3,6 mm do centro dos furos de fixacao (o parafuso nao encosta em nenhuma ilha)
     for ref, (x, y) in fix.items():
         z = pcbnew.ZONE(b); z.SetLayer(pcbnew.B_Cu); z.SetIsRuleArea(True)
