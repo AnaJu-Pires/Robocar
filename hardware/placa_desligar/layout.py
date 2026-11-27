@@ -23,9 +23,9 @@ import shapely.geometry as sg
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 PASSO = 2.54
-NC, NR = 16, 7
-LARG, ALT = 40.0, 18.0                    # u (tras -> frente) x w (dentro -> fora), mm
-U0, W0 = 0.95, 1.37                       # centro do furo (1, 1)
+NC, NR = 17, 7
+LARG, ALT = 43.0, 18.0                    # u (tras -> frente) x w (dentro -> fora), mm
+U0, W0 = 1.2, 1.37                       # centro do furo (1, 1)
 
 
 def mm(c, r):
@@ -34,65 +34,71 @@ def mm(c, r):
 
 # ------------------------------------------------------------------------------------------- pecas
 # perna: (c, r, rede). rede None = so mecanica (nao ligar nada).
-FUROS_M3 = {'MH1': (2, 6), 'MH2': (15, 2)}
+FUROS_M3 = {'MH1': (3, 6), 'MH2': (16, 2)}
 R_CABECA = 2.9                            # cabeca do M3 / porca (mm)
 
 PECAS = {
     # J1: 2 x 4 macho. Os 8 jumpers do J41 chegam pela frente. Ordem escolhida para os fios nao cruzarem.
-    'J1': dict(tipo='barra', pernas=[(15, 4, 'P15'), (16, 4, '5V'), (15, 5, 'P19'), (16, 5, '3V3'),
-                                     (15, 6, 'P16'), (16, 6, 'P18'), (15, 7, 'GND'), (16, 7, 'GND')],
-               rotulos={(15, 4): '15', (16, 4): '2 (5V)', (15, 5): '19', (16, 5): '17 (3V3)', (15, 6): '16',
-                        (16, 6): '18', (15, 7): '20 (GND)', (16, 7): '6 (GND)'}),
+    'J1': dict(tipo='barra', pernas=[(16, 4, 'P15'), (17, 4, '5V'), (16, 5, 'P19'), (17, 5, '3V3'),
+                                     (16, 6, 'P16'), (17, 6, 'P18'), (16, 7, 'GND'), (17, 7, 'GND')],
+               rotulos={(16, 4): '15', (17, 4): '2 (5V)', (16, 5): '19', (17, 5): '17 (3V3)', (16, 6): '16',
+                        (17, 6): '18', (16, 7): '20 (GND)', (17, 7): '6 (GND)'}),
     # J2: 1 x 3 macho para o modulo da luz (no mastro): GND, controle (pino 15), 5 V
-    'J2': dict(tipo='barra', pernas=[(11, 1, 'GND'), (12, 1, 'P15'), (13, 1, '5V')],
-               rotulos={(11, 1): 'GND', (12, 1): 'LUZ', (13, 1): '5V'}),
+    'J2': dict(tipo='barra', pernas=[(12, 1, 'GND'), (13, 1, 'P15'), (14, 1, '5V')],
+               rotulos={(12, 1): 'GND', (13, 1): 'LUZ', (14, 1): '5V'}),
     # botao 6x6: pernas em diagonal (4,3)-(6,5) sao as que chaveiam em qualquer posicao
-    'S1': dict(tipo='botao', pernas=[(4, 3, 'BOT'), (6, 3, None), (4, 5, None), (6, 5, 'GND')]),
-    'R1': dict(tipo='res', valor='10k', pernas=[(4, 1, '3V3'), (4, 2, 'BOT')], corpo=(4, 1)),
-    'R2': dict(tipo='res', valor='1k', pernas=[(3, 3, 'BOT'), (3, 4, 'P18')], corpo=(3, 4)),
+    'S1': dict(tipo='botao', pernas=[(5, 3, 'BOT'), (7, 3, None), (5, 5, None), (7, 5, 'GND')]),
+    # S3: botao de LARGADA (no lugar do jumper J14 da placa da ESP32). Isolado do resto: so liga nos 2 pinos do J3,
+    # que vao ao J14 da ESP32 por 2 jumpers Dupont. Pernas usadas em diagonal: (3,1)-(1,3)
+    'S3': dict(tipo='botao', pernas=[(3, 1, 'LARG'), (1, 1, None), (3, 3, None), (1, 3, 'LARG_GND')]),
+    'J3': dict(tipo='barra', pernas=[(1, 4, 'LARG_GND'), (2, 4, 'LARG')], rotulos={(1, 4): 'GND', (2, 4): 'LARG'}),
+    'R1': dict(tipo='res', valor='10k', pernas=[(5, 1, '3V3'), (5, 2, 'BOT')], corpo=(5, 1)),
+    'R2': dict(tipo='res', valor='1k', pernas=[(4, 3, 'BOT'), (4, 4, 'P18')], corpo=(4, 4)),
     # vermelho: "Jetson ligada / apagou = pode desligar a chave" (pino 16)
-    'R5': dict(tipo='res', valor='150', pernas=[(7, 1, '3V3'), (7, 2, 'LEDV')], corpo=(7, 1)),
-    'D1': dict(tipo='led', cor='vermelho', pernas=[(8, 2, 'LEDV'), (8, 3, 'C1')]),          # (anodo, catodo)
-    'Q1': dict(tipo='to92', pernas=[(8, 4, 'C1'), (8, 5, 'B1'), (8, 6, 'GND')], face='tras'),  # C B E
-    'R3': dict(tipo='res', valor='10k', pernas=[(10, 4, 'P16'), (10, 5, 'B1')], corpo=(10, 5)),
-    'R4': dict(tipo='res', valor='100k', pernas=[(10, 6, 'B1'), (10, 7, 'GND')], corpo=(10, 7)),
+    'R5': dict(tipo='res', valor='150', pernas=[(8, 1, '3V3'), (8, 2, 'LEDV')], corpo=(8, 1)),
+    'D1': dict(tipo='led', cor='vermelho', pernas=[(9, 2, 'LEDV'), (9, 3, 'C1')]),          # (anodo, catodo)
+    'Q1': dict(tipo='to92', pernas=[(9, 4, 'C1'), (9, 5, 'B1'), (9, 6, 'GND')], face='tras'),  # C B E
+    'R3': dict(tipo='res', valor='10k', pernas=[(11, 4, 'P16'), (11, 5, 'B1')], corpo=(11, 5)),
+    'R4': dict(tipo='res', valor='100k', pernas=[(11, 6, 'B1'), (11, 7, 'GND')], corpo=(11, 7)),
     # amarelo: "codigo rodando" (pino 19)
-    'R8': dict(tipo='res', valor='150', pernas=[(10, 3, '3V3'), (10, 2, 'LEDA')], corpo=(10, 3)),
-    'D2': dict(tipo='led', cor='amarelo', pernas=[(13, 2, 'LEDA'), (13, 3, 'C2')]),
-    'Q2': dict(tipo='to92', pernas=[(12, 4, 'C2'), (12, 5, 'B2'), (12, 6, 'GND')], face='tras'),
-    'R6': dict(tipo='res', valor='10k', pernas=[(14, 4, 'P19'), (14, 5, 'B2')], corpo=(14, 4)),
-    'R7': dict(tipo='res', valor='100k', pernas=[(14, 6, 'B2'), (14, 7, 'GND')], corpo=(14, 7)),
+    'R8': dict(tipo='res', valor='150', pernas=[(11, 3, '3V3'), (11, 2, 'LEDA')], corpo=(11, 3)),
+    'D2': dict(tipo='led', cor='amarelo', pernas=[(14, 2, 'LEDA'), (14, 3, 'C2')]),
+    'Q2': dict(tipo='to92', pernas=[(13, 4, 'C2'), (13, 5, 'B2'), (13, 6, 'GND')], face='tras'),
+    'R6': dict(tipo='res', valor='10k', pernas=[(15, 4, 'P19'), (15, 5, 'B2')], corpo=(15, 4)),
+    'R7': dict(tipo='res', valor='100k', pernas=[(15, 6, 'B2'), (15, 7, 'GND')], corpo=(15, 7)),
 }
 
 # ligacoes por baixo: ('ponte', a, b) = perna dobrada / ponte de solda entre furos vizinhos;
 # ('fio', a, b) = fio encapado (30 AWG / cabinho), pode passar por cima de outros furos
 LIGACOES = [
+    # largada (S3 -> J3 -> J14 da ESP32)
+    ('ponte', (1, 3), (1, 4)), ('fio', (3, 1), (2, 4)),
     # botao
-    ('ponte', (4, 2), (4, 3)), ('ponte', (3, 3), (4, 3)),
-    ('ponte', (6, 5), (6, 6)), ('ponte', (6, 6), (6, 7)),
+    ('ponte', (5, 2), (5, 3)), ('ponte', (4, 3), (5, 3)),
+    ('ponte', (7, 5), (7, 6)), ('ponte', (7, 6), (7, 7)),
     # barra de 3V3 (linha 1) ate o R5; R8 por fio
-    ('ponte', (4, 1), (5, 1)), ('ponte', (5, 1), (6, 1)), ('ponte', (6, 1), (7, 1)),
-    ('fio', (7, 1), (10, 3)),
+    ('ponte', (5, 1), (6, 1)), ('ponte', (6, 1), (7, 1)), ('ponte', (7, 1), (8, 1)),
+    ('fio', (8, 1), (11, 3)),
     # barra de GND (linha 7)
-    ('ponte', (6, 7), (7, 7)), ('ponte', (7, 7), (8, 7)), ('ponte', (8, 7), (9, 7)), ('ponte', (9, 7), (10, 7)),
-    ('ponte', (10, 7), (11, 7)), ('ponte', (11, 7), (12, 7)), ('ponte', (12, 7), (13, 7)), ('ponte', (13, 7), (14, 7)),
-    ('ponte', (14, 7), (15, 7)), ('ponte', (15, 7), (16, 7)),
-    ('ponte', (8, 6), (8, 7)), ('ponte', (12, 6), (12, 7)),
+    ('ponte', (7, 7), (8, 7)), ('ponte', (8, 7), (9, 7)), ('ponte', (9, 7), (10, 7)), ('ponte', (10, 7), (11, 7)),
+    ('ponte', (11, 7), (12, 7)), ('ponte', (12, 7), (13, 7)), ('ponte', (13, 7), (14, 7)), ('ponte', (14, 7), (15, 7)),
+    ('ponte', (15, 7), (16, 7)), ('ponte', (16, 7), (17, 7)),
+    ('ponte', (9, 6), (9, 7)), ('ponte', (13, 6), (13, 7)),
     # vermelho
-    ('ponte', (7, 2), (8, 2)), ('ponte', (8, 3), (8, 4)), ('ponte', (8, 5), (9, 5)), ('ponte', (9, 5), (10, 5)),
-    ('ponte', (10, 5), (10, 6)),
+    ('ponte', (8, 2), (9, 2)), ('ponte', (9, 3), (9, 4)), ('ponte', (9, 5), (10, 5)), ('ponte', (10, 5), (11, 5)),
+    ('ponte', (11, 5), (11, 6)),
     # amarelo
-    ('ponte', (10, 2), (11, 2)), ('ponte', (11, 2), (12, 2)), ('ponte', (12, 2), (13, 2)), ('ponte', (13, 3), (12, 4)),
-    ('ponte', (12, 5), (13, 5)), ('ponte', (13, 5), (14, 5)), ('ponte', (14, 5), (14, 6)),
+    ('ponte', (11, 2), (12, 2)), ('ponte', (12, 2), (13, 2)), ('ponte', (13, 2), (14, 2)), ('ponte', (14, 3), (13, 4)),
+    ('ponte', (13, 5), (14, 5)), ('ponte', (14, 5), (15, 5)), ('ponte', (15, 5), (15, 6)),
     # J1 -> pecas
-    ('fio', (16, 5), (7, 1)),        # 3V3
-    ('fio', (15, 6), (10, 4)),       # P16 -> R3
-    ('fio', (16, 6), (3, 4)),        # P18 -> R2
-    ('ponte', (15, 5), (14, 4)),     # P19 -> R6 (perna do R6 dobrada ate o pino do J1, diagonal curta)
+    ('fio', (17, 5), (8, 1)),        # 3V3
+    ('fio', (16, 6), (11, 4)),       # P16 -> R3
+    ('fio', (17, 6), (4, 4)),        # P18 -> R2
+    ('ponte', (16, 5), (15, 4)),     # P19 -> R6 (perna do R6 dobrada ate o pino do J1, diagonal curta)
     # J1 -> J2 (luz)
-    ('fio', (15, 4), (12, 1)),       # P15 -> LUZ
-    ('fio', (16, 4), (13, 1)),       # 5V
-    ('fio', (11, 7), (11, 1)),       # GND
+    ('fio', (16, 4), (13, 1)),       # P15 -> LUZ
+    ('fio', (17, 4), (14, 1)),       # 5V
+    ('fio', (12, 7), (12, 1)),       # GND
 ]
 
 # o que o esquema pede: rede -> conjunto de (peca, indice da perna)
@@ -105,6 +111,7 @@ REDES = {
     'P18': {('J1', 5), ('R2', 1)},
     'P19': {('J1', 2), ('R6', 0)},
     'BOT': {('S1', 0), ('R1', 1), ('R2', 0)},
+    'LARG': {('S3', 0), ('J3', 1)}, 'LARG_GND': {('S3', 3), ('J3', 0)},
     'LEDV': {('R5', 1), ('D1', 0)}, 'C1': {('D1', 1), ('Q1', 0)}, 'B1': {('Q1', 1), ('R3', 1), ('R4', 0)},
     'LEDA': {('R8', 1), ('D2', 0)}, 'C2': {('D2', 1), ('Q2', 0)}, 'B2': {('Q2', 1), ('R6', 1), ('R7', 0)},
 }
@@ -223,7 +230,8 @@ def exportar():
         u = sum(q[0] for q in pts) / len(pts); w = sum(q[1] for q in pts) / len(pts)
         return [round(u, 2), round(w, 2)]
     dados = dict(placa=[LARG, ALT, 1.6], furos_m3={k: [round(v, 2) for v in mm(*c)] for k, c in FUROS_M3.items()},
-                 botao=pos('S1'), led_vermelho=pos('D1'), led_amarelo=pos('D2'),
+                 botao=pos('S1'), botao_largada=pos('S3'), j3=dict(centro=pos('J3'), lu=5.08, lw=2.54, altura=8.5),
+                 led_vermelho=pos('D1'), led_amarelo=pos('D2'),
                  j1=dict(centro=pos('J1'), lu=5.08, lw=10.16, altura=8.5), j2=dict(centro=pos('J2'), lu=7.62, lw=2.54, altura=8.5),
                  obs='u: da borda de tras para a frente; w: da borda de dentro (ESP32) para fora; mm. Gerado por layout.py')
     with open(os.path.join(AQUI, 'layout.json'), 'w') as f:
@@ -233,7 +241,7 @@ def exportar():
 
 CORES = {'3V3': '#d62728', 'GND': '#222222', '5V': '#ff7f0e', 'P15': '#9467bd', 'P16': '#8c564b', 'P18': '#1f77b4',
          'P19': '#bcbd22', 'BOT': '#17becf', 'LEDV': '#e377c2', 'C1': '#7f7f7f', 'B1': '#2ca02c', 'LEDA': '#e377c2',
-         'C2': '#7f7f7f', 'B2': '#2ca02c'}
+         'C2': '#7f7f7f', 'B2': '#2ca02c', 'LARG': '#00a080', 'LARG_GND': '#555555'}
 
 
 def desenhar(arq):
@@ -274,16 +282,16 @@ def desenhar(arq):
                 txt = nome + (' ' + p['valor'] if 'valor' in p else '')
                 ax.text(X(cu), Y(cw), txt, ha='center', va='center', fontsize=6.5,
                         color='white' if p['tipo'] in ('to92', 'botao', 'barra') else 'black', weight='bold')
-                if nome == 'J2':
+                if nome in ('J2', 'J3'):
                     for (c, r), rot in p['rotulos'].items():
                         u, w = mm(c, r)
                         ax.text(X(u), Y(w) + 2.2, rot, fontsize=6.5, ha='center', color='navy', weight='bold')
                 if nome == 'J1':
                     for r in range(4, 8):
-                        a, b = p['rotulos'][(15, r)], p['rotulos'][(16, r)]
-                        ax.text(X(LARG) + 1.0, Y(mm(16, r)[1]), f'{a} | {b}', fontsize=6.5, ha='left', va='center',
+                        a, b = p['rotulos'][(16, r)], p['rotulos'][(17, r)]
+                        ax.text(X(LARG) + 1.0, Y(mm(17, r)[1]), f'{a} | {b}', fontsize=6.5, ha='left', va='center',
                                 color='navy', weight='bold')
-                    ax.text(X(LARG) + 1.0, Y(mm(16, 3)[1]) + 0.6, 'pino do J41:\ncol.15 | col.16', fontsize=6, ha='left',
+                    ax.text(X(LARG) + 1.0, Y(mm(17, 3)[1]) + 0.6, 'pino do J41:\ncol.16 | col.17', fontsize=6, ha='left',
                             color='navy')
                 if p['tipo'] == 'to92':
                     (c, r, _) = p['pernas'][0]
@@ -298,7 +306,7 @@ def desenhar(arq):
             cor = CORES.get(rede_de.get(a) or '', 'k')
             ax.plot([X(ua), X(ub)], [Y(wa), Y(wb)], color=cor, lw=3.2 if tipo == 'ponte' else 1.6,
                     ls='-' if tipo == 'ponte' else (0, (4, 1.5)), alpha=1.0 if baixo else 0.25, solid_capstyle='round')
-        for c in (1, 4, 8, 12, 16):
+        for c in (1, 5, 9, 13, 17):
             ax.text(X(mm(c, 1)[0]), 1.0, str(c), ha='center', fontsize=6, color='gray')
         for r in range(1, NR + 1):
             ax.text(X(-1.2) if not baixo else X(LARG + 1.2), Y(mm(1, r)[1]), str(r), va='center', ha='center', fontsize=6,
@@ -327,21 +335,23 @@ def negativos():
         err = verificar(pc, lg, rd, fm)
         pegou = any(contendo in e for e in err)
         casos.append((nome, pegou, err[:1]))
-    caso('falta a ponte do emissor do Q1 ao GND', 'rede GND', lambda pc, lg, rd, fm: lg.remove(('ponte', (8, 6), (8, 7))))
-    caso('fio do 5V soldado no pino do 3V3', 'rede', lambda pc, lg, rd, fm: (lg.remove(('fio', (16, 4), (13, 1))),
-                                                                          lg.append(('fio', (16, 5), (13, 1)))))
+    caso('falta a ponte do emissor do Q1 ao GND', 'rede GND', lambda pc, lg, rd, fm: lg.remove(('ponte', (9, 6), (9, 7))))
+    caso('fio do 5V soldado no pino do 3V3', 'rede', lambda pc, lg, rd, fm: (lg.remove(('fio', (17, 4), (14, 1))),
+                                                                          lg.append(('fio', (17, 5), (14, 1)))))
     caso('ponte nua comprida (fio sem capa atravessando a placa)', 'ponte nua',
-         lambda pc, lg, rd, fm: (lg.remove(('fio', (15, 6), (10, 4))), lg.append(('ponte', (15, 6), (10, 4)))))
+         lambda pc, lg, rd, fm: (lg.remove(('fio', (16, 6), (11, 4))), lg.append(('ponte', (16, 6), (11, 4)))))
     caso('perna mecanica do botao ligada na barra de GND', 'so mecanica',
-         lambda pc, lg, rd, fm: lg.extend([('ponte', (4, 5), (5, 6)), ('ponte', (5, 6), (6, 6)), ('ponte', (6, 6), (6, 7))]))
-    caso('ponte terminando num furo vazio (ponta solta)', 'ponta solta', lambda pc, lg, rd, fm: lg.append(('ponte', (14, 7), (13, 6))))
-    caso('duas pernas no mesmo furo', 'duas pernas', lambda pc, lg, rd, fm: pc['R4']['pernas'].__setitem__(0, (10, 5, 'B1')))
+         lambda pc, lg, rd, fm: lg.extend([('ponte', (5, 5), (6, 6)), ('ponte', (6, 6), (7, 6)), ('ponte', (7, 6), (7, 7))]))
+    caso('ponte terminando num furo vazio (ponta solta)', 'ponta solta', lambda pc, lg, rd, fm: lg.append(('ponte', (15, 7), (14, 6))))
+    caso('duas pernas no mesmo furo', 'duas pernas', lambda pc, lg, rd, fm: pc['R4']['pernas'].__setitem__(0, (11, 5, 'B1')))
     caso('LED em cima do transistor (corpos sobrepostos)', 'sobrepoem',
-         lambda pc, lg, rd, fm: pc['D1'].__setitem__('pernas', [(9, 4, 'LEDV'), (9, 6, 'C1')]))
-    caso('parafuso no meio dos resistores', 'parafuso', lambda pc, lg, rd, fm: fm.__setitem__('MH1', (10, 6)))
+         lambda pc, lg, rd, fm: pc['D1'].__setitem__('pernas', [(10, 4, 'LEDV'), (10, 6, 'C1')]))
+    caso('parafuso no meio dos resistores', 'parafuso', lambda pc, lg, rd, fm: fm.__setitem__('MH1', (11, 6)))
     caso('J1 no meio da placa (longe do passa-fio do J41)', 'J1 nao esta', lambda pc, lg, rd, fm:
          pc['J1'].__setitem__('pernas', [(c - 6, r, n) for c, r, n in pc['J1']['pernas']]))
-    caso('resistor com rotulo de rede errado', 'rotulada', lambda pc, lg, rd, fm: pc['R3']['pernas'].__setitem__(0, (10, 4, 'P18')))
+    caso('botao de largada ligado no GND da Jetson (tem de ficar isolado, so no J3)', 'rede LARG_GND',
+         lambda pc, lg, rd, fm: lg.append(('fio', (1, 4), (10, 7))))
+    caso('resistor com rotulo de rede errado', 'rotulada', lambda pc, lg, rd, fm: pc['R3']['pernas'].__setitem__(0, (11, 4, 'P18')))
     return casos
 
 
