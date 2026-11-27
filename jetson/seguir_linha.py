@@ -10,12 +10,14 @@ Exemplos (ou use o Makefile na raiz do repositorio):
   python3 seguir_linha.py --gravar                 # grava quadros em dados/gravacoes/
   python3 seguir_linha.py --esp32 /dev/ttyUSB0 --sem-janela --log   # no carro
   python3 seguir_linha.py --mostrar-config         # parametros efetivos
+  python3 seguir_linha.py --sem-janela --fotos 1   # pelo SSH: salva imagem+mascara a cada 1 s e nos eventos
 
 Teclas (com janela): q sair | i iniciar/reiniciar | p parar | f salvar quadro em dados/capturas/
 """
 
 import argparse
 import json
+import os
 import sys
 import time
 
@@ -24,7 +26,7 @@ import cv2
 from robocar import configuracao, controle, desenho, protocolo
 from robocar.camera import Camera
 from robocar.leds import FALHAS_APAGA_LUZ, LedsRobo
-from robocar.registro import GravadorVideo, LogCSV
+from robocar.registro import FotosDebug, GravadorVideo, LogCSV
 from robocar.visao import DetectorLinha
 
 AUTO = "auto"
@@ -40,6 +42,9 @@ def argumentos():
     ap.add_argument("--limiar-fixo", type=float, help="ignora a calibracao e usa este limiar (0-255)")
     ap.add_argument("--gravar", nargs="?", const=AUTO, help="grava os quadros (.avi); padrao em dados/gravacoes/")
     ap.add_argument("--log", nargs="?", const=AUTO, help="log CSV por quadro; padrao em dados/logs/")
+    ap.add_argument("--fotos", nargs="?", type=float, const=2.0, metavar="SEG",
+                    help="sem janela (SSH): salva imagem+mascara a cada SEG s (padrao 2) e nos eventos "
+                         "(largada, linha sumiu, parou) em dados/capturas/<data>/")
     ap.add_argument("--armar", action="store_true",
                     help="arma a ESP32 sem o botao (SOMENTE bancada, com as rodas suspensas)")
     ap.add_argument("--mostrar-config", action="store_true", help="mostra os parametros efetivos e sai")
@@ -75,6 +80,16 @@ def desligar_jetson():
               "ou desligue com: sudo shutdown -h now" % r)
         return 1
     return 0
+
+
+def textos_debug(direcao, erro, det, ctrl, info, esq, dir_, fps, proc_ms):
+    return [
+        ("Direcao: %s" % direcao, desenho.VERMELHO if erro is None else desenho.VERDE),
+        ("Erro: %s  longe: %s" % (fmt(erro), fmt(det["erro_longe"])), desenho.AMARELO),
+        ("%s  v=%.2f  E=%+.2f D=%+.2f" % (ctrl.estado, info["v"], esq, dir_), desenho.BRANCO),
+        ("%.0f fps  proc %.1f ms  limiar %.0f%s" % (
+            fps, proc_ms, det["limiar"], "  CRUZAMENTO" if det["cruzamento"] else ""), desenho.AMARELO),
+    ]
 
 
 def salvar_quadro(cinza, n):
@@ -139,9 +154,15 @@ def main():
         log = LogCSV(destino)
         print("Log em", destino)
 
+    fotos = None
+    if args.fotos is not None:
+        pasta = os.path.splitext(configuracao.arquivo_de_dados("capturas", "d"))[0]  # dados/capturas/<data_hora>
+        fotos = FotosDebug(pasta, args.fotos)
+        print("Fotos de depuracao em", pasta)
+
     armado_ant = False
     armar_pendente = bool(link and args.armar)  # a ESP32 so arma depois de estar PRONTO
-    estado_ant = ctrl.estado
+    estado_ant = estado_foto_ant = ctrl.estado
     n, fps, proc_ms, falhas = 0, 0.0, 0.0, 0
     t_ant = t_print = time.time()
     desligar = False
@@ -211,8 +232,18 @@ def main():
 
             erro = det["erro"]
             direcao = desenho.rotulo_direcao(erro, margem)
-            if erro is None:
+            if erro is None and ctrl.estado == controle.AVANCANDO:
+                direcao = "SEM LINHA: RETO"
+            elif erro is None:
                 direcao = "PROCURAR %s" % ("DIREITA" if ctrl.ultimo_lado > 0 else "ESQUERDA")
+
+            if fotos:
+                motivo = ctrl.estado.lower() if ctrl.estado != estado_foto_ant else None
+                estado_foto_ant = ctrl.estado
+                salvo = fotos.talvez_salvar(t, lambda: desenho.painel_debug(cinza, det, textos_debug(
+                    direcao, erro, det, ctrl, info, esq, dir_, fps, proc_ms)), motivo)
+                if salvo and motivo:
+                    print("Foto (%s): %s" % (motivo, salvo))
 
             if t - t_print >= periodo_print:
                 t_print = t
@@ -232,14 +263,7 @@ def main():
                              estado_esp32=tel["estado"] if tel else None)
 
             if janela and n % a_cada == 0:
-                textos = [
-                    ("Direcao: %s" % direcao, desenho.VERMELHO if erro is None else desenho.VERDE),
-                    ("Erro: %s  longe: %s" % (fmt(erro), fmt(det["erro_longe"])), desenho.AMARELO),
-                    ("%s  v=%.2f  E=%+.2f D=%+.2f" % (ctrl.estado, info["v"], esq, dir_), desenho.BRANCO),
-                    ("%.0f fps  proc %.1f ms  limiar %.0f%s" % (
-                        fps, proc_ms, det["limiar"], "  CRUZAMENTO" if det["cruzamento"] else ""),
-                     desenho.AMARELO),
-                ]
+                textos = textos_debug(direcao, erro, det, ctrl, info, esq, dir_, fps, proc_ms)
                 cv2.imshow("Seguidor de Linha", desenho.imagem_debug(cinza, det, textos))
                 cv2.imshow("Mascara - Linha Preta", desenho.mascara_ampliada(det["mascara"]))
                 tecla = cv2.waitKey(1) & 0xFF

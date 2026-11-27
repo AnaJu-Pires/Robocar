@@ -13,7 +13,7 @@ import cv2
 
 def gstreamer_pipeline(sensor_id, captura_largura, captura_altura, fps, flip_method,
                        saida_largura, saida_altura, formato="GRAY8", exposicao_ns=None,
-                       ganho=None, trava_auto_exposicao=False):
+                       ganho=None, trava_auto_exposicao=False, trava_balanco_branco=False):
     props = ["sensor-id=%d" % sensor_id]
     if exposicao_ns:
         props.append('exposuretimerange="%d %d"' % (int(exposicao_ns), int(exposicao_ns)))
@@ -21,6 +21,8 @@ def gstreamer_pipeline(sensor_id, captura_largura, captura_altura, fps, flip_met
         props.append('gainrange="%s %s"' % (ganho, ganho))
     if trava_auto_exposicao:
         props.append("aelock=true")
+    if trava_balanco_branco:
+        props.append("awblock=true")
 
     if formato == "GRAY8":
         conversao = "video/x-raw, width=(int)%d, height=(int)%d, format=(string)GRAY8 ! " % (
@@ -66,7 +68,8 @@ class Camera(object):
                     captura_altura=c["captura_altura"], fps=c["fps"], flip_method=c["flip_method"],
                     saida_largura=c["saida_largura"], saida_altura=c["saida_altura"])
         extras = dict(exposicao_ns=c["exposicao_ns"], ganho=c["ganho"],
-                      trava_auto_exposicao=c["trava_auto_exposicao"])
+                      trava_auto_exposicao=c["trava_auto_exposicao"],
+                      trava_balanco_branco=c["trava_balanco_branco"])
         tem_extras = any(extras.values())
         tentativas = []
         for formato in ("GRAY8", "BGR"):

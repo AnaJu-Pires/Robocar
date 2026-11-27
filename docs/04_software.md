@@ -73,7 +73,7 @@ jetson/
 
 | Para ajustar… | Parâmetros |
 |---|---|
-| Orientação, modo e exposição da câmera | `camera.flip_method`, `captura_*`, `fps`, `exposicao_ns`, `ganho` |
+| Orientação, modo e exposição da câmera | `camera.flip_method`, `captura_*`, `fps`, `exposicao_ns`, `ganho`, `trava_auto_exposicao`, `trava_balanco_branco` |
 | Região analisada e robustez | `visao.inicio_roi`, `n_faixas`, `limiar_modo`, `salto_max_frac`, `fator_largo` |
 | Limiar com calibração ruim ou luz variando | `visao.razao_min`, `razao_max`, `suavizar_limiar` |
 | Bifurcação e box | `visao.preferencia_bifurcacao`, `visao.marca_frac_escura`, `parada.*` |
@@ -83,8 +83,9 @@ jetson/
 ## 6. Dados de teste
 
 * `--gravar` salva os quadros crus. `--fonte <vídeo>` reprocessa com outros parâmetros, permitindo ajustar a visão **sem a pista**.
-* `--log` salva um CSV por quadro (colunas em [registro.py](../jetson/robocar/registro.py)).
-* A tecla `f` salva o quadro atual.
+* `--log` salva um CSV por quadro (colunas em [registro.py](../jetson/robocar/registro.py)). O arquivo recebe flush a cada 0,5 s e fsync (numa thread, sem travar o controle) a cada 2 s: um corte da chave perde só os últimos ~2 s, não a corrida inteira.
+* `--fotos [SEG]` (ou `make fotos`), para trabalhar **só pelo SSH**: salva imagem + máscara lado a lado a cada SEG s e nos eventos (largada, linha sumiu, parou) em `dados/capturas/<data>/`, até 400 fotos. Traga para o PC com `scp`.
+* A tecla `f` salva o quadro atual (com janela).
 * Tudo vai para [dados/](../dados/), que fica fora do git.
 
 ## 7. Código original e o que mudou

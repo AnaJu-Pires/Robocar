@@ -8,7 +8,7 @@ VIDEO  ?=
 OPCOES ?=
 JETSON := cd jetson &&
 
-.PHONY: metricas chassi chassi-verificar chassi-cortar chassi-negativos sim-esp32 ajuda testes benchmark calibrar visao gravar video carro bancada movimento servico diagnostico calibrar-auto config placa drc limpar
+.PHONY: metricas chassi chassi-verificar chassi-cortar chassi-negativos sim-esp32 ajuda testes benchmark calibrar visao fotos gravar video carro bancada movimento servico diagnostico calibrar-auto config placa drc limpar
 
 ajuda:  ## lista os alvos
 	@echo "Alvos (make <alvo>):"
@@ -28,6 +28,9 @@ calibrar-auto:  ## calibracao sem janela (via SSH): linha e chao visiveis embaix
 
 visao:  ## camera ao vivo, so visualizacao (nao move motores)
 	$(JETSON) $(PYTHON) seguir_linha.py $(OPCOES)
+
+fotos:  ## pelo SSH: camera ao vivo SEM janela, salva imagem+mascara em dados/capturas/<data>/ (SEG=2; Ctrl+C para)
+	$(JETSON) $(PYTHON) seguir_linha.py --sem-janela --fotos $(or $(SEG),2) $(OPCOES)
 
 gravar:  ## camera ao vivo gravando quadros em dados/gravacoes/
 	$(JETSON) $(PYTHON) seguir_linha.py --gravar $(OPCOES)

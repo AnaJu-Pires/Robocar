@@ -24,6 +24,7 @@ Os comandos rodam na raiz do repositório (ver `make ajuda`):
 | `make calibrar-auto` | a mesma calibração **sem janela** (pelo SSH): linha e chão visíveis embaixo; salva e grava uma foto em `dados/capturas/` |
 | `make diagnostico` | junta logs, configuração e fotos em `~/diagnostico_<data>.tar.gz` para análise |
 | `make visao` | câmera ao vivo com janelas (não move motores) |
+| `make fotos` | **pelo SSH**: câmera ao vivo sem janela; salva imagem + máscara a cada `SEG` s (padrão 2) e nos eventos em `dados/capturas/<data>/` (Ctrl+C para). `make carro OPCOES="--fotos 1"` faz o mesmo andando |
 | `make gravar` | idem, gravando vídeo em `dados/gravacoes/` |
 | `make video VIDEO=dados/gravacoes/x.avi` | reprocessa um vídeo |
 | `make bancada PORTA=/dev/ttyUSB0` | com a ESP32, arma pela Jetson: **rodas suspensas** |

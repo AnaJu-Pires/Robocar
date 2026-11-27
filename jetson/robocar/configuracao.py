@@ -30,6 +30,8 @@ PADRAO = {
         "exposicao_ns": None,         # ex.: 2000000 = 2 ms (fixa); None = automatica
         "ganho": None,                # ex.: 4; None = automatico
         "trava_auto_exposicao": False,
+        "trava_balanco_branco": False,  # awblock: o cinza (Y) muda pouco com o balanco, mas com a luz propria
+                                        # vale travar junto com a exposicao (roteiro de testes, etapa 2)
     },
     "visao": {
         "inicio_roi": 0.45,           # fracao da altura onde comeca a regiao analisada

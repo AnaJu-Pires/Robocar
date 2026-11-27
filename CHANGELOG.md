@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Adicionado (27/11/2026, trabalhar só pelo SSH)
+- `make fotos` / `seguir_linha.py --fotos [SEG]`: sem janela, salva imagem + máscara a cada SEG s e nos eventos (largada, linha sumiu, parou) em `dados/capturas/<data>/`.
+- Log CSV com flush a cada 0,5 s e fsync numa thread a cada 2 s: o corte da chave não apaga mais a corrida (o log `20261121_204647.csv` do cartão ficou só com o cabeçalho).
+- `camera.trava_balanco_branco` (awblock), junto da trava de exposição que já existia. 7 testes novos (`test_registro.py`).
 ### Alterado (27/11/2026, seguir a linha: fim da linha, cruzamento e freio)
 - Controle: novo estado **AVANCANDO** (D-038). Linha some indo reto (`|erro|`, `|erro_longe|` ≤ `reto_max_erro` 0,25) ou num cruzamento: segue reto a no máximo `v_avanco` (0,25) por até `avanco_s` (0,35 s); a linha voltou → segue; não voltou → PARADO "fim da linha" (box). Na curva continua girando (BUSCANDO). `avanco_s` = 0 volta ao comportamento antigo.
 - `seguir_linha.py`: ao parar, mantém zero armado (freio) por `parada.freio_s` (0,5 s) antes de desarmar; antes desarmava na hora e a roda ficava solta. `make metricas` conta "vezes que seguiu reto sem linha". 9 testes novos.

@@ -47,5 +47,16 @@ def imagem_debug(cinza, det, textos=(), escala=2):
     return img
 
 
+def painel_debug(cinza, det, textos=(), escala=2):
+    """Imagem de depuracao + mascara lado a lado (para salvar em arquivo quando nao ha janela)."""
+    import numpy as np
+    img = imagem_debug(cinza, det, textos, escala)
+    masc = np.zeros(cinza.shape[:2], np.uint8)
+    masc[det["y0"]:det["y0"] + det["mascara"].shape[0]] = det["mascara"]
+    masc = cv2.cvtColor(mascara_ampliada(masc, escala), cv2.COLOR_GRAY2BGR)
+    cv2.line(masc, (0, det["y0"] * escala), (masc.shape[1], det["y0"] * escala), (255, 255, 0), 1)
+    return np.hstack([img, masc])
+
+
 def mascara_ampliada(mascara, escala=2):
     return cv2.resize(mascara, None, fx=escala, fy=escala, interpolation=cv2.INTER_NEAREST)
