@@ -4,7 +4,7 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 
 | defeito plantado | verificacao | pegou? | o que ela disse |
 |---|---|---|---|
-| (nenhum: projeto como esta) | todas | passou, como deve | 55 verificacoes |
+| (nenhum: projeto como esta) | todas | passou, como deve | 56 verificacoes |
 | regulamento: comprimento > 250 mm (esfera 100 mm mais para a frente) | regulamento | sim | comprimento <= 250 mm: 261.6 mm (de x = -55.8 a 205.9, com plugues, cabos e camera em toda a faixa) |
 | regulamento: largura > 150 mm (bitola de 140 mm) | regulamento | sim | largura <= 150 mm: 159.0 mm (de y = -79.5 a 79.5) |
 | regulamento: pneu de 120 mm | regulamento | sim | diametro do pneu 20-113 mm: 120 mm |
@@ -37,4 +37,4 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 | medidas: --para-cortar com medidas estimadas | medidas | sim | conferir antes de cortar: jet_furo_d: diametro do furo (M2.5); define centros = borda - d |
 | dxf: DXF gravado com a Jetson 1 mm diferente da medida | dxf | sim | furos da Jetson no DXF: 86.30 x 57.30 mm (1 esperado) |
 
-Tempo: 152 s.
+Tempo: 138 s.

@@ -8,7 +8,7 @@ Massas e posicoes: as do modelo (`pecas.py`); nas variantes B e C so mudam de an
 | | massa (g) | CG x / y / z (mm) | peso nas rodas | tomba a (g) | empina a (g) | curva R100 (m/s) | limite | volta 20 m (s) | comprimento (mm) |
 |---|---|---|---|---|---|---|---|---|---|
 | v3 (25/11): Jetson baixa sobre a bateria, 2 andares | 633 | 16.8 / -1.0 / 36.1 | 86 % | 1.11 | 0.47 | 0.94 | aderencia | 12.6 | 240 |
-| A - v4: XL4016 + bateria no piso, Jetson no 2o, ESP32 no 3o (escolhida) | 657 | 21.7 / -1.6 / 49.9 | 77 % | 0.77 | 0.44 | 0.80 | software | 13.6 | 162 |
+| A - v4: XL4016 + bateria no piso, Jetson no 2o, ESP32 no 3o (escolhida) | 657 | 21.7 / -1.6 / 49.9 | 77 % | 0.77 | 0.43 | 0.80 | software | 13.6 | 162 |
 | B - Jetson no 3o, ESP32 no 2o (largada e USB da ESP32 ficam embaixo da Jetson) | 657 | 21.7 / -1.6 / 57.2 | 77 % | 0.67 | 0.38 | 0.77 | tombamento | 14.0 | 162 |
 | C - Jetson no piso, XL4016 no 2o (XL quente em cima do dissipador; +15 mm) | 657 | 21.7 / -1.6 / 47.9 | 80 % | 0.87 | 0.45 | 0.80 | software | 13.5 | 177 |
 

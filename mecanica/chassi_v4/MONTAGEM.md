@@ -32,6 +32,7 @@ Os comprimentos vêm do modelo (`make chassi` refaz a tabela em [verificacao.md]
 | motor_esq / _dir | cabo de 6 vias original | encoder → J12 + J10 / J13 + J11 | precisa ≥ 141 mm (assumi 150) | passa-fio atrás da Jetson (andar 2) → passa-fio do andar 3, **na frente da placa da ESP32** (junto dos conectores dos motores) |
 | usb_jetson_esp32 | USB-A ↔ USB-C | ESP32 (andar 3, trás) → Jetson (andar 2, trás) | precisa ≥ 70 mm | cabo de 15–20 cm |
 | j41_desligar | 8 Dupont fêmea-fêmea 15 cm | J41 15–20, 2 e 6 → J1 da placa de interface | precisa ≥ 101 mm | sobe pelo passa-fio da direita do andar 3, na frente da placa; ver [pinos do J1](../../hardware/placa_desligar/README.md#montagem-furo-a-furo) |
+| largada_j14 | 2 Dupont fêmea-fêmea 10 cm | J3 do painel → J14 da ESP32 (sem o jumper) | precisa ≥ ~60 mm | em qualquer ordem: é só um botão |
 | ffc_camera | flat 15 vias | CSI → câmera | precisa de 135 mm a 65° (temos 150) | contorna a frente do andar 3; folga para girar a câmera |
 
 Regras conferidas pela verificação: nada a menos de 3 mm de roda ou redutor; nenhum cabo atravessa MDF sem
