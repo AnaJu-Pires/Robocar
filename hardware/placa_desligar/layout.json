@@ -1,0 +1,48 @@
+{
+ "placa": [
+  40.0,
+  18.0,
+  1.6
+ ],
+ "furos_m3": {
+  "MH1": [
+   3.49,
+   14.07
+  ],
+  "MH2": [
+   36.51,
+   3.91
+  ]
+ },
+ "botao": [
+  11.11,
+  8.99
+ ],
+ "led_vermelho": [
+  18.73,
+  5.18
+ ],
+ "led_amarelo": [
+  31.43,
+  5.18
+ ],
+ "j1": {
+  "centro": [
+   37.78,
+   12.8
+  ],
+  "lu": 5.08,
+  "lw": 10.16,
+  "altura": 8.5
+ },
+ "j2": {
+  "centro": [
+   28.89,
+   1.37
+  ],
+  "lu": 7.62,
+  "lw": 2.54,
+  "altura": 8.5
+ },
+ "obs": "u: da borda de tras para a frente; w: da borda de dentro (ESP32) para fora; mm. Gerado por layout.py"
+}

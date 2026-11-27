@@ -63,6 +63,9 @@ config:  ## mostra os parametros efetivos (padrao + config.json)
 placa:  ## regenera as saidas da placa da ESP32 (PDFs 1:1, furacao, STEP, imagens) com o kicad-cli
 	bash hardware/placa_esp32/gerar_saidas.sh
 
+placa-interface:  ## placa de interface (desligar/LEDs/luz): verifica o desenho furo a furo, grava layout.json e a imagem, roda os negativos
+	cd hardware/placa_desligar && $(PYTHON) layout.py && $(PYTHON) layout.py --negativos
+
 drc:  ## placa da ESP32: DRC + so B.Cu + paridade esquema x placa (precisa do Python do KiCad)
 	$(PYTHON) hardware/placa_esp32/verificar.py
 
