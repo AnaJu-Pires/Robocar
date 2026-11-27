@@ -4,7 +4,7 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 
 | defeito plantado | verificacao | pegou? | o que ela disse |
 |---|---|---|---|
-| (nenhum: projeto como esta) | todas | passou, como deve | 56 verificacoes |
+| (nenhum: projeto como esta) | todas | passou, como deve | 58 verificacoes |
 | regulamento: comprimento > 250 mm (esfera 100 mm mais para a frente) | regulamento | sim | comprimento <= 250 mm: 261.6 mm (de x = -55.8 a 205.9, com plugues, cabos e camera em toda a faixa) |
 | regulamento: largura > 150 mm (bitola de 140 mm) | regulamento | sim | largura <= 150 mm: 159.0 mm (de y = -79.5 a 79.5) |
 | regulamento: pneu de 120 mm | regulamento | sim | diametro do pneu 20-113 mm: 120 mm |
@@ -25,9 +25,9 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 | material: aba de 1,5 mm (parte fina) | material | sim | teste_aba_fina: parte do contorno mais fina que 2.0 mm perto de (20.8, 35.0) |
 | material: gravacao em cima de furo | material | sim | teste_gravacao: gravacao "TEXTO" cai em furo ou fora da peca |
 | cg: 120 g no alto (tomba antes do limite de curva) | cg | sim | tomba so acima de 1.15 x a aceleracao lateral permitida: tomba com 0.61 g; permitido 0.65 g (curva R100 a ate 0.80 m/s; atrito 0.90) |
-| cg: sem limite de curva por software (tomba antes de escorregar) | cg | sim | tomba so acima de 1.15 x a aceleracao lateral permitida: tomba com 0.78 g; permitido 0.90 g (curva R100 a ate 0.94 m/s; atrito 0.90) |
+| cg: sem limite de curva por software (tomba antes de escorregar) | cg | sim | tomba so acima de 1.15 x a aceleracao lateral permitida: tomba com 0.77 g; permitido 0.90 g (curva R100 a ate 0.94 m/s; atrito 0.90) |
 | cg: 80 g de lastro de lado (CG fora do centro) | cg | sim | CG centrado (/y/ <= 3 mm): +4.6 mm |
-| cg: 150 g de lastro atras (empina) | cg | sim | empina so acima de 0.40 g: 0.13 g -> rampa do firmware deve limitar a aceleracao abaixo disso |
+| cg: 150 g de lastro atras (empina) | cg | sim | empina so acima de 0.40 g: 0.14 g -> rampa do firmware deve limitar a aceleracao abaixo disso |
 | cabos: cabo do motor de 90 mm (curto) | cabos | sim | motor_esq: precisa de 139 mm e tem 90 mm |
 | cabos: bitola de 86 mm (fios passam a menos de 3 mm da roda) | cabos | sim | alim_xl1: a menos de 3 mm de roda_esq |
 | cabos: passa-fio do P4 apagado (fio atravessa o andar 2) | cabos | sim | xl1_p4_jetson: atravessa a chapa andar2 |
@@ -36,5 +36,6 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 | cabos: cabo USB de 50 mm | cabos | sim | usb_jetson_esp32: precisa de 70 mm e tem 50 mm |
 | medidas: --para-cortar com medidas estimadas | medidas | sim | conferir antes de cortar: jet_furo_d: diametro do furo (M2.5); define centros = borda - d |
 | dxf: DXF gravado com a Jetson 1 mm diferente da medida | dxf | sim | furos da Jetson no DXF: 86.30 x 57.30 mm (1 esperado) |
+| dxf: furos das pecas compradas cortados em vez de gravados (equipe fura a mao) | dxf_cortados | sim | furos de fixacao das pecas compradas so gravados (furar a mao): 10 cortados (Jetson 2,9 / camera 2,2 / esfera 2,8 mm); esperado 0 |
 
-Tempo: 157 s.
+Tempo: 164 s.

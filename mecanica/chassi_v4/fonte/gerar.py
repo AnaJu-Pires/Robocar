@@ -121,6 +121,17 @@ def transformar(c, dx, dy, girar):
         return (x - x0 + dx, y - y0 + dy)
     return tr
 
+# furos de fixacao de pecas compradas: com FURAR_A_MAO o laser so GRAVA (circulo do tamanho do furo + cruz no centro);
+# a equipe fura com a parafusadeira conferindo com a peca. Ficam cortados: encaixes, passa-fios, furos que alinham 2 chapas
+# (porca presa), pivo/arco da camera e pino da bateria.
+MARCAR = {'camera', 'desligar', 'distribuicao', 'esfera', 'esp32', 'jetson', 'suporte_motor', 'xl1', 'xl2'}
+FURAR_A_MAO = [True]
+
+def eh_marca(f, c=None):
+    if c is not None and c.nome.startswith(('gabarito', 'teste')):
+        return False                     # gabaritos do pente continuam cortados: servem de guia para a broca
+    return FURAR_A_MAO[0] and f.nome in MARCAR
+
 def escrever_dxf(folha, arq):
     doc = ezdxf.new('R2010', setup=True); doc.units = ezdxf.units.MM
     doc.layers.add('CORTE', color=1); doc.layers.add('GRAVAR', color=5)
@@ -129,10 +140,16 @@ def escrever_dxf(folha, arq):
         tr = transformar(c, dx, dy, g)
         msp.add_lwpolyline([tr(p) for p in list(c.contorno.exterior.coords)[:-1]], close=True, dxfattribs={'layer': 'CORTE'})
         for f in c.furos:
+            lay = 'GRAVAR' if eh_marca(f, c) else 'CORTE'
             if f.tipo == 'circ':
-                msp.add_circle(tr(f.centro), f.d / 2, dxfattribs={'layer': 'CORTE'})
+                msp.add_circle(tr(f.centro), f.d / 2, dxfattribs={'layer': lay})
             else:
-                msp.add_lwpolyline([tr(p) for p in list(f.geom.exterior.coords)[:-1]], close=True, dxfattribs={'layer': 'CORTE'})
+                msp.add_lwpolyline([tr(p) for p in list(f.geom.exterior.coords)[:-1]], close=True, dxfattribs={'layer': lay})
+            if lay == 'GRAVAR':
+                cx, cy = f.centro if f.centro is not None else (f.geom.centroid.x, f.geom.centroid.y)
+                r = (f.d / 2 if f.d else 1.5) + 1.5
+                msp.add_line(tr((cx - r, cy)), tr((cx + r, cy)), dxfattribs={'layer': 'GRAVAR'})
+                msp.add_line(tr((cx, cy - r)), tr((cx, cy + r)), dxfattribs={'layer': 'GRAVAR'})
         for (txt, x, y, h) in c.textos:
             t = msp.add_text(txt, dxfattribs={'layer': 'GRAVAR', 'height': h, 'rotation': 90 if g else 0})
             t.set_placement(tr((x, y)), align=ezdxf.enums.TextEntityAlignment.MIDDLE_CENTER)
@@ -144,10 +161,18 @@ def desenhar_folha(folha, ax, mesa):
         ax.add_patch(MPoly([tr(p) for p in c.contorno.exterior.coords], closed=True, fill=True, fc=(0.97, 0.93, 0.86),
                            ec='red', lw=0.35))
         for f in c.furos:
+            marca = eh_marca(f, c)
+            ec, fc = ('blue', 'none') if marca else ('red', 'white')
             if f.tipo == 'circ':
-                ax.add_patch(MCirc(tr(f.centro), f.d / 2, fill=True, fc='white', ec='red', lw=0.35))
+                ax.add_patch(MCirc(tr(f.centro), f.d / 2, fill=not marca, fc=fc, ec=ec, lw=0.35))
             else:
-                ax.add_patch(MPoly([tr(p) for p in f.geom.exterior.coords], closed=True, fc='white', ec='red', lw=0.35))
+                ax.add_patch(MPoly([tr(p) for p in f.geom.exterior.coords], closed=True, fill=not marca, fc=fc, ec=ec, lw=0.35))
+            if marca:
+                cx, cy = f.centro if f.centro is not None else (f.geom.centroid.x, f.geom.centroid.y)
+                r = (f.d / 2 if f.d else 1.5) + 1.5
+                for (a, b) in (((cx - r, cy), (cx + r, cy)), ((cx, cy - r), (cx, cy + r))):
+                    (xa, ya), (xb, yb) = tr(a), tr(b)
+                    ax.plot([xa, xb], [ya, yb], color='blue', lw=0.3)
         for (txt, x, y, h) in c.textos:
             ax.text(*tr((x, y)), txt, fontsize=h * 2.2, color='blue', ha='center', va='center', rotation=90 if g else 0)
 
@@ -309,10 +334,12 @@ def auditar_dxf(arqs, m):
     if isinstance(arqs, str):
         arqs = [arqs]
     circ = []
+    cortados = []
     for k, arq in enumerate(arqs):        # cada folha deslocada 10 m para nao misturar furos de folhas diferentes
         doc = ezdxf.readfile(arq)
         circ += [(round(e.dxf.radius * 2, 2), np.array([e.dxf.center.x + 10000.0 * k, e.dxf.center.y]))
                  for e in doc.modelspace() if e.dxftype() == 'CIRCLE']
+        cortados += [round(e.dxf.radius * 2, 2) for e in doc.modelspace() if e.dxftype() == 'CIRCLE' and e.dxf.layer == 'CORTE']
     def retangulos(d, a, b, tol=0.05):
         pts = [c for dd, c in circ if abs(dd - d) < 0.01]
         alvo = sorted([a, a, b, b, math.hypot(a, b), math.hypot(a, b)])
@@ -337,10 +364,15 @@ def auditar_dxf(arqs, m):
          V.Resultado(retangulos(2.2, cf[0], cf[1]) == 1, 'dxf', 'furos da camera no DXF', f'{cf[0]} x {cf[1]} mm'),
          V.Resultado(pares(2.8, v('esfera_furos')) == 1, 'dxf', 'furos da esfera no DXF', f'{v("esfera_furos")} mm'),
          V.Resultado(sum(abs(dd - 3.3) < 0.01 for dd, _ in circ) == n_pino, 'dxf', 'furos do pino de trava no DXF', f'{n_pino} esperados')]
+    if FURAR_A_MAO[0]:
+        n_cort = sum(1 for dd in cortados if abs(dd - 2.9) < 0.01 or abs(dd - 2.2) < 0.01 or abs(dd - 2.8) < 0.01)
+        R.append(V.Resultado(n_cort == 0, 'dxf', 'furos de fixacao das pecas compradas so gravados (furar a mao)',
+                             f'{n_cort} cortados (Jetson 2,9 / camera 2,2 / esfera 2,8 mm); esperado 0'))
     return R
 
 # ------------------------------------------------------------------------------------------- principal
 def principal():
+    FURAR_A_MAO[0] = bool(modelo.PADRAO.get('FURAR_A_MAO', True))
     ap = argparse.ArgumentParser()
     ap.add_argument('--so-verificar', action='store_true')
     ap.add_argument('--para-cortar', action='store_true')

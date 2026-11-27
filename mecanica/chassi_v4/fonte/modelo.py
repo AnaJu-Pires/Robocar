@@ -48,7 +48,8 @@ PADRAO = dict(
     CABO_FOLGA=0.10,
     LASTRO=None,
     TRIMPOT_CHAVE=40.0,
-    PF3_MOTOR=(53.5, 30.0),  # passa-fio dos motores no andar 3 (x, |y|): na frente da placa da ESP32, longe da placa de interface    # comprimento livre para a chave de fenda acima do andar 2 (chave curta)
+    PF3_MOTOR=(53.5, 30.0),
+    FURAR_A_MAO=True,        # furos de fixacao das pecas compradas: o laser so grava a marca (circulo + cruz) e a equipe fura  # passa-fio dos motores no andar 3 (x, |y|): na frente da placa da ESP32, longe da placa de interface    # comprimento livre para a chave de fenda acima do andar 2 (chave curta)
     PILARES=((-14.0, 6.0), (50.0, 70.0)),   # x dos pilares andar 2 -> 3 (aba numa ponta, porca presa na outra)
     ESFERA_MARGEM=2.5,     # material entre o furo da esfera e a borda da frente
     CHAVE_Y=28.0,          # centro do recorte da chave na parede de tras do berco
@@ -519,10 +520,13 @@ def construir(P=None, verif=False):
     m.F_cam = F_cam
     YO = PY - T
     CA, CC = 2.0, P['CAM_C']
-    base_or = so.unary_union([sg.Point(0, 0).buffer(14.0), ret(-2, CC - 16, CA + T + 2.5, 0)])
+    LUZ_Y0, LUZ_Y1 = 15.0, 33.0                         # placa da luz (D-037): acima do pivo, no plano da placa da camera
+    base_or = so.unary_union([sg.Point(0, 0).buffer(14.0), ret(-2, CC - 16, CA + T + 2.5, 0),
+                              ret(-2, 10.0, CA + T + 2.5, LUZ_Y1 + 1.0)])
     th0, th1 = 180 + P['CAM_ANG'][0] - 4, 180 + P['CAM_ANG'][1] + 4
     for_ = [circ(0, 0, 3.4, 'pivo', 'pivo'), arco_rasgo(0, 0, R_ARCO, th0, th1, 3.4, 'arco', 'ajuste do angulo'),
-            Furo(ret(CA, CC - 8, CA + S, CC + 8), 'placa_camera', funcao='encaixe')]
+            Furo(ret(CA, CC - 8, CA + S, CC + 8), 'placa_camera', funcao='encaixe'),
+            Furo(ret(CA, LUZ_Y0 + 4, CA + S, LUZ_Y1 - 4), 'placa_luz', funcao='encaixe')]
     escala = []
     for ang in range(int(P['CAM_ANG'][0]), int(P['CAM_ANG'][1]) + 1, 10):
         th = math.radians(90 + ang)
@@ -540,6 +544,15 @@ def construir(P=None, verif=False):
                       descricao='camera presa por tras, lente para a frente')
     placa_cam.qtd = 1
     chapas.append(placa_cam)
+    # placa da luz: a fita COB cola na frente (aponta para onde a camera olha e gira junto); o modulo da luz (IRLZ44N)
+    # fica atras; os 2 fios da fita passam pelo furo
+    base_pl = ret(-YO, LUZ_Y0, YO, LUZ_Y1)
+    abas_pl = [ret(YO, LUZ_Y0 + 4, YO + T, LUZ_Y1 - 4), ret(-YO - T, LUZ_Y0 + 4, -YO, LUZ_Y1 - 4)]
+    placa_luz = Chapa('placa_luz', base_pl, [circ(-YO + 4.0, LUZ_Y0 + 4.0, 3.0, 'fio_luz', 'fios da fita passam para tras')],
+                      abas_pl, frames=[], textos=[('LUZ', 4.0, LUZ_Y0 + 3.2, 2.0)], descricao='fita de LED na frente, modulo atras')
+    placa_luz.qtd = 1
+    chapas.append(placa_luz)
+    m.LUZ_Y = (LUZ_Y0, LUZ_Y1)
 
     def partes_camera(ang):
         out = []
@@ -548,6 +561,10 @@ def construir(P=None, verif=False):
         ex, ey, ez, o = F_cam(ang, 0)
         frp = (-ez, ey, ex, o + CA * ex)
         out.append(('placa_camera', placa_cam.solido(T).moved(loc(frp)), 'chapa'))
+        out.append(('placa_luz', placa_luz.solido(T).moved(loc(frp)), 'chapa'))
+        out.append(('luz_cob', caixa_local(frp, -YO + 1.0, YO - 1.0, LUZ_Y0 + 1.0, LUZ_Y1 - 1.0, T, T + 2.0), 'camera'))
+        out.append(('modulo_luz', caixa_local(frp, -10.0, 10.0, LUZ_Y0 + 1.0, LUZ_Y1 - 1.0, -16.0, 0.0), 'camera'))
+        m.luz_modulo_pt = aplicar(frp, 0, LUZ_Y0 + 2.0, -8.0)
         pw_, ph_, pt_ = v('cam_placa')
         out.append(('camera_placa', caixa_local(frp, -pw_ / 2, pw_ / 2, CC - ph_ / 2, CC + ph_ / 2, -1.5 - pt_, -1.5), 'camera'))
         ld, ll = v('cam_lente')
@@ -628,6 +645,16 @@ def construir(P=None, verif=False):
          3.5, '8 fios Dupont femea', 'J41 pinos 15 a 20, 2 (5 V) e 6 (GND)', 'placa de interface (andar 3)',
          apoio=['pf3_j41'], disponivel=150.0, extra=0.0,
          obs='jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 (D-033)')
+    partes_camera(P['CAM_ANG_NOMINAL'])
+    lj2 = (8.0 + LY['j2']['centro'][0], -(EW / 2 + 1.0) - LY['j2']['centro'][1], zbd + LY['j2']['altura'] + 3.0)
+    lm = m.luz_modulo_pt
+    exc, eyc, _, oc = F_cam(P['CAM_ANG_NOMINAL'], 0)
+    atras = lambda yl, t: tuple(np.array(oc) + CA * np.array(exc) + yl * np.array(eyc) - t * np.array(exc))   # t > 0: atras da placa
+    apoios['travessa_mastro'] = (TRVx, -6.0, ZTR + 4.0 + 1.5)
+    cabo('luz', [lj2, (45.0, -30.0, lj2[2] + 1), (TRVx, -6.0, ZTR + 4.0 + 1.5), atras(-12.0, 24.0), atras(LUZ_Y0 + 2.0, 24.0),
+                 tuple(lm)],
+         2.0, '3 fios finos (5V, LUZ, GND) com Dupont femea', 'J2 da placa de interface', 'modulo da luz (atras da placa da luz)',
+         apoio=['travessa_mastro'], extra=30.0, obs='passa entre os postes, por cima da travessa; folga para girar a camera')
     m.cabos_ffc = (jet_pt(np.mean(v('jet_csi_u')), 58) + (ZJ + JT + 4,))
     def ffc_rota(ang):
         partes_camera(ang)
@@ -641,7 +668,7 @@ def construir(P=None, verif=False):
 def chapas_3d(m, ang=None):
     out = []
     for c in m.chapas:
-        if c.nome in ('orelha_camera', 'placa_camera'):
+        if c.nome in ('orelha_camera', 'placa_camera', 'placa_luz'):
             continue
         sol = c.solido(m.T)
         for k, fr in enumerate(c.frames):
@@ -650,7 +677,7 @@ def chapas_3d(m, ang=None):
     cams = {c.nome: c for c in m.chapas}
     for nome, sol, tipo in m.partes_camera(ang):
         if tipo == 'chapa':
-            out.append((nome, sol, cams['orelha_camera' if 'orelha' in nome else 'placa_camera']))
+            out.append((nome, sol, cams['orelha_camera' if 'orelha' in nome else nome]))
     return out
 
 def camera_compradas(m, ang):

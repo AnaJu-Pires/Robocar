@@ -3,6 +3,16 @@
 Os comprimentos vêm do modelo (`make chassi` refaz a tabela em [verificacao.md](verificacao.md)). **Corte = rota × 1,10
 + 20 mm** (descascar, terminal, termorretrátil). Números de 26/11/2026.
 
+## 0. Furar (antes de montar)
+
+No DXF/PDF os furos das peças compradas vêm **gravados**: círculo do tamanho do furo + cruz no centro (azul no PDF).
+1. Ponha a peça (ou o gabarito cortado do pente) em cima da marca e confira que os furos dela caem nos círculos.
+2. Se cair: fure no centro da cruz. Se não cair (medida estimada diferente da peça): marque pelo furo da peça e fure ali.
+3. Brocas: M2 (câmera, suportes dos motores) **2,0 mm**; M2.5 (Jetson, esfera) **2,8 mm**; M3 **3,2–3,5 mm**. MDF:
+   broca de madeira com ponta, parafusadeira na velocidade baixa, um pedaço de madeira embaixo para não lascar.
+4. Os suportes dos motores tinham furo oblongo (ajuste do alinhamento): fure no centro da marca; se o eixo ficar torto,
+   alargue o furo para o lado com a broca inclinada.
+
 ## 1. Energia
 
 ```

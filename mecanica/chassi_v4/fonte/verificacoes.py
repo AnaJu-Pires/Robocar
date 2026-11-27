@@ -141,7 +141,7 @@ def interferencia(m):
 
 def camera(m):
     mv = modelo.construir(m.P, verif=True)
-    base = [s for s in solidos(mv) if s['grupo'] != 'camera' and 'camera' not in s['nome']]
+    base = [s for s in solidos(mv) if s['grupo'] != 'camera' and 'camera' not in s['nome'] and 'luz' not in s['nome']]
     R = []
     angs = list(np.arange(m.P['CAM_ANG'][0], m.P['CAM_ANG'][1] + 0.1, 5.0))
     for ang in angs:

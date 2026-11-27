@@ -1,12 +1,12 @@
 # Verificacao automatica do chassi v4 (gerada por `fonte/gerar.py`)
 
-Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (56 ok, 0 falhas).
+Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (58 ok, 0 falhas).
 
 | | grupo | verificacao | detalhe |
 |---|---|---|---|
-| ok | regulamento | comprimento <= 250 mm | 161.7 mm (de x = -55.8 a 105.9, com plugues, cabos e camera em toda a faixa) |
+| ok | regulamento | comprimento <= 250 mm | 175.7 mm (de x = -55.8 a 120.0, com plugues, cabos e camera em toda a faixa) |
 | ok | regulamento | largura <= 150 mm | 143.0 mm (de y = -71.5 a 71.5) |
-| ok | regulamento | chassi >= 50 x 60 mm | 159 x 121 mm |
+| ok | regulamento | chassi >= 50 x 60 mm | 168 x 121 mm |
 | ok | regulamento | diametro do pneu 20-113 mm | 42 mm |
 | ok | regulamento | largura do pneu 11-45 mm | 19 mm |
 | ok | regulamento | tensao do motor 3-12 V | 7.2 V (XL4016 #2, D-019) |
@@ -14,7 +14,7 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (56 ok, 0 falhas).
 | ok | regulamento | 2 rodas tracionadas tocam o chao | z minimo das rodas: 0.00, 0.00 mm |
 | ok | regulamento | esfera no chao (carro nivelado) | fundo da esfera a +0.00 mm do chao (piso dianteiro a 15.0 mm, esfera de 15 mm) |
 | ok | regulamento | vao livre >= 8 mm (emendas do tapete) | 12.0 mm |
-| ok | interferencia | nenhuma sobreposicao | 102 solidos (13 volumes de acesso) |
+| ok | interferencia | nenhuma sobreposicao | 105 solidos (13 volumes de acesso) |
 | ok | camera | camera livre em toda a faixa | 25 a 65 graus, de 5 em 5 |
 | ok | camera | a camera nao ve o proprio carro no angulo nominal | 45 graus; livre ate 45 graus (campo vertical estimado 56 graus) |
 | ok | material | piso_traseiro | 13 furos, teia >= 2.0 mm, 1 peca |
@@ -29,12 +29,13 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (56 ok, 0 falhas).
 | ok | material | andar3 | 23 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | poste_mastro | 3 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | travessa_mastro | 0 furos, teia >= 2.0 mm, 1 peca |
-| ok | material | orelha_camera | 3 furos, teia >= 2.0 mm, 1 peca |
+| ok | material | orelha_camera | 4 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | placa_camera | 5 furos, teia >= 2.0 mm, 1 peca |
-| ok | cg | massa total estimada | 664 g; CG x 21.1 / y -1.5 / z 50.1 mm |
+| ok | material | placa_luz | 1 furos, teia >= 2.0 mm, 1 peca |
+| ok | cg | massa total estimada | 667 g; CG x 21.4 / y -1.5 / z 50.5 mm |
 | ok | cg | CG centrado (|y| <= 3 mm) | -1.5 mm |
-| ok | cg | peso nas rodas entre 70 e 92 % | 78 % |
-| ok | cg | tomba so acima de 1.15 x a aceleracao lateral permitida | tomba com 0.78 g; permitido 0.65 g (curva R100 a ate 0.80 m/s; atrito 0.90) |
+| ok | cg | peso nas rodas entre 70 e 92 % | 77 % |
+| ok | cg | tomba so acima de 1.15 x a aceleracao lateral permitida | tomba com 0.77 g; permitido 0.65 g (curva R100 a ate 0.80 m/s; atrito 0.90) |
 | ok | cg | empina so acima de 0.40 g | 0.42 g -> rampa do firmware deve limitar a aceleracao abaixo disso |
 | ok | cabos | pigtail_xt60_fusivel | rota 102 mm, corte 132 mm |
 | ok | cabos | fusivel_chave | rota 66 mm, corte 92 mm |
@@ -49,6 +50,7 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (56 ok, 0 falhas).
 | ok | cabos | motor_dir | rota 129 mm, corte 141 mm (tem 150) |
 | ok | cabos | usb_jetson_esp32 | rota 64 mm, corte 70 mm (tem 300) |
 | ok | cabos | j41_desligar | rota 91 mm, corte 100 mm (tem 150) |
+| ok | cabos | luz | rota 130 mm, corte 173 mm |
 | ok | cabos | ffc_camera | rota 123 mm, corte 135 mm (tem 150) |
 | ok | medidas | conferir antes de cortar: jet_furo_d | diametro do furo (M2.5); define centros = borda - d |
 | ok | medidas | conferir antes de cortar: jet_furo_u0 | distancia da ponta do P4 ao centro do 1o furo; None = furos centrados |
@@ -66,6 +68,7 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (56 ok, 0 falhas).
 | ok | dxf | furos da camera no DXF | 21.0 x 12.5 mm |
 | ok | dxf | furos da esfera no DXF | 16.0 mm |
 | ok | dxf | furos do pino de trava no DXF | 2 esperados |
+| ok | dxf | furos de fixacao das pecas compradas so gravados (furar a mao) | 0 cortados (Jetson 2,9 / camera 2,2 / esfera 2,8 mm); esperado 0 |
 
 ## Cabos: rota e comprimento de corte
 
@@ -86,6 +89,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | motor_dir | cabo de 6 vias do motor | conector branco do encoder (dir) | J13 + J11 | 129 | cabo pronto | 150 | 84 | cabo original do motor; o comprimento disponivel e estimado |
 | usb_jetson_esp32 | cabo USB-A / USB-C de dados | USB-C da ESP32 (andar 3, tras) | USB-A da Jetson (andar 2, tras) | 64 | cabo pronto | 300 | 64 | cabo curto: 15-20 cm bastam |
 | j41_desligar | 8 fios Dupont femea | J41 pinos 15 a 20, 2 (5 V) e 6 (GND) | placa de interface (andar 3) | 91 | cabo pronto | 150 | 60 | jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 (D-033) |
+| luz | 3 fios finos (5V, LUZ, GND) com Dupont femea | J2 da placa de interface | modulo da luz (atras da placa da luz) | 130 | 173 | do rolo | 84 | passa entre os postes, por cima da travessa; folga para girar a camera |
 | ffc_camera | flat 15 vias | CSI da Jetson | camera | 123 | cabo pronto | 150 | 123 | pior angulo: 65 graus |
 
 ## Massas (para refazer o CG depois de pesar)
@@ -133,12 +137,13 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | fio_alim_xl2 | 2.1 | -3 | -6 | 52 | calculada |
 | suporte_motor_esq | 2.0 | 0 | 45 | 21 | E |
 | suporte_motor_dir | 2.0 | 0 | -45 | 21 | E |
+| orelha_camera_esq | 2.0 | 87 | 15 | 146 | calculada |
+| orelha_camera_dir | 2.0 | 87 | -16 | 146 | calculada |
 | fio_pigtail_xt60_fusivel | 1.8 | -39 | -40 | 56 | calculada |
 | parede_berco_esq | 1.8 | -37 | 56 | 32 | calculada |
 | fio_xl1_p4_jetson | 1.6 | -5 | 35 | 49 | calculada |
-| orelha_camera_esq | 1.6 | 83 | 16 | 142 | calculada |
-| orelha_camera_dir | 1.6 | 83 | -16 | 142 | calculada |
 | placa_camera | 1.6 | 76 | -0 | 132 | calculada |
+| placa_luz | 1.3 | 105 | 0 | 161 | calculada |
 | pino_trava | 1.0 | -40 | -55 | 19 | calculada |
 | espacador_jetson_1 | 1.0 | 11 | 43 | 56 | calculada |
 | espacador_jetson_2 | 1.0 | 69 | 43 | 56 | calculada |
@@ -159,7 +164,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | espacador_xl2_4_44 | 0.5 | 34 | -6 | 20 | calculada |
 | espacador_dist_14_4 | 0.5 | -37 | 27 | 58 | calculada |
 | espacador_dist_15_39 | 0.5 | -37 | -8 | 58 | calculada |
-| **total** | **664** | **21.1** | **-1.5** | **50.1** | |
+| **total** | **667** | **21.4** | **-1.5** | **50.5** | |
 
 ## Fixadores (contados pelos furos)
 

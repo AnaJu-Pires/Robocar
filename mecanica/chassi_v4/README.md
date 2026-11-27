@@ -1,4 +1,21 @@
-# Robocar Blitz — chassi v4 (3 andares)
+# Robocar Blitz — chassi v4 (3 andares) — **é este que vamos cortar**
+
+| Chassi | Comprimento | Situação |
+|---|---|---|
+| v1 (`mecanica/chassi/`) | — | placa da ESP32 antiga (v0.7); não serve mais |
+| v3 (`mecanica/chassi_v3/`) | 240 mm | a 10 mm do limite de 250; só referência |
+| **v4 (este)** | **176 mm** (162 com a câmera em 45°) | 3 andares, todas as placas novas, luz da câmera, 51 verificações |
+
+**Por que o v4:** é o único que tem lugar para tudo o que existe hoje (placa de distribuição, placa de interface,
+luz da câmera) e passa em todas as verificações. É 64 mm mais curto que o v3 e, no desempate (§4.8), robô menor
+ganha. O preço é o centro de massa mais alto: tomba com 0,77 g, por isso a curva é limitada no software a 0,65 g
+(D-032).
+
+**Furos:** os furos de fixação das peças compradas (Jetson, ESP32, XL4016, placas de interface e de distribuição,
+câmera, esfera, suportes dos motores) **não são cortados**. O laser só grava um círculo do tamanho do furo e uma
+cruz no centro, e vocês furam com a parafusadeira conferindo com a peça (D-037). O laser continua cortando o que
+tem de alinhar entre duas chapas (parafusos com porca presa, pivô e arco da câmera, pino da bateria), os encaixes,
+os passa-fios e os recortes.
 
 MDF 3 mm cortado a laser, 2 chapas de 390 × 270 mm. Substitui o [v3](../chassi_v3/) (240 mm de comprimento, muito
 perto do limite de 250). Tudo sai de `fonte/` (Python + CadQuery + ezdxf): o `make chassi` gera os arquivos e
