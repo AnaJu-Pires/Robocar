@@ -233,6 +233,9 @@ def imagens(m, pasta):
     render.vista3d(render.triangulos(sem23), os.path.join(pasta, 'vista_andar1.png'), 40, -55,
                    'So o andar 1: XL4016, motores, berco da bateria e chave', lim)
     figura_camera(m, os.path.join(pasta, 'camera_faixa_angulo.png'))
+    import figura_pecas
+    figura_pecas.figura(m, os.path.join(pasta, 'pecas_no_modelo.png'),
+                        os.path.join(RAIZ, '..', '..', 'hardware', 'placa_esp32', 'imagens', 'vista_3d.png'))
 
 def figura_camera(m, arq):
     """Lado (x para a direita): mastro, Jetson, piso e, para 3 angulos, camera, eixo otico e campo de visao vertical."""

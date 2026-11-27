@@ -18,6 +18,12 @@ perto do limite de 250). Tudo sai de `fonte/` (Python + CadQuery + ezdxf): o `ma
 | Peças de MDF | 19 (14 desenhos) | 18 |
 | Verificações | 51 ok (interferência com 14 volumes de acesso; câmera em 9 ângulos; 6 releem o DXF) · **30 testes negativos, todos pegos** · 10 medidas a conferir | 52 · 28 |
 
+## Peças compradas como estão no modelo
+
+Não são fotos: é o desenho que o chassi usa para cada peça, com as medidas e de onde veio cada uma (medido, documento ou **ESTIMADO**). Ponha a peça real ao lado: o que estiver estimado e for diferente, corrija em `fonte/pecas.py` e rode `make chassi`. A placa da ESP32 é o render do KiCad da placa de vocês.
+
+![Peças no modelo](imagens/pecas_no_modelo.png)
+
 ## 1. Quem fica em cada andar ([D-031](../../docs/decisoes.md))
 
 ```
