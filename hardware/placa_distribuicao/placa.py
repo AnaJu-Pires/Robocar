@@ -110,7 +110,10 @@ def _por_pinos(fp, a, c):
 
 
 def montar(pecas=PECAS, ilhas=ILHAS, fix=FIX, trilhas=TRILHAS, sem_cobre=()):
-    b = pcbnew.NewBoard(PCB) if hasattr(pcbnew, 'NewBoard') else pcbnew.CreateEmptyBoard()
+    # placa nova num arquivo TEMPORARIO: NewBoard grava o arquivo vazio na hora; o .kicad_pcb de verdade so e gravado
+    # no fim de principal(), depois de todas as verificacoes (os testes negativos nunca tocam nele)
+    _tmp = tempfile.mkdtemp()
+    b = pcbnew.NewBoard(os.path.join(_tmp, 'x.kicad_pcb'))
     ds = b.GetDesignSettings()
     ds.m_MinClearance = FM(0.5)
     ds.m_HoleClearance = FM(0.5)
@@ -412,6 +415,13 @@ def principal():
     if erros:
         return 1
     b.Save(PCB)
+    # modelos 3D na mesma variavel da placa da ESP32 (KiCad 10): o 3D aparece ao abrir no KiCad de voces
+    txt = open(PCB, encoding='utf-8').read().replace('${KICAD6_3DMODEL_DIR}', '${KICAD10_3DMODEL_DIR}')
+    open(PCB, 'w', encoding='utf-8').write(txt)
+    gravada = pcbnew.LoadBoard(PCB)
+    if len(gravada.GetFootprints()) != len(PECAS) + len(FIX):
+        print(f'ERRO: o .kicad_pcb gravado tem {len(gravada.GetFootprints())} pecas (esperado {len(PECAS) + len(FIX)})')
+        return 1
     saidas()
     print(f'placa de distribuicao {W:.0f} x {H:.0f} mm: {len(PECAS)} pecas, {len(REDES)} redes, DRC limpo, so B.Cu, '
           f'cobre >= {LARG_MIN_MM} mm nos caminhos de 7 A: OK')

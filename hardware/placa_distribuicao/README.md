@@ -6,9 +6,12 @@ entre o plugue USB e o P4, em **2 espaçadores M3 de 10 mm**. Decisão: [D-036](
 
 ![Cobre visto de cima (azul = cobre embaixo)](imagens/cobre_vista_de_cima.png)
 
-Arquivos do KiCad: `placa_distribuicao.kicad_sch` (esquemático; PDF em `placa_distribuicao_esquematico.pdf`),
-`placa_distribuicao.kicad_pcb` (placa) e `placa_distribuicao.step` (3D). Abrem no KiCad 7 a 10. O esquemático é
-conferido pelo próprio KiCad contra o circuito e contra a placa a cada `make placa-distribuicao`.
+**Abrir no KiCad:** Arquivo → Abrir projeto → `hardware/placa_distribuicao/placa_distribuicao.kicad_pro`. Na janela
+do projeto: esquemático (`placa_distribuicao.kicad_sch`) e placa (`placa_distribuicao.kicad_pcb`); na placa, **Alt+3**
+abre o 3D. Abre no KiCad 7 a 10. O 3D também está em `placa_distribuicao.step` (abre no Onshape/FreeCAD). O
+esquemático é conferido pelo próprio KiCad contra o circuito e contra a placa a cada `make placa-distribuicao`.
+
+![3D](imagens/vista_3d.png)
 
 ![Esquemático](imagens/esquematico.png)
 
