@@ -267,3 +267,31 @@ controle (1,0 ≈ 1,98 m/s) quando a linha está curva. Hoje `v_max` = 0,35 (≈
 `v_max` acima de 0,40, manter `v_min` ≤ 0,40 e conferir no T12 que a roda de dentro não levanta.
 **Consequências:** na pista sintética a volta fica ~1 s mais lenta que a do v3 sem teto de controle (13,6 × 12,6 s); com
 o teto real do controle (~1,2 m/s) a diferença some. Se a pesagem subir o CG, o limite cai junto (`make chassi-verificar`).
+
+### D-033 — Luz própria na câmera e LED "código rodando" na placa de interface
+*27/11/2026 · aceita (peça da luz a confirmar)*
+**Contexto:** o professor sugeriu luz em cima da câmera para não depender da iluminação do local. FATO: a única
+calibração registrada (22/11) teve contraste de 40 níveis (branco 106, preto 66), abaixo do aviso de 60, e foi a
+causa dos 46 % de cruzamentos falsos. A equipe também pediu LEDs de "Jetson ligada", "câmera ligada" e "código certo
+rodando".
+**Decisão:**
+* **Luz:** fita LED 5 V branca fria 2835 (2 trechos, 6 LEDs) ou 4 LEDs brancos 5 mm, **nos 5 V regulados** (J41
+  pino 2), chaveada por IRLZ44N no J41 pino 15 (gpio194). O `seguir_linha.py` e o `calibrar.py` acendem a luz
+  **antes** de abrir a câmera (a exposição já converge com a luz) e apagam ao sair; com 5 quadros seguidos sem imagem
+  ela apaga. Assim a própria luz é o indicador de "câmera ligada" (sem LED a mais).
+* **Amarelo** no J41 pino 19 (gpio16) por BC337: pisca 1 Hz esperando a largada, 4 Hz andando, para se o programa
+  fechar ou travar. Só o `seguir_linha.py` pisca, então "piscando" = o programa certo está rodando.
+* **Vermelho** (D-028) continua sendo "Jetson ligada / pode desligar a chave".
+* O serviço `botao-desligar` (root) exporta os pinos 15 e 19 em 0 e libera a escrita: o programa do robô segue sem
+  sudo. Sem os pinos (PC, serviço velho) os LEDs viram no-op com um aviso; o robô anda igual.
+* A placa extra cresce de 30 × 18 para 40 × 18 mm (16 × 7 furos); o andar 3 do v4 foi refeito e passa nas 51
+  verificações. A placa da ESP32 não muda.
+**Alternativas:** LED por resistor direto no pino (o TXB0108 do J41 não aguenta carga); BC337 para a luz (~0,2 mA na
+base só liga ~20 mA); luz de 12 V na bateria (brilho cai com a carga e a calibração deixa de valer); 3 LEDs
+indicadores separados (o de câmera repetiria a luz); luz PWM (pode bater com o obturador e criar faixas na imagem).
+**Riscos:** reflexo da luz no tapete aparecer como branco estourado (testar no T19, difusor); consumo da luz no 5 V
+da Jetson (medir; > 0,5 A usar 1 trecho). Regulamento: as seções que citamos (§3.2.2–§3.2.4) não falam de
+iluminação no robô; a luz fica dentro da envolvente. **Confirmar na inspeção** se houver dúvida.
+**Consequências:** custo ~R$ 15–25 (fita + IRLZ44N, ESTIMATIVA); ~2 h de montagem. Os pinos 15–20 do J41 ficam todos
+ocupados (livres: 31 e 33).
+

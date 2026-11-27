@@ -3,6 +3,9 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Adicionado (27/11/2026, rodada 2)
+- Luz da câmera e LED amarelo "código rodando" na placa extra, que vira placa de interface (D-033): `jetson/robocar/leds.py`. A luz (J41 pino 15, IRLZ44N, 5 V regulados) acende antes de abrir a câmera no `seguir_linha.py` e no `calibrar.py`, apaga ao sair e com 5 quadros seguidos sem imagem; o amarelo (pino 19) pisca 1 Hz esperando e 4 Hz andando. `seguir_linha.py --sem-leds`. O serviço `botao-desligar` exporta os 2 pinos e libera a escrita para o programa do robô (`Before=robocar.service`). 7 testes novos (6 em `test_leds.py`, 1 no serviço).
+- Chassi v4: placa extra de 30 × 18 para 40 × 18 mm, LED amarelo no modelo e chicote do J41 com 7 fios (pinos 15–20 + pino 2). 51 verificações e 30 testes negativos passam; DXF, PDF, STEP e imagens regerados.
 ### Adicionado (27/11/2026, rodada 1)
 - `make metricas` (`jetson/metricas_log.py`, `robocar/metricas.py`): números da corrida a partir do log CSV (tempo andando, distância e velocidade pelos encoders, vezes que perdeu a linha, % de quadros com linha, |erro| p50/p95, cruzamentos, fps real, maior travada, processamento, queda da bateria). 4 testes.
 - `docs/08_diario.md`: diário de engenharia das rodadas de otimização.
