@@ -84,11 +84,12 @@ else
   echo "   grupo dialout: ok"
 fi
 if [ -z "$RAIZ" ]; then
-  echo "   modo de energia: $(nvpmodel -q 2>/dev/null | head -1 || echo '?')"
-  if dmesg | grep -q "imx219 .*bound"; then
-    echo "   camera: detectada no boot ($(dmesg | grep -o 'imx219 [0-9]-0010' | sort -u | tr '\n' ' '))"
+  echo "   modo de energia: $(nvpmodel -q 2>/dev/null | grep -i 'power mode' | head -1 || echo '?')"
+  # /dev/video0 so existe se o sensor foi reconhecido no boot; o dmesg pode ja ter perdido as linhas do boot
+  if ls /dev/video* >/dev/null 2>&1; then
+    echo "   camera: detectada ($(ls /dev/video* | tr '\n' ' '))"
   else
-    echo "   CAMERA NAO DETECTADA no boot: desligue tudo, confira o cabo flat nas duas pontas e ligue de novo"
+    echo "   CAMERA NAO DETECTADA (sem /dev/video*): desligue tudo, confira o cabo flat nas duas pontas e ligue de novo"
   fi
   if [ -e /dev/ttyUSB0 ]; then
     if fuser /dev/ttyUSB0 >/dev/null 2>&1; then
