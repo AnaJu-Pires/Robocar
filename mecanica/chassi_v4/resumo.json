@@ -12,15 +12,15 @@
   -71.5,
   71.5
  ],
- "massa_g": 657,
+ "massa_g": 664,
  "cg_mm": [
-  21.7,
-  -1.6,
-  49.9
+  21.1,
+  -1.5,
+  50.1
  ],
- "peso_nas_rodas": 0.769,
- "tomba_g": 0.77,
- "empina_g": 0.44,
+ "peso_nas_rodas": 0.776,
+ "tomba_g": 0.78,
+ "empina_g": 0.42,
  "z": {
   "piso_traseiro": [
    12.0,
@@ -42,7 +42,7 @@
   "esp32_placa": 107.0
  },
  "verificacoes": {
-  "total": 55,
+  "total": 56,
   "falhas": 0
  },
  "pecas": [
@@ -91,8 +91,8 @@
   {
    "nome": "andar2",
    "qtd": 1,
-   "area_mm2": 17751,
-   "massa_g": 39.9,
+   "area_mm2": 17669,
+   "massa_g": 39.8,
    "descricao": "Jetson, chave, fusivel, placa de desligar; sai com 4 parafusos"
   },
   {

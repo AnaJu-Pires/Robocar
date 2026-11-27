@@ -230,12 +230,27 @@ def construir(P=None, verif=False):
              'eletronica', (0.1, 0.1, 0.1), 'chave_geral')
     acesso('dedo_chave', caixa(PAR_T0 - 15, PAR_T0 - 3, CHY - 8, CHY + 8, CHZ - 6, CHZ + 6), 'ligar e desligar a chave geral (por tras)',
            ignora=('chave_geral',))
+    # placa de distribuicao (D-036): fusivel + ilhas BAT+/FUS+/SW+/GND, em espacadores de 10 mm (solda dos fios embaixo).
+    # Coordenadas da placa (hardware/placa_distribuicao/placa.py): x da borda de tras, y do lado esquerdo do carro.
     fw, fl, fh = v('fus_placa')
-    FX0, FY0 = X_TRAS + 3.0, -6.0                        # entre os plugues USB (y < -14) e P4 (y > 36)
-    comprada('placa_fusivel', caixa(FX0, FX0 + fw, FY0, FY0 + fl, ZA2t, ZA2t + fh), v('fus_massa'), 'eletronica',
+    DIST_X0, DIST_Y0, DIST_ESP = -52.0, 31.0, 10.0
+    dp = lambda x, y: (DIST_X0 + x, DIST_Y0 - y)
+    ZD = ZA2t + DIST_ESP                                 # face de baixo da placa
+    m.dist_pt, m.ZD = dp, ZD
+    comprada('placa_fusivel', caixa(DIST_X0, DIST_X0 + fw, DIST_Y0 - fl, DIST_Y0, ZD, ZD + 1.6), v('fus_massa'), 'eletronica',
              (0.15, 0.4, 0.55))
-    acesso('dedo_fusivel', caixa(FX0 + 3, FX0 + 15, FY0 + 5, FY0 + fl - 5, ZA2t + fh, ZA2t + fh + 25),
-           'trocar o fusivel por cima, atras do andar 3', ignora=('placa_fusivel',))
+    for hx, hy in ((14.5, 4.0), (15.0, 39.5)):
+        comprada(f'espacador_dist_{int(hx)}_{int(hy)}', cilindro((*dp(hx, hy), ZA2t), (*dp(hx, hy), ZD), 6.0), 0.5, 'fixacao',
+                 (0.9, 0.9, 0.85), 'placa_fusivel')
+    (fx, fy0), (_, fy1) = dp(6.5, 8.0), dp(6.5, 31.0)
+    comprada('fusivel_5x20', caixa(fx - 4.0, fx + 4.0, fy1, fy0, ZD + 1.6, ZD + 1.6 + 10.0), 0, 'eletronica', (0.8, 0.8, 0.8),
+             'placa_fusivel')
+    (dx_, dy0_), (_, dy1_) = dp(18.5, 11.0), dp(18.5, 23.2)
+    comprada('diodo_protecao', caixa(dx_ - 2.7, dx_ + 2.7, dy1_, dy0_, ZD + 1.6, ZD + 1.6 + 5.6), 0, 'eletronica', (0.2, 0.2, 0.2),
+             'placa_fusivel')
+    acesso('dedo_fusivel', caixa(fx - 4, fx + 4, fy1 + 2, fy0 - 2, ZD + 11.6, ZD + 40),
+           'trocar o fusivel por cima, atras do andar 3', ignora=('placa_fusivel', 'fusivel_5x20'))
+    m.dist_furos = [dp(14.5, 4.0), dp(15.0, 39.5)]
     m._desl_pendente = True
 
     # ---------------------------------------------------------------------------- ANDAR 3: placa da ESP32
@@ -408,10 +423,15 @@ def construir(P=None, verif=False):
     f2.append(circ(*PF_VM, 8.0, 'passa_fio_vm', 'fios do VM (XL4016 #2) sobem para o andar 3'))
     f2.append(circ(*PF_P4, 10.0, 'passa_fio_p4', 'fios do P4 e do VM esquerdo sobem'))
     PF_CH = (PAR_T0 + T + 8.0, CHY + cr_w / 2 + 6.0)
-    f2.append(circ(*PF_CH, 8.0, 'passa_fio_chave', 'fios da chave sobem para o fusivel'))
+    f2.append(circ(*PF_CH, 8.0, 'passa_fio_chave', 'fios da chave sobem para a placa de distribuicao'))
+    for (x, y) in m.dist_furos:
+        f2.append(circ(x, y, 3.4, 'distribuicao', 'parafuso M3 da placa de distribuicao (espacador de 10 mm)'))
+    PF_XL = (-15.5, 2.0)
+    f2.append(circ(*PF_XL, 9.0, 'passa_fio_xl', 'alimentacao dos 2 XL4016 desce da placa de distribuicao'))
+    apoios['pf_xl'] = (PF_XL[0], PF_XL[1], ZA2 + T / 2)
     apoios['pf_chave'] = (PF_CH[0], PF_CH[1], ZA2 + T / 2)
     PF_XT = (BX0 + 2.0 + xw6 / 2, -54.0)
-    f2.append(circ(*PF_XT, 8.0, 'passa_fio_xt60', 'pigtail do XT60 sobe para o fusivel'))
+    f2.append(circ(*PF_XT, 8.0, 'passa_fio_xt60', 'pigtail do XT60 sobe para a placa de distribuicao'))
     for nome_, (x, y) in (('pf_motor_e', PF_MOTOR[0]), ('pf_motor_d', PF_MOTOR[1]), ('pf_vm', PF_VM), ('pf_p4', PF_P4),
                           ('pf_xt60', PF_XT)):
         apoios[nome_] = (x, y, ZA2 + T / 2)
@@ -548,21 +568,24 @@ def construir(P=None, verif=False):
     (xb1, yb1) = xl_pt(0, 0, 24); (xb2, yb2) = xl_pt(1, 0, 24)
     zb = EZ + 11                                  # por cima do suporte do motor
     zm = (ZA2t + ZA3) / 2                         # entre os andares 2 e 3
-    fus_in = (FX0 + 5, FY0 + 5, ZA2t + 4); fus_out = (FX0 + 5, FY0 + fl - 5, ZA2t + 4)
+    dp = m.dist_pt; zp = m.ZD + 1.6 + 3.0                  # em cima das ilhas da placa de distribuicao
+    pad = lambda x, y: (*dp(x, y), zp)
     pfz = ZA2 + T / 2
     cabo('pigtail_xt60_fusivel', [(BX0 + 2 + xw6 / 2, XTY0 + xh6 / 2, Z1 + 1 + XT_L), (PF_XT[0], PF_XT[1], Z1 + BH + 2),
-                                  (PF_XT[0], PF_XT[1], pfz), (PF_XT[0], PF_XT[1], ZA2t + 6), fus_in],
-         4.0, '0,75 mm2 vermelho + preto', 'XT60 do chassi (par solto, a direita da bateria)', 'entrada da placa do fusivel',
+                                  (PF_XT[0], PF_XT[1], pfz), (PF_XT[0], PF_XT[1], zp + 4), (*dp(6.5, 40.0), zp + 4), pad(6.5, 40.0)],
+         4.0, '0,75 mm2 vermelho + preto', 'XT60 do chassi (par solto, a direita da bateria)', 'BAT+ / BAT- da placa de distribuicao',
          apoio=['pf_xt60'], obs='XT60 soldado nesta ponta; termorretratil')
     chave = (PAR_T0 + T + c_d - 2, CHY, CHZ)
-    cabo('fusivel_chave', [fus_out, (PF_CH[0], PF_CH[1], ZA2t + 4), (PF_CH[0], PF_CH[1], ZA2 - 4), chave],
-         2.6, '0,75 mm2 vermelho', 'saida do fusivel', 'chave geral (terminal 1)', apoio=['pf_chave'])
-    jb = apoios['janela_berco']
-    cabo('chave_xl', [chave, (CHX, 10.0, jb[2]), (jb[0], 8.0, jb[2]), (6.0, 30.0, ZA2 - 6), (XL0 - 8, yb1, zi + 4), (xb1 - 3, yb1, zi)],
-         4.0, '0,75 mm2 vermelho + preto', 'chave geral (terminal 2) + GND do fusivel', 'IN+ / IN- do XL4016 #1',
-         apoio=['janela_berco'], obs='sai pela janela da parede do berco e passa por cima dos motores')
-    cabo('jumper_in_xl', [(xb1 - 3, yb1 - 8, zi), (XL0 - 6, 0, Z2 + 8), (xb2 - 3, yb2 + 8, zi)],
-         4.0, '0,75 mm2 vermelho + preto', 'IN+ / IN- do XL4016 #1', 'IN+ / IN- do XL4016 #2', apoio=[])
+    cabo('fusivel_chave', [pad(6.5, 4.0), (*dp(6.5, 4.0), zp + 4), (PF_CH[0], PF_CH[1], zp + 4), (PF_CH[0], PF_CH[1], ZA2 - 4), chave],
+         2.6, '0,75 mm2 vermelho', 'CHAVE 1 (FUS+) da placa de distribuicao', 'chave geral (terminal 1)', apoio=['pf_chave'])
+    cabo('chave_placa', [chave, (PF_CH[0], PF_CH[1], ZA2 - 4), (PF_CH[0], PF_CH[1], zp + 4), (*dp(21.0, 4.0), zp + 4), pad(21.0, 4.0)],
+         2.6, '0,75 mm2 vermelho', 'chave geral (terminal 2)', 'CHAVE 2 (SW+) da placa de distribuicao', apoio=['pf_chave'])
+    for k, (yp, sy_, (xb, yb)) in enumerate(((4.0, 1, (xb1, yb1)), (13.0, -1, (xb2, yb2)))):
+        cabo(f'alim_xl{k + 1}', [pad(28.5, yp), (*dp(28.5, yp), zp + 4), (PF_XL[0], PF_XL[1], zp + 4), (PF_XL[0], PF_XL[1], ZA2 - 6),
+                                (6.0, 30.0 * sy_, ZA2 - 6), (XL0 - 8, yb, zi + 4), (xb - 3, yb, zi)],
+             4.0, '0,75 mm2 vermelho + preto', f'XL{k + 1} + / XL{k + 1} - da placa de distribuicao',
+             f'IN+ / IN- do XL4016 #{k + 1} ({"Jetson" if k == 0 else "motores"})', apoio=['pf_xl'],
+             obs='um par por conversor (sem jumper de um borne para o outro)')
     p4f = m.p4_fim
     cabo('xl1_p4_jetson', [(xb1 - 3, yb1 + 6, zi), (XL0 - 8, 30, zi + 6), (PF_P4[0], PF_P4[1], ZA2 - 6), (PF_P4[0], PF_P4[1], ZA2t + 6),
                            (p4f[0] - 6, p4f[1], p4f[2] - 4), (p4f[0] - 2, p4f[1], p4f[2])],
@@ -578,9 +601,9 @@ def construir(P=None, verif=False):
              apoio=['pf_p4' if sy_ > 0 else 'pf_vm', pf3], obs='ja soldado na placa: so conferir o comprimento')
     j1 = esp_pt(39.5, 8.5)
     pv3 = apoios['pf3_vm_e']
-    cabo('vbat', [chave, (PF_CH[0], PF_CH[1], ZA2 - 4), (PF_CH[0], PF_CH[1], ZA2t + 6), (pv3[0], pv3[1], zm),
+    cabo('vbat', [pad(25.0, 8.5), (*dp(25.0, 8.5), zm), (pv3[0], pv3[1], zm),
                   (pv3[0], pv3[1], ZA3t + 3), (pv3[0], pv3[1], zt + 4), (j1[0], j1[1], zt + 2)],
-         1.6, '0,2 mm2 (fio fino)', 'chave geral (terminal 2)', 'J1 (VBAT) da placa da ESP32', apoio=['pf_chave', 'pf3_vm_e'],
+         1.6, '0,2 mm2 (fio fino)', 'VBAT (SW+) da placa de distribuicao', 'J1 (VBAT) da placa da ESP32', apoio=['pf3_vm_e'],
          obs='conector de 1 via (Dupont) no meio para o andar 3 sair')
     for lado, sy_ in (('esq', 1), ('dir', -1)):
         yc = sy_ * (Y_FIM + 2.5)

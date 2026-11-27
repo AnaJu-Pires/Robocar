@@ -78,8 +78,8 @@ M = {
     'esp_usb_plugue':   med((22.0, 12.0, 7.0), 'E', 'plugue USB-C reto: comprimento x largura x altura'),
     'esp_massa':        med(40.0, 'E', 'PESAR montada com os fios'),
     # Placa do fusivel (ja feita) e placa extra de desligar
-    'fus_placa':        med((30.0, 30.0, 14.0), 'M', '30 x 30; altura com o fusivel estimada'),
-    'fus_massa':        med(8.0, 'E'),
+    'fus_placa':        med((32.0, 44.0, 22.0), 'V', 'placa de distribuicao (hardware/placa_distribuicao): 32 x 44; altura com espacador de 10 mm e fusivel'),
+    'fus_massa':        med(12.0, 'E', 'placa + fusivel + diodo + 2 espacadores'),
     'desl_placa':       med((40.0, 18.0, 14.0), 'V', 'placa de interface: medidas e posicoes em hardware/placa_desligar/layout.json'),
     # Chave, plugues, cabos
     'chave_recorte':    med((19.0, 13.0), 'E', 'KCD1-101: recorte 19 x 13; conferir a sua', afeta_corte=True),

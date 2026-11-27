@@ -29,7 +29,7 @@ Não são fotos: é o desenho que o chassi usa para cada peça, com as medidas e
 ```
  z (mm)
  99-102   ANDAR 3  placa da ESP32 (largada, USB, LED e EN/BOOT por cima) + placa de interface + mastro curto da câmera
- 50-53    ANDAR 2  Jetson de través (100 mm na largura), portas para TRÁS; atrás dela: placa do fusível
+ 50-53    ANDAR 2  Jetson de través (100 mm na largura), portas para TRÁS; atrás dela: placa de distribuição (fusível)
  12-18    ANDAR 1  motores no eixo · 2 XL4016 à frente do eixo · bateria atravessada atrás (sai pela direita) + chave
           trás ◄── x = −56 ─────── 0 (eixo) ─────────────────────────── 106 ──► frente
 ```
@@ -90,7 +90,7 @@ quando soubermos qual luz foi comprada.
 | Gravar a ESP32 | USB-C na traseira da placa | andar 3, trás |
 | SSH | Wi-Fi (adaptador na USB livre) ou Ethernet: as portas da Jetson ficam viradas para trás | andar 2, trás |
 | microSD | sai pela borda da frente da Jetson, entre os andares 2 e 3 (verificado) | frente |
-| Fusível | por cima, atrás do andar 3 (verificado) | andar 2, trás |
+| Fusível | por cima, atrás do andar 3 (verificado); LED verde da placa de distribuição = chave ligada | andar 2, trás |
 | Tirar o andar 3 sem mexer na Jetson | 4 parafusos M3 (porcas presas nos pilares) + Dupont do VBAT + conectores dos motores + USB | andar 3 |
 | Tirar a Jetson com o andar 2 | 4 parafusos M3 do andar 2 (porcas presas nas paredes do andar 1) + P4 + flat; a Jetson sai parafusada no andar 2 | andar 2 |
 
@@ -118,7 +118,7 @@ Mesma organização do v3 (ver [o README do v3](../chassi_v3/README.md#arquivos)
 | parede_berco_frente | 1 | berço, apoio do andar 2, furo do pino, janela dos fios da chave |
 | parede_berco_esq | 1 | batente esquerdo da bateria |
 | parede_frente | 2 | laterais do andar 1; porcas presas do andar 2 |
-| andar2 | 1 | Jetson, placa do fusível, furos dos trimpots e passa-fios |
+| andar2 | 1 | Jetson, placa de distribuição, furos dos trimpots e passa-fios |
 | pilar_tras / pilar_frente | 2 + 2 | sustentam o andar 3; porcas presas |
 | andar3 | 1 | placa da ESP32, placa de interface, mastro |
 | poste_mastro, travessa_mastro | 2 + 1 | mastro curto da câmera |

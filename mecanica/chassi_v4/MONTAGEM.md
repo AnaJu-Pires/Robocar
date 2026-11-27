@@ -6,12 +6,13 @@ Os comprimentos vêm do modelo (`make chassi` refaz a tabela em [verificacao.md]
 ## 1. Energia
 
 ```
- ANDAR 1 (atrás)                          ANDAR 2 (atrás da Jetson)            ANDAR 1 (frente)            ANDAR 3
- bateria ─XT60 (em pé, à direita)─ pigtail ──passa-fio──► placa do fusível 7 A
-                                                             │ (passa-fio)
- chave (parede de trás do berço) ◄──────────────────────────┘
-   ├─ chave_xl (janela do berço, por cima dos motores) ───────────────────────► IN do XL4016 #1 ─jumper─► IN do #2
-   └─ vbat (fio fino, Dupont no meio) ─────────── passa-fio do andar 2 ─── passa-fio do andar 3 ──────────────► J1
+ ANDAR 1 (atrás)                          ANDAR 2: placa de distribuição (D-036)        ANDAR 1 (frente)        ANDAR 3
+ bateria ─XT60 (em pé, à direita)─ pigtail ──passa-fio──► BAT+ ─[fusível 7 A]─ FUS+ ─┐
+                                                          BAT− ── GND                 │ CHAVE 1
+ chave (parede de trás do berço) ◄────────────── passa-fio da chave ──────────────────┘
+   └───────────────────────────── passa-fio da chave ──► CHAVE 2 ── SW+ ─┬ alim_xl1 ── passa-fio XL ──► IN do XL4016 #1
+                                                                          ├ alim_xl2 ── passa-fio XL ──► IN do XL4016 #2
+                                                                          └ vbat (fino, Dupont no meio) ─ passa-fio do andar 3 ─► J1
  XL4016 #1 OUT 5,2 V ── xl1_p4_jetson ── passa-fio esquerdo do andar 2 ──► P4 da Jetson (portas para trás)
  XL4016 #2 OUT 7,2 V ─┬ vm_e ── passa-fio esquerdo do andar 2 ── passa-fio do andar 3 ──────────────────► J2
                       └ vm_d ── passa-fio direito do andar 2 ─── passa-fio do andar 3 ──────────────────► J3
@@ -21,10 +22,11 @@ Os comprimentos vêm do modelo (`make chassi` refaz a tabela em [verificacao.md]
 
 | Cabo | Bitola / tipo | De → para | Corte | Rota e apoio |
 |---|---|---|---|---|
-| pigtail_xt60_fusivel | 0,75 mm² vermelho + preto | XT60 do chassi → entrada do fusível | **122 mm** | do XT60 (em pé na ponta direita da bateria) sobe pelo passa-fio de trás do andar 2 |
-| fusivel_chave | 0,75 mm² vermelho | saída do fusível → terminal 1 da chave | **80 mm** | desce pelo passa-fio da chave (andar 2) |
-| chave_xl | 0,75 mm² vermelho + preto | terminal 2 da chave (+) e GND do fusível (−) → IN do XL4016 #1 | **126 mm** | sai do berço pela janela da parede da frente e passa por cima dos motores |
-| jumper_in_xl | 0,75 mm² vermelho + preto | IN do #1 → IN do #2 | **61 mm** | entre os bornes (2 fios por borne: ilhós ou estanhar junto) |
+| pigtail_xt60_fusivel | 0,75 mm² vermelho + preto | XT60 do chassi → BAT+ / BAT− da placa de distribuição | **132 mm** | do XT60 (em pé na ponta direita da bateria) sobe pelo passa-fio de trás do andar 2 |
+| fusivel_chave | 0,75 mm² vermelho | CHAVE 1 (FUS+) → terminal 1 da chave | **92 mm** | desce pelo passa-fio da chave (andar 2) |
+| chave_placa | 0,75 mm² vermelho | terminal 2 da chave → CHAVE 2 (SW+) | **93 mm** | sobe pelo mesmo passa-fio |
+| alim_xl1 | 0,75 mm² vermelho + preto | XL1 + / XL1 − → IN do XL4016 #1 (Jetson) | **151 mm** | desce pelo passa-fio novo na frente da placa e passa por cima dos motores |
+| alim_xl2 | 0,75 mm² vermelho + preto | XL2 + / XL2 − → IN do XL4016 #2 (motores) | **145 mm** | idem; um par para cada conversor, sem jumper entre os bornes |
 | xl1_p4_jetson | 0,75 mm² vermelho + preto | OUT do XL4016 #1 → P4 | **118 mm** | sobe pelo passa-fio esquerdo do andar 2 até o P4 (centro = +; conferir 5,2 V antes) |
 | vm_e | 0,75 mm² vermelho + preto | OUT do XL4016 #2 → J2 | rota 178 (precisa ≥ **216**) | passa-fio esquerdo do andar 2 → passa-fio esquerdo do andar 3 |
 | vm_d | 0,75 mm² vermelho + preto | OUT do XL4016 #2 → J3 | rota 124 (precisa ≥ **156**) | passa-fio direito do andar 2 → passa-fio direito do andar 3 |
@@ -55,15 +57,15 @@ conferir o nivelamento.
 
 **3. Energia no andar 1 — soldar e apertar antes de fechar o andar 2**
 1. Ajustar o XL4016 #1 em 5,2 V e o #2 em 7,2 V na bancada, sem carga (T03).
-2. Soldar: XT60 no pigtail; pigtail e saída na placa do fusível; fios na chave; P4 no `xl1_p4_jetson`; Dupont do VBAT.
+2. Soldar: XT60 no pigtail; na [placa de distribuição](../../hardware/placa_distribuicao/README.md): pigtail, fios da chave, `alim_xl1`, `alim_xl2` e VBAT; fios na chave; P4 no `xl1_p4_jetson`; Dupont do VBAT.
 3. XL4016 no piso dianteiro (espaçadores de 4 mm), **bornes para trás** (#1 à esquerda).
-4. Chave na parede de trás do berço. Passar `chave_xl` pela janela do berço e apertar no IN do #1; `jumper_in_xl` do #1
-   para o #2; `xl1_p4_jetson` no OUT do #1; `vm_e` e `vm_d` no OUT do #2 (os fios do VM vêm da placa da ESP32: deixe-os
+4. Chave na parede de trás do berço. `alim_xl1` no IN do #1 e `alim_xl2` no IN do #2 (descem pelo passa-fio na frente da
+   placa de distribuição); `xl1_p4_jetson` no OUT do #1; `vm_e` e `vm_d` no OUT do #2 (os fios do VM vêm da placa da ESP32: deixe-os
    soltos para cima por enquanto).
 
 **4. Andar 2**
-1. Placa do fusível atrás (fita dupla face). Jetson nos espaçadores de 5 mm, portas para trás.
-2. Passar pelos passa-fios do andar 2: pigtail e fios da chave (atrás), P4 e VM esquerdo (esquerda), VM direito
+1. Placa de distribuição atrás, em 2 espaçadores M3 de 10 mm (furos no andar 2). Jetson nos espaçadores de 5 mm, portas para trás.
+2. Passar pelos passa-fios do andar 2: pigtail e fios da chave (atrás), pares dos XL4016 (passa-fio na frente da placa de distribuição), P4 e VM esquerdo (esquerda), VM direito
    (direita), cabos dos motores (atrás da Jetson).
 3. Encaixar o andar 2 nas abas das paredes e fechar com 4 parafusos M3 (porcas presas).
 4. P4 na Jetson; flat no CSI (Jetson desligada).
