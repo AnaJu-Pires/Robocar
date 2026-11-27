@@ -322,3 +322,17 @@ cabos só olhava MDF e rodas.
 **Consequências:** fios do VM já soldados precisam de **≥ 216 / 156 mm** (antes 210 / 150); cabo dos motores
 ~139–141 mm de corte (tem 150). 51 verificações + 31 testes negativos no chassi; 10 na placa.
 
+### D-035 — Painel do operador: largada e desligar juntos; placa da ESP32 continua 8 × 8
+*27/11/2026 · aceita*
+**Contexto:** a equipe prefere botão no lugar do jumper de largada (J14) e uma placa só, do tamanho da anterior
+(8 × 8), se possível com o fusível. Todas as peças da placa da ESP32 estão em barra de pinos (trocar é fácil).
+**Decisão:** a placa da ESP32 v0.8 fica como está (8 × 8). A placa de interface vira o **painel do operador**
+(17 × 7 furos, 43 × 18 mm), ao lado dela no andar 3: botão de **LARGADA** (S3, ligado ao J14 por 2 fios, isolado do
+resto), botão de **DESLIGAR**, LED vermelho e LED amarelo, todos por cima, do lado direito. A placa de distribuição
+(cobre dividido + fusível) fica no andar 2.
+**Por quê:** a v0.8 não tem área livre para o circuito do J41 (pedaços de ~12 × 8 mm entre as trilhas); pôr tudo
+nela exigiria aumentar a placa para o lado e mudar de novo os passa-fios do VM e do J41. O painel ocupa uma faixa
+que já estava livre e não aumenta o chassi. Os 3,3 V da Jetson ficam fora da placa que tem o VM dos motores.
+**Consequências:** 11 testes negativos no desenho do painel; o acesso ao botão de largada no chassi passou para o
+painel; novo cabo `largada_j14` (2 Dupont de 10 cm). Uma v0.9 integrada pode ser estudada depois de 05/12.
+

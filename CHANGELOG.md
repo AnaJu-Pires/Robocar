@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (27/11/2026, rodada 2c: painel do operador)
+- Placa de interface vira o painel do operador (17 × 7 furos, 43 × 18 mm; D-035): botão de LARGADA (S3) no lugar do jumper J14, ligado por 2 fios Dupont, ao lado do botão de DESLIGAR e dos LEDs. 11 testes negativos no desenho (novo: botão de largada ligado ao GND da Jetson).
+- Chassi v4: botão de largada, J3 e cabo `largada_j14` no modelo; o acesso ao botão de largada passa para o painel.
+- Luz: instruções para a fita COB 5 V comprada (não usar o controle de toque, que regula por PWM e faz faixas na imagem; 3 pedaços de 5 cm; medir a corrente).
 ### Alterado (27/11/2026, rodada 2b: placa de interface)
 - `hardware/placa_desligar/layout.py` (`make placa-interface`): placa de interface 16 × 7 furos desenhada furo a furo (lado dos componentes e da solda em `imagens/placa_perfurada.png`), com verificação de redes, furos, corpos, parafusos, pontes e bordas e 10 testes negativos. Grava `layout.json`, que o chassi v4 lê (D-034).
 - O MOSFET da luz sai da placa e vai para um módulo junto da luz (J2 de 3 vias: 5V, LUZ, GND). Chicote do J41 com 8 fios (15–20, 2 e 6).

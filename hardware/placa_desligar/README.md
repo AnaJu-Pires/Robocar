@@ -1,6 +1,6 @@
-# Placa de interface: desligar a Jetson, luz da câmera e LEDs (placa extra, 40 × 18 mm)
+# Painel do operador (placa de interface): largada, desligar, LEDs e luz da câmera (43 × 18 mm)
 
-Uma plaquinha perfurada (**16 × 7 furos**) no **andar 3** do chassi v4, à direita da placa da ESP32, com 2 parafusos
+Uma plaquinha perfurada (**17 × 7 furos**) no **andar 3** do chassi v4, à direita da placa da ESP32, com 2 parafusos
 M3, mais um **módulo da luz** pequeno junto da luz, no mastro da câmera. Liga só na barra **J41 da Jetson** (8 jumpers:
 pinos 15–20, 2 e 6). A placa da ESP32 v0.8 **não muda**.
 
@@ -12,6 +12,7 @@ A pasta continua `placa_desligar/` para não quebrar os links.
 
 | O que | Pino do J41 | Quem controla | Significa |
 |---|---|---|---|
+| Botão de **LARGADA** (no lugar do jumper J14) | — (2 fios até o **J14 da ESP32**) | firmware da ESP32 | soltar = largada; apertar andando = para; segurar 3 s parado = desligar (reserva) |
 | Botão de desligar | 18 (gpio15) | serviço `botao-desligar` (root) | segurar **2 s** = desligar a Jetson com segurança |
 | LED **vermelho** | 16 (gpio232) | serviço `botao-desligar` | aceso = Jetson ligada; **apagou = pode desligar a chave** |
 | LED **amarelo** | 19 (gpio16) | `seguir_linha.py` | **pisca 1 Hz** = programa do robô rodando, esperando a largada; **4 Hz** = andando; **parado** (aceso ou apagado) = programa fechado ou travado |
@@ -40,10 +41,12 @@ Reserva (sem a placa): com o robô parado, segurar o botão de **largada** da ES
 
 | Pedido | Decisão | Por quê |
 |---|---|---|
+| Placa principal 8 × 8 com tudo dentro | **Placa da ESP32 continua 8 × 8 (v0.8) + este painel** | a v0.8 não tem área livre para o circuito do J41 (sobram pedaços de ~12 × 8 mm entre trilhas); caber tudo pediria aumentar a placa para o lado e mudar de novo os passa-fios do VM e do J41. O painel ocupa a faixa ao lado, que já estava livre, sem aumentar o chassi |
+| Botão no lugar do jumper de largada | **Sim, no painel** (S3), ligado ao J14 por 2 fios Dupont | os 2 botões e os 2 LEDs ficam juntos, no lado direito, por cima; o botão é isolado (só liga nos 2 pinos do J14) e não tem polaridade |
 | Juntar tudo numa placa só | **Sim para tudo que é sinal**: botão, 2 LEDs, saída da luz e o conector do J41 | é tudo do J41; uma placa, um chicote |
-| Pôr o **fusível** junto | **Não**: o fusível fica na placa dele, no andar 2, logo depois da bateria | o fusível protege o **fio** que sai da bateria; tem de ficar o mais perto dela possível. Trazê-lo para o andar 3 deixaria ~15 cm de fio da bateria **sem proteção** subindo ao lado da Jetson, e poria 12 V / 7 A a um furo de distância dos pinos de 3,3 V da Jetson (uma ponte de solda e o J41 queima) |
-| Refazer a **placa da ESP32** com tudo integrado | **Não antes da competição** (fica para a v0.9) | é ela que move os motores; corroer e soldar de novo a 3 dias do congelamento arrisca o carro inteiro para ganhar só "uma placa em vez de duas". E estas funções são da **Jetson**, não da ESP32 |
-| Placa de até 10 × 10 cm | **40 × 18 mm** | é o espaço livre ao lado da ESP32 no andar 3; maior bateria nos passa-fios dos motores e do J41 |
+| Pôr o **fusível** junto | **Não**: a placa de distribuição de vocês (cobre dividido + e −, fusível soldado, fios soldados em cada lado) continua no andar 2, logo depois da chave; ela já está no modelo (30 × 30 mm) | o fusível protege o **fio** que sai da bateria; tem de ficar o mais perto dela possível. Trazê-lo para o andar 3 deixaria ~15 cm de fio da bateria **sem proteção** subindo ao lado da Jetson, e poria 12 V / 7 A a um furo de distância dos pinos de 3,3 V da Jetson (uma ponte de solda e o J41 queima) |
+| Refazer a **placa da ESP32** com tudo integrado | **Não agora** | trocar as peças é fácil (tudo em barra de pinos), mas o circuito novo não cabe nos 80 × 73: precisaria crescer para o lado e mudar os passa-fios. E as funções novas são da **Jetson** (3,3 V da Jetson), melhor longe da ESP32 e do VM numa face só de cobre. Fica como ideia para uma v0.9 depois de 05/12 |
+| Placa de até 10 × 10 cm | **43 × 18 mm** | é o espaço livre ao lado da ESP32 no andar 3; maior bate nos passa-fios do VM e do J41 |
 | MOSFET da luz na placa | **No módulo da luz** (junto da luz) | a placa fica sem a peça grande (TO-220) e o módulo é a única parte que depende da luz que vocês compraram |
 | Botão **com trava** de 6 pinos | **Não usar** | para desligar a Jetson o botão tem de ser de **pulso** (aperta e volta). Com trava, ele fica apertado: desliga e, no boot seguinte, continua apertado. Para a bateria ele também não serve: esses botões aguentam pouca corrente (é comum 0,1–0,5 A; confira o que está escrito no anúncio) e o carro puxa alguns ampères. Usar a **chave táctil 6 × 6** (pulso) no botão e a **KCD1** na bateria |
 
@@ -108,7 +111,9 @@ J1 (pinos 2, 15, 6) ────────────── J2 (5V, LUZ, GND)
 
 | Ref | Peça | Obs |
 |---|---|---|
-| S1 | chave táctil 6 × 6 mm com haste de **13 mm** | haste alta = aperta com o dedo por cima sem tirar nada |
+| S1 | chave táctil 6 × 6 mm com haste de **13 mm** | DESLIGAR; haste alta = aperta com o dedo por cima sem tirar nada |
+| S3 | chave táctil 6 × 6 mm com haste de **13 mm** | LARGADA; marque com fita colorida (ex.: verde) para não confundir com o DESLIGAR |
+| J3 | barra de pinos macho 1 × 2 + 2 jumpers Dupont fêmea-fêmea de 10 cm | até o J14 da placa da ESP32 (tirar o jumper do J14) |
 | D1 | LED vermelho 3 mm | "Jetson ligada / apagou = pode desligar" |
 | D2 | LED amarelo 3 mm | "código rodando" |
 | Q1, Q2 | BC337 | olhando a face chata, pernas da esquerda para a direita: C, B, E |
@@ -116,31 +121,32 @@ J1 (pinos 2, 15, 6) ────────────── J2 (5V, LUZ, GND)
 | R2 | 1 kΩ | |
 | R4, R7 | 100 kΩ | |
 | R5, R8 | 150 Ω (100–220 Ω) | |
-| PCB | placa perfurada **40 × 18 mm (16 × 7 furos)**, ilhas isoladas | furos de 3,2 mm em MH1 (2,6) e MH2 (15,2); já no andar 3 do v4 |
+| PCB | placa perfurada **43 × 18 mm (17 × 7 furos)**, ilhas isoladas | furos de 3,2 mm em MH1 (3,6) e MH2 (16,2); já no andar 3 do v4 |
 | J1 | barra de pinos **macho 2 × 4** | recebe 8 jumpers Dupont fêmea-fêmea de 15 cm vindos do J41 (pinos 15–20, 2 e 6) |
 | J2 | barra de pinos **macho 1 × 3** | cabo de 3 fios de ~25 cm até o módulo da luz |
-| — | fio fino encapado (30 AWG ou cabinho) ~30 cm + perna cortada de resistor para as pontes | 7 fios encapados e 32 pontes curtas (ver desenho) |
+| — | fio fino encapado (30 AWG ou cabinho) ~35 cm + perna cortada de resistor para as pontes | 8 fios encapados e 33 pontes curtas (ver desenho) |
 
 **Módulo da luz** (pedacinho de placa perfurada de ~20 × 15 mm, colado/parafusado atrás da luz): Q3 **IRLZ44N**
 (olhando a face com o texto: G, D, S), R9 1 kΩ, R10 100 kΩ, barra macho 1 × 3 (5V, LUZ, GND, na mesma ordem do J2)
 e os 2 fios da luz. O suporte da luz no mastro entra no chassi quando soubermos qual luz é (ver "Luz da câmera").
 | M1, M2 | 2 parafusos M3 × 10 + 2 espaçadores M3 de 3 mm + porcas | fixação no andar 3 |
 
-### Luz da câmera (comprar)
+### Luz da câmera: a fita COB 5 V que vocês compraram
 
-| Opção | Onde/quanto (ESTIMATIVA) | Por quê |
-|---|---|---|
-| **1 (recomendada)** fita LED **5 V** branca fria (6000–6500 K), **SMD 2835**, 60 LEDs/m — a "fita USB para TV" | loja de eletrônica ou de iluminação, R$ 10–20 o metro | espalha bem (120°), corta a cada 3 LEDs (5 cm), já tem resistor, adesiva. Usar **2 trechos = 10 cm, 6 LEDs** |
-| 2 (se não achar até 29/11) 4 LEDs brancos 5 mm alto brilho + 4 resistores de 100 Ω | laboratório, ~R$ 2 | (5,2 − 3,1)/100 ≈ 20 mA cada. Feixe estreito (20–30°): mais mancha clara no meio, usar difusor |
-| **Não** comprar | fita de **12 V** | ligada na bateria, o brilho muda com a carga; nos 5 V nem acende |
+FATO (anúncio): fita LED **COB**, **5 V USB**, com interruptor de toque **regulável**; branco quente ou frio.
+COB é a melhor opção para a câmera: luz contínua, sem pontinhos (sem reflexo em bolinhas no tapete).
 
-Difusor: papel vegetal ou 2 voltas de fita crepe na frente dos LEDs (tira o reflexo duro no tapete).
-Consumo esperado (ESTIMATIVA, conferir com o multímetro): opção 1 ≈ 0,1–0,4 A em 5 V; opção 2 ≈ 0,08 A. Se a fita
-puxar **mais de 0,5 A**, use 1 trecho só.
-
-Onde montar: **em cima da lente**, no mastro da câmera, apontando para a mesma faixa de pista que a câmera vê
-(o chassi ganha o suporte quando a peça for escolhida). **Risco:** reflexo da luz no tapete aparecer na imagem como
-"branco estourado"; teste no T19 e, se acontecer, incline a luz mais para baixo ou ponha o difusor.
+* **Não use o controle de toque.** Controle "regulável" de LED quase sempre regula por PWM (liga e desliga muito
+  rápido; ESTIMATIVA, não há dado no anúncio). A câmera lê a imagem linha por linha e o PWM vira **faixas claras e
+  escuras** na imagem. Quem liga a luz é o nosso MOSFET, em corrente contínua.
+* Corte um pedaço **nas marcas de corte** da fita, solde 2 fios (vermelho no **+**, preto no **−**) e ligue no
+  módulo da luz (+ no 5V, − no dreno do IRLZ44N). O resto do rolo, com o USB, fica de reserva.
+* Tamanho: comece com **3 pedaços de 5 cm lado a lado** (15 cm no total) numa plaquinha em cima da câmera. Meça a
+  corrente: com mais de 0,5 A, tire um pedaço (o 5 V vem da Jetson pelo pino 2).
+* Branco **frio** se puderem escolher: a câmera fica em tons de cinza; o frio costuma dar um pouco mais de contraste
+  no tapete (ESTIMATIVA; o teste T19 decide).
+* **Me passem a largura da fita e a distância entre as marcas de corte**: com isso eu desenho o suporte no mastro
+  (ele gira junto com a câmera, então a luz acompanha o ângulo).
 
 ## Montagem furo a furo
 
@@ -156,7 +162,9 @@ resistores em pé → LEDs (perna longa no furo com **+**) → BC337 (**face ret
 fios encapados por último. Antes de ligar na Jetson: multímetro em continuidade entre cada pino do J1 e o ponto
 que o desenho mostra, e **sem continuidade** entre 5V, 3V3 e GND.
 
-Pinos do J1 (coluna 15 | coluna 16, de cima para baixo no desenho): **15 | 2 (5V)**, **19 | 17 (3V3)**,
+J3 (canto de trás, lado de dentro): 2 jumpers até o J14 da ESP32, em qualquer ordem (é só um botão).
+
+Pinos do J1 (coluna 16 | coluna 17, de cima para baixo no desenho): **15 | 2 (5V)**, **19 | 17 (3V3)**,
 **16 | 18**, **20 (GND) | 6 (GND)**. Na barra J41 da Jetson: 15, 17, 19 na fileira dos ímpares; 16, 18, 20, 2 e 6
 na dos pares. O fio do **pino 2 (5 V)** é o único que estraga algo se for no lugar errado: confira duas vezes.
 
@@ -177,17 +185,19 @@ na dos pares. O fio do **pino 2 (5 V)** é o único que estraga algo se for no l
    ```
    Aperte e solte: aparece `botao APERTADO` / `botao solto`. Segure 2 s: o LED pisca e aparece
    `desligando (TESTE: nao desliga)`. Ctrl+C e depois `sudo systemctl start botao-desligar`.
-4. **Luz e amarelo:** `make carro` (ou `sudo systemctl restart robocar`). A luz acende em ~2 s e o amarelo pisca
+4. **Largada:** tire o jumper do J14 e ligue os 2 fios do J3. Com o robô ligado e esperando, aperte e solte o S3:
+   o robô arma (rodas suspensas!). Apertar andando: para. Segurar 3 s parado: desliga a Jetson (reserva).
+5. **Luz e amarelo:** `make carro` (ou `sudo systemctl restart robocar`). A luz acende em ~2 s e o amarelo pisca
    1 Hz; dê a largada (rodas suspensas): 4 Hz. `sudo systemctl stop robocar`: luz e amarelo apagam.
    Se aparecer `LEDs: sem gpio194, gpio16` no log, o serviço `botao-desligar` não está rodando ou é da versão
    antiga: `make servico` de novo.
-5. **Desligar de verdade:** segure 2 s. Cronometre até o vermelho **apagar** (anote; esperado 10–25 s). Desligue a
+6. **Desligar de verdade:** segure 2 s. Cronometre até o vermelho **apagar** (anote; esperado 10–25 s). Desligue a
    chave. Ligue de novo e confira que o desligamento foi limpo:
    ```bash
    journalctl -b -1 -n 30 --no-pager
    ```
    O fim deve mostrar `Reached target Power-Off` (ou `Shutdown`), sem erros de sistema de arquivos.
-6. **Testes negativos** (anote em `docs/06_testes.md`, T15 e T19):
+7. **Testes negativos** (anote em `docs/06_testes.md`, T15 e T19):
    * aperto curto (< 2 s): nada acontece;
    * ligar a Jetson **com o botão apertado**: não desliga (o serviço só arma depois de ver o botão solto 0,5 s);
    * `sudo systemctl stop robocar` e repetir o passo 5: tem de desligar igual (não depende do programa do robô);
