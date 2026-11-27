@@ -276,7 +276,7 @@ causa dos 46 % de cruzamentos falsos. A equipe também pediu LEDs de "Jetson lig
 rodando".
 **Decisão:**
 * **Luz:** fita LED 5 V branca fria 2835 (2 trechos, 6 LEDs) ou 4 LEDs brancos 5 mm, **nos 5 V regulados** (J41
-  pino 2), chaveada por IRLZ44N no J41 pino 15 (gpio194). O `seguir_linha.py` e o `calibrar.py` acendem a luz
+  pino 2), chaveada por IRLZ44N (no módulo da luz, D-034) no J41 pino 15 (gpio194). O `seguir_linha.py` e o `calibrar.py` acendem a luz
   **antes** de abrir a câmera (a exposição já converge com a luz) e apagam ao sair; com 5 quadros seguidos sem imagem
   ela apaga. Assim a própria luz é o indicador de "câmera ligada" (sem LED a mais).
 * **Amarelo** no J41 pino 19 (gpio16) por BC337: pisca 1 Hz esperando a largada, 4 Hz andando, para se o programa
@@ -294,4 +294,31 @@ da Jetson (medir; > 0,5 A usar 1 trecho). Regulamento: as seções que citamos (
 iluminação no robô; a luz fica dentro da envolvente. **Confirmar na inspeção** se houver dúvida.
 **Consequências:** custo ~R$ 15–25 (fita + IRLZ44N, ESTIMATIVA); ~2 h de montagem. Os pinos 15–20 do J41 ficam todos
 ocupados (livres: 31 e 33).
+
+### D-034 — Placa de interface furo a furo; fusível e placa da ESP32 ficam de fora; passa-fios dos motores para a frente
+*27/11/2026 · aceita*
+**Contexto:** a equipe pediu uma placa única (até 10 × 10 cm), se possível com o fusível, encaixada no chassi como a
+placa da ESP32. Ao refazer o andar 3 apareceu um defeito que as verificações não pegavam: o passa-fio do motor
+direito (x 16–24, y −49…−41) ficava **embaixo** da placa de desligar, e o cabo atravessava a placa. A verificação de
+cabos só olhava MDF e rodas.
+**Decisão:**
+* Uma placa de interface de **16 × 7 furos (40 × 18 mm)** com tudo que é sinal do J41: botão, LED vermelho, LED
+  amarelo, saída da luz. Desenho furo a furo gerado e verificado por `hardware/placa_desligar/layout.py` (redes,
+  furos, corpos, parafusos, pontes, bordas; 10 testes negativos). O chassi lê a posição da placa, dos furos e das
+  peças do `layout.json`.
+* **J1 na borda da frente** (de frente para o passa-fio do J41), **J2 na borda de dentro** (cabo da luz para o
+  mastro), botão e LEDs por cima.
+* **MOSFET da luz num módulo junto da luz**: a placa fica sem o TO-220 e só o módulo depende da luz comprada.
+* **Fusível fica na placa dele**, logo depois da bateria. O fusível protege o fio que sai dela; no andar 3 sobrariam
+  ~15 cm sem proteção ao lado da Jetson, e 12 V / 7 A ficariam a um furo dos 3,3 V do J41.
+* **Placa da ESP32 não é refeita antes da competição.** É a placa dos motores, e refazê-la a 3 dias do congelamento
+  arrisca o carro inteiro. As funções novas são da Jetson. Integração fica para a v0.9, depois de 05/12.
+* **Botão com trava de 6 pinos não é usado.** Desligar pede pulso; com trava o botão fica preso. Na bateria a corrente
+  passa do que esses botões aguentam. Usar a táctil 6 × 6 e a KCD1.
+* Passa-fios dos motores no andar 3 vão para **(53,5; ±30)**, na frente da placa da ESP32, onde ficam os conectores
+  dos motores. Nova verificação: **cabo não atravessa placa de circuito**, com teste negativo. Ela achou mais 3 rotas
+  que cortavam a borda da placa da ESP32 (VM esquerdo, VBAT) e a placa de interface (chicote do J41); corrigidas: o
+  cabo sobe antes de passar por cima. O VBAT passa pelo passa-fio do VM esquerdo (sem trecho solto > 110 mm).
+**Consequências:** fios do VM já soldados precisam de **≥ 216 / 156 mm** (antes 210 / 150); cabo dos motores
+~139–141 mm de corte (tem 150). 51 verificações + 31 testes negativos no chassi; 10 na placa.
 

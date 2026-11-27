@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (27/11/2026, rodada 2b: placa de interface)
+- `hardware/placa_desligar/layout.py` (`make placa-interface`): placa de interface 16 × 7 furos desenhada furo a furo (lado dos componentes e da solda em `imagens/placa_perfurada.png`), com verificação de redes, furos, corpos, parafusos, pontes e bordas e 10 testes negativos. Grava `layout.json`, que o chassi v4 lê (D-034).
+- O MOSFET da luz sai da placa e vai para um módulo junto da luz (J2 de 3 vias: 5V, LUZ, GND). Chicote do J41 com 8 fios (15–20, 2 e 6).
+- Chassi v4: passa-fios dos motores no andar 3 para a frente da placa da ESP32 (o do motor direito ficava embaixo da placa de interface). Nova verificação "cabo não atravessa placa de circuito" (e teste negativo), que corrigiu também as rotas do VM esquerdo, do VBAT e do chicote do J41. Fios do VM: ≥ 216 / 156 mm.
 ### Adicionado (27/11/2026, rodada 2)
 - Luz da câmera e LED amarelo "código rodando" na placa extra, que vira placa de interface (D-033): `jetson/robocar/leds.py`. A luz (J41 pino 15, IRLZ44N, 5 V regulados) acende antes de abrir a câmera no `seguir_linha.py` e no `calibrar.py`, apaga ao sair e com 5 quadros seguidos sem imagem; o amarelo (pino 19) pisca 1 Hz esperando e 4 Hz andando. `seguir_linha.py --sem-leds`. O serviço `botao-desligar` exporta os 2 pinos e libera a escrita para o programa do robô (`Before=robocar.service`). 7 testes novos (6 em `test_leds.py`, 1 no serviço).
 - Chassi v4: placa extra de 30 × 18 para 40 × 18 mm, LED amarelo no modelo e chicote do J41 com 7 fios (pinos 15–20 + pino 2). 51 verificações e 30 testes negativos passam; DXF, PDF, STEP e imagens regerados.

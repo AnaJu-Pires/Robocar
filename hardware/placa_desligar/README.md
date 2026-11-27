@@ -1,7 +1,12 @@
 # Placa de interface: desligar a Jetson, luz da câmera e LEDs (placa extra, 40 × 18 mm)
 
-Uma plaquinha perfurada no **andar 3** do chassi v4, à direita da placa da ESP32, com 2 parafusos M3. Liga só na
-barra **J41 da Jetson** (um conector 2 × 3 nos pinos 15–20 + um fio no pino 2). A placa da ESP32 v0.8 **não muda**.
+Uma plaquinha perfurada (**16 × 7 furos**) no **andar 3** do chassi v4, à direita da placa da ESP32, com 2 parafusos
+M3, mais um **módulo da luz** pequeno junto da luz, no mastro da câmera. Liga só na barra **J41 da Jetson** (8 jumpers:
+pinos 15–20, 2 e 6). A placa da ESP32 v0.8 **não muda**.
+
+**Coerente com o chassi:** o J1 (jumpers do J41) fica na borda da **frente**, de frente para o passa-fio do J41; o
+J2 (cabo da luz) fica na borda de **dentro**, do lado do mastro; botão e LEDs ficam por cima. As posições de tudo
+(e os 2 furos no andar 3) saem do mesmo arquivo, `layout.json`, que o modelo do chassi lê.
 Decisões: [D-028](../../docs/decisoes.md) (desligar) e [D-033](../../docs/decisoes.md) (luz e LED do código).
 A pasta continua `placa_desligar/` para não quebrar os links.
 
@@ -10,8 +15,8 @@ A pasta continua `placa_desligar/` para não quebrar os links.
 | Botão de desligar | 18 (gpio15) | serviço `botao-desligar` (root) | segurar **2 s** = desligar a Jetson com segurança |
 | LED **vermelho** | 16 (gpio232) | serviço `botao-desligar` | aceso = Jetson ligada; **apagou = pode desligar a chave** |
 | LED **amarelo** | 19 (gpio16) | `seguir_linha.py` | **pisca 1 Hz** = programa do robô rodando, esperando a largada; **4 Hz** = andando; **parado** (aceso ou apagado) = programa fechado ou travado |
-| **Luz da câmera** (branca) | 15 (gpio194) → MOSFET | `seguir_linha.py` e `calibrar.py` | acesa = câmera aberta e mandando quadros; apaga se a câmera parar (5 quadros seguidos sem imagem) ou o programa sair |
-| 3,3 V / GND / 5 V | 17 / 20 / 2 | — | alimentação dos LEDs / referência / alimentação da luz |
+| **Luz da câmera** (branca) | 15 (gpio194) → J2 → MOSFET no módulo da luz | `seguir_linha.py` e `calibrar.py` | acesa = câmera aberta e mandando quadros; apaga se a câmera parar (5 quadros seguidos sem imagem) ou o programa sair |
+| 3,3 V / GND / 5 V | 17 / 20 e 6 / 2 | — | alimentação dos LEDs / referência / alimentação da luz |
 
 Não há LED separado de "câmera ligada": a própria luz faz esse papel (D-033).
 
@@ -30,6 +35,17 @@ no fim do desligamento. Por isso "apagou" é uma informação confiável.
 
 **Procedimento:** segurar o botão 2 s → LED pisca → esperar **apagar** (10–25 s) → desligar a chave geral.
 Reserva (sem a placa): com o robô parado, segurar o botão de **largada** da ESP32 por 3 s.
+
+## O que entra nesta placa e o que não entra (decisão técnica)
+
+| Pedido | Decisão | Por quê |
+|---|---|---|
+| Juntar tudo numa placa só | **Sim para tudo que é sinal**: botão, 2 LEDs, saída da luz e o conector do J41 | é tudo do J41; uma placa, um chicote |
+| Pôr o **fusível** junto | **Não**: o fusível fica na placa dele, no andar 2, logo depois da bateria | o fusível protege o **fio** que sai da bateria; tem de ficar o mais perto dela possível. Trazê-lo para o andar 3 deixaria ~15 cm de fio da bateria **sem proteção** subindo ao lado da Jetson, e poria 12 V / 7 A a um furo de distância dos pinos de 3,3 V da Jetson (uma ponte de solda e o J41 queima) |
+| Refazer a **placa da ESP32** com tudo integrado | **Não antes da competição** (fica para a v0.9) | é ela que move os motores; corroer e soldar de novo a 3 dias do congelamento arrisca o carro inteiro para ganhar só "uma placa em vez de duas". E estas funções são da **Jetson**, não da ESP32 |
+| Placa de até 10 × 10 cm | **40 × 18 mm** | é o espaço livre ao lado da ESP32 no andar 3; maior bateria nos passa-fios dos motores e do J41 |
+| MOSFET da luz na placa | **No módulo da luz** (junto da luz) | a placa fica sem a peça grande (TO-220) e o módulo é a única parte que depende da luz que vocês compraram |
+| Botão **com trava** de 6 pinos | **Não usar** | para desligar a Jetson o botão tem de ser de **pulso** (aperta e volta). Com trava, ele fica apertado: desliga e, no boot seguinte, continua apertado. Para a bateria ele também não serve: esses botões aguentam pouca corrente (é comum 0,1–0,5 A; confira o que está escrito no anúncio) e o carro puxa alguns ampères. Usar a **chave táctil 6 × 6** (pulso) no botão e a **KCD1** na bateria |
 
 ## Por que assim (comparação)
 
@@ -63,20 +79,22 @@ J41 pino 19 (gpio16) ─── R6 10k ──┬───────────
                                   │
                                  GND ───────────────────── E
 
-J41 pino 2 (5 V) ───────────────── fio ──► (+) LUZ (fita LED 5 V, no mastro da câmera)
-                                           (−) LUZ ── fio ──── D  Q3 IRLZ44N
-J41 pino 15 (gpio194) ── R9 1k ───┬─────────────────────── G
+J1 (pinos 2, 15, 6) ────────────── J2 (5V, LUZ, GND) ── cabo de 3 fios ── MÓDULO DA LUZ (no mastro):
+
+  5V ────────────────────────────────► (+) LUZ (fita 5 V ou LEDs com resistor)
+                                       (−) LUZ ──────────────── D  Q3 IRLZ44N
+  LUZ (pino 15) ── R9 1k ─────────┬──────────────────────────── G
                                   R10 100k
                                   │
-                                 GND ───────────────────── S
+  GND ────────────────────────────┴──────────────────────────── S
 ```
 
-* R4, R7 e R10 (100k) seguram base/porta em 0 V quando o pino está solto (Jetson desligada, iniciando, ou serviço
+* R4, R7 (na placa) e R10 (no módulo da luz) seguram base/porta em 0 V quando o pino está solto (Jetson desligada, iniciando, ou serviço
   parado): **tudo apagado**. Por isso o amarelo apagado no boot é normal até o programa do robô começar.
 * Os pinos do J41 passam por um conversor de nível (TXB0108) que **não aguenta carga**: tudo é ligado por transistor.
   Pela base do BC337 passam ~0,2 mA, o suficiente para um LED de ~9 mA, **não** para a luz. A luz vai por MOSFET,
   cuja porta não puxa corrente.
-* **Q3 tem de ser IRLZ44N** (com **L**: liga com 3,3 V na porta). IRFZ44N, IRF540N e IRF3205 precisam de ~10 V na
+* **Q3 (no módulo da luz) tem de ser IRLZ44N** (com **L**: liga com 3,3 V na porta). IRFZ44N, IRF540N e IRF3205 precisam de ~10 V na
   porta e **não ligam direito** com 3,3 V. Sem IRLZ44N: TIP120 com R9 = 1k (perde ~1 V; a luz fica mais fraca) ou
   AO3400/SI2302 (SMD).
 * R2 (1k) protege o pino 18 se ele for configurado como saída por engano. R9 (1k) limita o pico de carga da porta.
@@ -94,14 +112,18 @@ J41 pino 15 (gpio194) ── R9 1k ───┬───────────
 | D1 | LED vermelho 3 mm | "Jetson ligada / apagou = pode desligar" |
 | D2 | LED amarelo 3 mm | "código rodando" |
 | Q1, Q2 | BC337 | olhando a face chata, pernas da esquerda para a direita: C, B, E |
-| Q3 | **IRLZ44N** (TO-220, deitado na placa) | olhando a face com o texto, pernas da esquerda para a direita: G, D, S |
 | R1, R3, R6 | 10 kΩ | |
-| R2, R9 | 1 kΩ | |
-| R4, R7, R10 | 100 kΩ | |
+| R2 | 1 kΩ | |
+| R4, R7 | 100 kΩ | |
 | R5, R8 | 150 Ω (100–220 Ω) | |
-| PCB | placa perfurada **40 × 18 mm (16 × 7 furos)** | 2 furos de 3,2 mm em cantos opostos; já no andar 3 do v4 |
-| J1 | conector fêmea 2 × 3 (pinos 15–20) + 1 jumper fêmea (pino 2) | ou 7 jumpers Dupont fêmea de 15 cm |
-| J2 | 2 fios de ~25 cm (vermelho = 5 V, preto = LUZ −) até a luz | sobem pelo mastro da câmera |
+| PCB | placa perfurada **40 × 18 mm (16 × 7 furos)**, ilhas isoladas | furos de 3,2 mm em MH1 (2,6) e MH2 (15,2); já no andar 3 do v4 |
+| J1 | barra de pinos **macho 2 × 4** | recebe 8 jumpers Dupont fêmea-fêmea de 15 cm vindos do J41 (pinos 15–20, 2 e 6) |
+| J2 | barra de pinos **macho 1 × 3** | cabo de 3 fios de ~25 cm até o módulo da luz |
+| — | fio fino encapado (30 AWG ou cabinho) ~30 cm + perna cortada de resistor para as pontes | 7 fios encapados e 32 pontes curtas (ver desenho) |
+
+**Módulo da luz** (pedacinho de placa perfurada de ~20 × 15 mm, colado/parafusado atrás da luz): Q3 **IRLZ44N**
+(olhando a face com o texto: G, D, S), R9 1 kΩ, R10 100 kΩ, barra macho 1 × 3 (5V, LUZ, GND, na mesma ordem do J2)
+e os 2 fios da luz. O suporte da luz no mastro entra no chassi quando soubermos qual luz é (ver "Luz da câmera").
 | M1, M2 | 2 parafusos M3 × 10 + 2 espaçadores M3 de 3 mm + porcas | fixação no andar 3 |
 
 ### Luz da câmera (comprar)
@@ -120,41 +142,31 @@ Onde montar: **em cima da lente**, no mastro da câmera, apontando para a mesma 
 (o chassi ganha o suporte quando a peça for escolhida). **Risco:** reflexo da luz no tapete aparecer na imagem como
 "branco estourado"; teste no T19 e, se acontecer, incline a luz mais para baixo ou ponha o difusor.
 
-## Ligações (lista de nós: confira cada uma com o multímetro em continuidade)
+## Montagem furo a furo
 
-| Nó | Liga |
-|---|---|
-| 3V3 | J41-17, R1, R5, R8 |
-| GND | J41-20, S1 (um lado), Q1-E, Q2-E, Q3-S, R4, R7, R10 |
-| BOTÃO | R1, R2, S1 (outro lado) |
-| J41-18 | R2 |
-| J41-16 | R3 |
-| B1 | R3, R4, Q1-B |
-| VERM | R5 → D1 (+, perna longa); D1 (−) → Q1-C |
-| J41-19 | R6 |
-| B2 | R6, R7, Q2-B |
-| AMAR | R8 → D2 (+); D2 (−) → Q2-C |
-| J41-15 | R9 |
-| PORTA | R9, R10, Q3-G |
-| LUZ − | Q3-D, fio preto da luz |
-| 5 V | J41-2, fio vermelho da luz (**não** encosta em nada da placa) |
+![Placa perfurada: lado dos componentes e lado da solda](imagens/placa_perfurada.png)
 
-Arranjo sugerido (vista dos componentes, frente do carro à esquerda): colunas 1–12 iguais à placa antiga
-(botão, vermelho, Q1); colunas 13–16 com o amarelo, Q2 e o IRLZ44N deitado (aba de metal para fora, sem
-encostar em nada: a aba é o dreno). Conector J1 na borda de baixo.
+Desenho gerado e **verificado** por `layout.py` (`make placa-interface`): toda rede do esquema ligada exatamente como
+pede (nada a mais, nada a menos), um componente por furo, corpos sem se encostar, nada embaixo da cabeça dos
+parafusos, pontes nuas só entre furos vizinhos (o resto é fio encapado), J1 na borda da frente e J2 na de dentro.
+`python3 layout.py --negativos` planta 10 defeitos e confere que cada um é pego.
 
-* Na barra J41 os pinos 15–20 ficam em 2 fileiras: **15, 17, 19** numa e **16, 18, 20** na outra; o pino 2 fica na
-  outra ponta da barra (fileira dos pares, junto do 4 = 5 V e do 6 = GND). **Marque o lado do pino 15** no conector.
-  Ligado deslocado, nada queima (só resistores e portas no caminho), mas não funciona. O fio do **pino 2 (5 V)** é
-  o único que pode estragar algo se for no lugar errado: confira duas vezes.
+Ordem de montagem (do mais baixo para o mais alto): pontes da barra de GND (linha 7) e de 3V3 (linha 1) →
+resistores em pé → LEDs (perna longa no furo com **+**) → BC337 (**face reta para trás**) → botão → J1 e J2 →
+fios encapados por último. Antes de ligar na Jetson: multímetro em continuidade entre cada pino do J1 e o ponto
+que o desenho mostra, e **sem continuidade** entre 5V, 3V3 e GND.
+
+Pinos do J1 (coluna 15 | coluna 16, de cima para baixo no desenho): **15 | 2 (5V)**, **19 | 17 (3V3)**,
+**16 | 18**, **20 (GND) | 6 (GND)**. Na barra J41 da Jetson: 15, 17, 19 na fileira dos ímpares; 16, 18, 20, 2 e 6
+na dos pares. O fio do **pino 2 (5 V)** é o único que estraga algo se for no lugar errado: confira duas vezes.
 
 ## Instalar e testar
 
-1. **Na bancada, sem a Jetson:** fonte de 3,3 V entre os fios 17 (+) e 20 (−), e 5 V no fio do pino 2.
-   * Tudo apagado. Encoste o fio 16 no 3,3 V: vermelho acende. Fio 19 no 3,3 V: amarelo acende.
-     Fio 15 no 3,3 V: **a luz acende**. Meça a corrente da luz (anote).
+1. **Na bancada, sem a Jetson:** fonte de 3,3 V nos pinos 17 (+) e 20 (−) do J1, 5 V no pino 2 e o módulo da luz no J2.
+   * Tudo apagado. Pino 16 no 3,3 V: vermelho acende. Pino 19 no 3,3 V: amarelo acende.
+     Pino 15 no 3,3 V: **a luz acende**. Meça a corrente da luz (anote).
    * Multímetro no fio 18: 3,3 V solto, 0 V com o botão apertado.
-2. **Na Jetson desligada**, encaixe o conector nos pinos 15–20 e o fio no pino 2. Ligue a chave e instale (ou
+2. **Na Jetson desligada**, ligue os 8 jumpers (J41 15–20, 2 e 6 → J1). Ligue a chave e instale (ou
    reinstale) os serviços: `make servico`. O vermelho acende quando o Linux sobe; amarelo e luz ficam apagados.
 3. **Botão sem desligar:**
    ```bash
