@@ -11,6 +11,11 @@ python3 -c "import cv2; print(cv2.getBuildInformation())" | grep -i gstreamer   
 sudo nvpmodel -m 0 && sudo jetson_clocks        # modo 10 W: exige 5 V / >= 4 A no J25 com J48 fechado
 ```
 Se a fonte de bancada não fornecer 4 A, use `sudo nvpmodel -m 1` (5 W).
+**Depois, uma vez:** `make preparar-jetson`. Tira o gpsd e o ModemManager da porta da ESP32 (eles abriam a
+`/dev/ttyUSB0` a cada conexão e embaralhavam a telemetria), deixa o journal persistente (o histórico sobrevive ao
+desligar) e confere câmera e porta. Desfazer: `sudo bash jetson/servico/preparar_jetson.sh --desfazer`.
+**Modo de energia:** o cartão estava em 5 W (`nvpmodel -m 1`) e os logs de 22/11 mostram 60 fps com 3,7 ms por
+quadro: **fique em 5 W** (menos calor e menos corrente no XL4016 #1).
 **Não instale `opencv-python` por pip na Jetson:** ele vem sem GStreamer e a câmera CSI não abre.
 
 ## Uso

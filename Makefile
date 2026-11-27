@@ -8,7 +8,7 @@ VIDEO  ?=
 OPCOES ?=
 JETSON := cd jetson &&
 
-.PHONY: metricas chassi chassi-verificar chassi-cortar chassi-negativos sim-esp32 ajuda testes benchmark calibrar visao fotos gravar video carro bancada movimento servico diagnostico calibrar-auto config placa drc limpar
+.PHONY: metricas chassi chassi-verificar chassi-cortar chassi-negativos sim-esp32 ajuda testes benchmark calibrar visao fotos gravar video carro bancada movimento servico preparar-jetson diagnostico calibrar-auto config placa drc limpar
 
 ajuda:  ## lista os alvos
 	@echo "Alvos (make <alvo>):"
@@ -50,6 +50,9 @@ bancada:  ## teste de motores com janela e log, armando pela Jetson (RODAS SUSPE
 
 movimento:  ## sem camera: frente, giro 360 e re pela ESP32 (largada no botao; OPCOES="--armar" = rodas no ar)
 	$(JETSON) $(PYTHON) teste_movimento.py --esp32 $(PORTA) $(OPCOES)
+
+preparar-jetson:  ## uma vez: tira gpsd/ModemManager da porta da ESP32, journal persistente, confere camera e porta
+	sudo bash jetson/servico/preparar_jetson.sh
 
 servico:  ## instala o inicio automatico no boot (modo carro; pede a senha do sudo)
 	sudo bash jetson/servico/instalar.sh $(PORTA)

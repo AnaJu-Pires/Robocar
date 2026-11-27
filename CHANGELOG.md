@@ -3,6 +3,8 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Adicionado (27/11/2026, logs do cartão da Jetson)
+- `make preparar-jetson` (`jetson/servico/preparar_jetson.sh`): mascara gpsd e ModemManager (pegavam a `/dev/ttyUSB0` a cada conexão da ESP32), journal persistente com gravação a cada 15 s, confere dialout, modo de energia, câmera detectada e porta livre. `--desfazer` volta ao padrão. Testado com systemctl falso; shellcheck limpo.
 ### Adicionado (27/11/2026, trabalhar só pelo SSH)
 - `make fotos` / `seguir_linha.py --fotos [SEG]`: sem janela, salva imagem + máscara a cada SEG s e nos eventos (largada, linha sumiu, parou) em `dados/capturas/<data>/`.
 - Log CSV com flush a cada 0,5 s e fsync numa thread a cada 2 s: o corte da chave não apaga mais a corrida (o log `20261121_204647.csv` do cartão ficou só com o cabeçalho).
