@@ -14,7 +14,7 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (70 ok, 0 falhas).
 | ok | regulamento | 2 rodas tracionadas tocam o chao | z minimo das rodas: 0.00, 0.00 mm |
 | ok | regulamento | esfera no chao (carro nivelado) | fundo da esfera a +0.00 mm do chao (piso dianteiro a 15.0 mm, esfera de 15 mm) |
 | ok | regulamento | vao livre >= 8 mm (emendas do tapete) | 12.0 mm |
-| ok | interferencia | nenhuma sobreposicao | 105 solidos (13 volumes de acesso) |
+| ok | interferencia | nenhuma sobreposicao | 106 solidos (13 volumes de acesso) |
 | ok | folga | encoder_esq | cresce 0.5/0.5/1/0/0/0.5 mm (x-/x+/y-/y+/z-/z+): cabe |
 | ok | folga | conector_motor_esq | cresce 0.5/0.5/1/0/0/1 mm (x-/x+/y-/y+/z-/z+): cabe |
 | ok | folga | encoder_dir | cresce 0.5/0.5/0/1/0/0.5 mm (x-/x+/y-/y+/z-/z+): cabe |
@@ -53,7 +53,7 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (70 ok, 0 falhas).
 | ok | material | orelha_camera | 4 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | placa_camera | 4 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | placa_luz | 1 furos, teia >= 2.0 mm, 1 peca |
-| ok | cg | massa total estimada | 670 g; CG x 21.6 / y -1.6 / z 50.5 mm |
+| ok | cg | massa total estimada | 671 g; CG x 21.6 / y -1.6 / z 50.5 mm |
 | ok | cg | CG centrado (|y| <= 3 mm) | -1.6 mm |
 | ok | cg | peso nas rodas entre 70 e 92 % | 77 % |
 | ok | cg | tomba so acima de 1.15 x a aceleracao lateral permitida | tomba com 0.76 g; permitido 0.65 g (curva R100 a ate 0.80 m/s; atrito 0.90) |
@@ -157,6 +157,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | fio_xl1_p4_jetson | 1.6 | -5 | 35 | 49 | calculada |
 | placa_luz | 1.3 | 105 | 0 | 161 | calculada |
 | fio_luz | 1.2 | 27 | 13 | 114 | calculada |
+| zener_vm | 1.2 | 24 | -31 | 21 | calculada |
 | pino_trava | 1.0 | -40 | -55 | 19 | calculada |
 | espacador_jetson_1 | 1.0 | 11 | 43 | 56 | calculada |
 | espacador_jetson_2 | 1.0 | 69 | 43 | 56 | calculada |
@@ -177,7 +178,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | espacador_xl2_4_44 | 0.5 | 34 | -6 | 20 | calculada |
 | espacador_dist_14_4 | 0.5 | -37 | 27 | 58 | calculada |
 | espacador_dist_15_39 | 0.5 | -37 | -8 | 58 | calculada |
-| **total** | **670** | **21.6** | **-1.6** | **50.5** | |
+| **total** | **671** | **21.6** | **-1.6** | **50.5** | |
 
 ## Fixadores (contados pelos furos)
 

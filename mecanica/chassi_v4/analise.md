@@ -8,9 +8,9 @@ Massas e posicoes: as do modelo (`pecas.py`); nas variantes B e C so mudam de an
 | | massa (g) | CG x / y / z (mm) | peso nas rodas | tomba a (g) | empina a (g) | curva R100 (m/s) | limite | volta 20 m (s) | comprimento (mm) |
 |---|---|---|---|---|---|---|---|---|---|
 | v3 (25/11): Jetson baixa sobre a bateria, 2 andares | 633 | 16.8 / -1.0 / 36.1 | 86 % | 1.11 | 0.47 | 0.94 | aderencia | 12.6 | 240 |
-| A - v4: XL4016 + bateria no piso, Jetson no 2o, ESP32 no 3o (escolhida) | 670 | 21.6 / -1.6 / 50.5 | 77 % | 0.76 | 0.43 | 0.80 | software | 13.6 | 176 |
-| B - Jetson no 3o, ESP32 no 2o (largada e USB da ESP32 ficam embaixo da Jetson) | 670 | 21.6 / -1.6 / 57.7 | 77 % | 0.67 | 0.37 | 0.77 | tombamento | 14.0 | 176 |
-| C - Jetson no piso, XL4016 no 2o (XL quente em cima do dissipador; +15 mm) | 670 | 21.6 / -1.6 / 48.6 | 80 % | 0.86 | 0.44 | 0.80 | software | 13.6 | 191 |
+| A - v4: XL4016 + bateria no piso, Jetson no 2o, ESP32 no 3o (escolhida) | 671 | 21.6 / -1.6 / 50.5 | 77 % | 0.76 | 0.43 | 0.80 | software | 13.6 | 176 |
+| B - Jetson no 3o, ESP32 no 2o (largada e USB da ESP32 ficam embaixo da Jetson) | 671 | 21.6 / -1.6 / 57.6 | 77 % | 0.67 | 0.37 | 0.77 | tombamento | 14.0 | 176 |
+| C - Jetson no piso, XL4016 no 2o (XL quente em cima do dissipador; +15 mm) | 671 | 21.6 / -1.6 / 48.5 | 80 % | 0.86 | 0.44 | 0.80 | software | 13.6 | 191 |
 
 Nas linhas da v4, a curva R100 ja respeita o limite por software de 0.65 g de aceleracao lateral (D-032).
 

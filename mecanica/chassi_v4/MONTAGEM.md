@@ -74,8 +74,9 @@ conferir o nivelamento.
 3. XL4016 no piso dianteiro (espaçadores de 4 mm), **bornes para trás** (#1 à esquerda).
 4. Chave na parede de trás do berço. `alim_xl1` no IN do #1 e `alim_xl2` no IN do #2 (descem pelo passa-fio na frente da
    placa de distribuição); `xl1_p4_jetson` no OUT do #1; `vm_e` e `vm_d` no OUT do #2 (os fios do VM vêm da placa da ESP32: deixe-os
-   soltos para cima por enquanto). **No mesmo borne OUT do #2, o zener de 9,1 V 5 W (1N5346B): faixa (catodo) no OUT+,
-   outra perna no OUT−** (D-042; protege os DRV8833 na frenagem).
+   soltos para cima por enquanto). **No mesmo borne OUT do #2, o zener de 9,1 V 5 W (1N5346B): perna da faixa (catodo)
+   torcida junto com os 2 vermelhos no OUT+, a outra junto com os 2 pretos no OUT−; o corpo fica deitado no piso, na
+   frente dos bornes** (D-042; protege os DRV8833 na frenagem). Não cabe embaixo da placa do XL4016 (espaçador de 4 mm).
 
 **4. Andar 2**
 1. Placa de distribuição atrás, em 2 espaçadores M3 de 10 mm (furos no andar 2). Jetson nos espaçadores de 5 mm, portas para trás.

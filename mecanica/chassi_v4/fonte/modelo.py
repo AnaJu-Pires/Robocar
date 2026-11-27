@@ -129,6 +129,11 @@ def construir(P=None, verif=False):
             x, y = xl_pt(k, l, w)
             comprada(f'espacador_xl{k + 1}_{l:.0f}_{w:.0f}', cilindro((x, y, Z2), (x, y, Z_XL), 5.5), 0.5, 'fixacao',
                      (0.9, 0.9, 0.85), nomes_xl[k])
+    # zener de 9,1 V 5 W (1N5346B, D-042) preso no borne OUT do XL4016 #2 junto com os fios do VM: o corpo (5,3 x 9,5 mm)
+    # fica deitado na frente dos bornes, em cima do piso (nao cabe embaixo da placa: o espacador tem 4 mm)
+    xz_, yz_ = XL0 - 6.0, xl_y0[1] + 24.0
+    comprada('zener_vm', cilindro((xz_, yz_ - 9.5, Z2 + 3.2), (xz_, yz_, Z2 + 3.2), 5.5), 1.2, 'eletronica', (0.15, 0.15, 0.15),
+             'xl4016_2_motores')
     m.Z_XL_TOPO = Z_XL + XL_H
     ZA2 = m.Z_XL_TOPO + P['AR_ANDAR2']                   # fundo do andar 2
     ZA2t = ZA2 + T
