@@ -11,6 +11,7 @@ Leia na ordem numérica na primeira vez. Depois, use a tabela para ir direto ao 
 | [05_protocolo_serial.md](05_protocolo_serial.md) | Especificação das mensagens Jetson ↔ ESP32 |
 | [06_testes.md](06_testes.md) | Como testar (automático, bancada, pista), critérios de aprovação e registro de resultados |
 | [07_plano.md](07_plano.md) | Cronograma até 05/12, próximos passos, pendências e riscos |
+| [09_roteiro_testes.md](09_roteiro_testes.md) | **Testar no hardware passo a passo, tudo pelo SSH:** câmera → calibração → detecção → serial → motores → pista; comandos e o que mandar de volta |
 | [decisoes.md](decisoes.md) | Registro das decisões técnicas: o que decidimos, por quê e o que descartamos |
 | [referencias/](referencias/) | Regulamento oficial (PDF) |
 

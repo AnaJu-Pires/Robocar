@@ -59,5 +59,27 @@ Preencha uma linha por ensaio. O arquivo de log/vídeo fica em `dados/`; cite o 
 | 21/11/2026 | T04 | OK pelo P4 | pelos pinos 5 V do J41 com fio jumper a Jetson desligava no boot; pelo plug P4 funcionou | — | — |
 | 21/11/2026 | T05 | OK | as duas rodas giravam ao contrário: `INVERTER_E = true`, `INVERTER_D = false` | — | — |
 | 21/11/2026 | Movimento (só ESP32) | OK | giro de 360° no chão: 60 % por 2,0 s | — | — |
+| 22/11/2026 | Pista (chão) | **Falhou** | 28 corridas armadas, todas curtas; quase todas terminaram em "linha perdida"; 20–100 % dos quadros com cruzamento falso; limiar oscilando de 40 a 189 (calibração com contraste 40); **encoder esquerdo = 0 em todas**; bateria 12,5 → 11,8 V sem queda nos arranques; 60 fps, 3,7 ms, maior travada 125 ms | `20261122_*.csv` (backup do cartão) | — |
+| 27/11/2026 | Logs do cartão | Analisados | ver "Achados dos logs do cartão" abaixo | backup de 25/11 | — |
 
 | | | | | | |
+
+## Achados dos logs do cartão (backup de 25/11, analisado em 27/11)
+
+Fonte: `syslog`, `kern.log` e `wtmp` de junho a 22/11, CSVs de 21–22/11, `dumpe2fs`. Jetson Nano 4 GB, **carrier B01**
+(device tree `p3449-0000-b00`), L4T R32.7.1 (JetPack 4.6.1), modo **5 W**; câmera na porta **CAM1** (I2C 8).
+
+| Achado | Evidência | O que foi feito / fazer |
+|---|---|---|
+| Os 9 boots de novembro terminaram por corte de energia | `wtmp` sem registro de shutdown (em setembro havia); 7 trechos de bytes NUL no syslog; "recovery complete" no boot seguinte | Desligar pelo `shutdown` (ou o botão) antes da chave |
+| Cartão **íntegro** | nenhum erro de ext4 ou de mmc; `e2fsck` em 25/11 deixou `clean` | — |
+| Um corte apagou uma corrida inteira | `20261121_204647.csv` só com o cabeçalho | Log com flush/fsync periódico (27/11) |
+| Sem bateria de relógio: horário volta a cada boot | horários fora de ordem entre boots | Nomes em `dados/` podem repetir/enganar sem internet |
+| Jetson desligou no boot pelos pinos 5 V do J41 | 2 boots de 21/11 terminam com ~34 s de uptime | Já resolvido: alimentação pelo P4 |
+| Sobrecorrente (`soctherm: OC ALARM`) só em setembro | 1.361 alarmes em 8–9/09, nenhum em novembro | Ficar em 5 W: 60 fps com 3,7 ms por quadro |
+| Câmera não detectada em 2 boots; falha de transmissão em 04/11 | `probe failed -121` nas duas portas; `waitCsiFrameStart timeout` | Prender o cabo flat; `make preparar-jetson` confere a câmera |
+| CAM0 vazia gera erros de "Sensor could not be opened" | a cada abertura da câmera | Inofensivo (a câmera da CAM1 funciona) |
+| **gpsd e ModemManager pegavam a `/dev/ttyUSB0`** | `gpsd_control(action=add, arg=/dev/ttyUSB0)` a cada conexão da ESP32 | `make preparar-jetson` mascara os dois |
+| USB da ESP32 só conecta na 3ª tentativa | `device not accepting address, error -71` em toda conexão | Cabo USB curto e bom |
+| Journal só na memória | sem `/var/log/journal` | `make preparar-jetson` (persistente, grava a cada 15 s) |
+

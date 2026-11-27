@@ -4,6 +4,9 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões n
 
 ## [Não lançado]
 ### Adicionado (27/11/2026, logs do cartão da Jetson)
+- `docs/09_roteiro_testes.md`: roteiro no hardware **todo pelo SSH**, em 7 etapas (preparar → câmera e distância cega → calibração e exposição → detecção empurrando → serial e watchdog → motores e encoders → pista e box → velocidade), com comando, critério e o que mandar de volta.
+- `docs/06_testes.md`: resultado da pista de 22/11 e tabela "Achados dos logs do cartão"; `docs/03_hardware.md`: Jetson B01, JetPack 4.6.1, câmera na CAM1.
+- `make diagnostico` leva também as fotos de depuração, o fim do boot anterior, alarmes de sobrecorrente, o estado do gpsd/ModemManager e quem usa a `/dev/ttyUSB0`.
 - `make preparar-jetson` (`jetson/servico/preparar_jetson.sh`): mascara gpsd e ModemManager (pegavam a `/dev/ttyUSB0` a cada conexão da ESP32), journal persistente com gravação a cada 15 s, confere dialout, modo de energia, câmera detectada e porta livre. `--desfazer` volta ao padrão. Testado com systemctl falso; shellcheck limpo.
 ### Adicionado (27/11/2026, trabalhar só pelo SSH)
 - `make fotos` / `seguir_linha.py --fotos [SEG]`: sem janela, salva imagem + máscara a cada SEG s e nos eventos (largada, linha sumiu, parou) em `dados/capturas/<data>/`.

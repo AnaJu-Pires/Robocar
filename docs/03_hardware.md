@@ -7,8 +7,8 @@ Também usamos dados da planilha de especificações da equipe (abas LIGACOES EL
 
 | Parte | Modelo | Situação | Dados-chave |
 |---|---|---|---|
-| Computador | Jetson Nano Developer Kit **4 GB** | possuímos | entrada J25 (5,5 × 2,1 mm, centro +) com jumper J48; 5 V / 4 A |
-| Câmera | **IMX219-160** (lente ~160°) | possuímos | CSI; Jetson + câmera = **149 g (medido pela equipe)** [V] |
+| Computador | Jetson Nano Developer Kit **4 GB**, carrier **B01**; L4T R32.7.1 (JetPack 4.6.1) [V, logs do cartão] | possuímos | entrada J25 (5,5 × 2,1 mm, centro +) com jumper J48; 5 V / 4 A |
+| Câmera | **IMX219-160** (lente ~160°), ligada na porta **CAM1** [V] | possuímos | CSI; Jetson + câmera = **149 g (medido pela equipe)** [V] |
 | Microcontrolador | ESP32 DevKit V1, 30 pinos, USB-C, CP2102 | possuímos | identificado por foto (13/11/2026) |
 | Motores | N20 6 V 750 rpm com encoder (RoboCore) ×2 | comprar | 120 mA vazio; **stall 1,6 A**; 1,7 kgf·cm; eixo D 3 mm; 20 g; ~140 pulsos/volta (medido pela loja) [V] |
 | Drivers | DRV8833 ×3 (2 em uso + 1 reserva) | comprar | VM 2,7–10,8 V; 1,2 A/canal, **2,4 A em paralelo** [V]; um módulo por motor, VM em 7,2 V ([D-019](decisoes.md)) |
