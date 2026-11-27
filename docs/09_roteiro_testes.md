@@ -14,6 +14,8 @@ Em cada etapa: rode os comandos, confira o **critério**, e me mande o que está
   ```
   Se o nome não responder, pegue o IP da Jetson na lista de aparelhos do roteador (ex.: http://192.168.15.1) e use
   `ssh blitz@IP`. Nos comandos abaixo, troque `blitz-desktop.local` pelo IP se for o caso.
+  Depois de ligar ou reiniciar, espere **2–3 min**: o `ping` pode responder antes de o SSH estar pronto
+  ("Connection refused"). O endereço IPv6 muda a cada boot: use sempre o nome `.local`.
 * **Pelo cabo micro-USB** (`ssh blitz@192.168.55.1`): **não use no PC com Windows 11 da equipe.** Em 27/11 o
   Windows reconheceu a Jetson como "UsbNcm Host Device", não recebeu endereço, e desativar o adaptador ou tirar o cabo
   **travou e reiniciou o PC** várias vezes (falha do driver do Windows, não da Jetson).
