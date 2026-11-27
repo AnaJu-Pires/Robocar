@@ -7,16 +7,16 @@ MDF 3 mm cortado a laser, **uma chapa de 390 × 270 mm**. Tudo sai de `fonte/` (
 
 ![Frente e lado direito](imagens/vista_3d.png)
 
-| | v3 | v1 (cortada) |
-|---|---|---|
-| Tamanho total (com plugues, cabos e câmera em toda a faixa) | **240 × 140 × 154 mm** | 246 × 123 mm (sem os plugues) |
-| Massa estimada | **633 g** (pesar: ver [Pesos](#7-pesos)) | — |
-| Centro de massa (x à frente do eixo / y / altura) | **16,8 / −1,0 / 36,1 mm** | Jetson no 2º andar (~46 mm) |
-| Peso nas rodas de tração | **86 %** | — |
-| Tomba com / escorrega com (μ = 0,9) | **1,11 g / 0,90 g**: escorrega antes de tombar | 0,97 g / 0,90 g |
-| Levanta a esfera (empina) com | 0,47 g → `controle.acel_max` = 2,0/s (≈ 0,4 g) | — |
-| Peças de MDF | 18 (14 desenhos) | 10 |
-| Verificações automáticas | 52, todas ok (interferência: 96 sólidos dois a dois, 14 deles volumes de acesso; câmera: 9 ângulos; 6 releem o DXF gravado) · 28 testes negativos, todos pegos · 10 medidas a conferir | nenhuma |
+| | v3 |
+|---|---|
+| Tamanho total (com plugues, cabos e câmera em toda a faixa) | **240 × 140 × 154 mm** |
+| Massa estimada | **633 g** (pesar: ver [Pesos](#7-pesos)) |
+| Centro de massa (x à frente do eixo / y / altura) | **16,8 / −1,0 / 36,1 mm** |
+| Peso nas rodas de tração | **86 %** |
+| Tomba com / escorrega com (μ = 0,9) | **1,11 g / 0,90 g**: escorrega antes de tombar |
+| Levanta a esfera (empina) com | 0,47 g → `controle.acel_max` = 2,0/s (≈ 0,4 g) |
+| Peças de MDF | 18 (14 desenhos) |
+| Verificações automáticas | 52, todas ok (interferência: 96 sólidos dois a dois, 14 deles volumes de acesso; câmera: 9 ângulos; 6 releem o DXF gravado) · 28 testes negativos, todos pegos · 10 medidas a conferir |
 
 ## 1. Arquitetura e tamanho ([D-026](../../docs/decisoes.md))
 
@@ -46,12 +46,11 @@ Comparação com as mesmas peças e massas ([analise.md](analise.md), `fonte/ana
 
 | | CG altura | Tomba com | Empina com | Limite em R100 | Volta 20 m* | Comprimento |
 |---|---|---|---|---|---|---|
-| A — v2.2 (Jetson no andar de cima)** | 45,5 mm | 0,97 g | 0,22 g | **tombamento** | 13,5 s | 246 mm |
+| A — Jetson no andar de cima | 45,5 mm | 0,97 g | 0,22 g | **tombamento** | 13,5 s | 246 mm |
 | **B — v3** | **36,1 mm** | **1,11 g** | 0,47 g | aderência | 12,6 s | **240 mm** |
 | C — Jetson no piso, bateria atravessada na frente | 33,1 mm | 1,14 g | 0,77 g | aderência | 12,4 s | **252 mm (> 250)** |
 
 \* pista sintética, sem limite de controle; serve para comparar, não para prever.
-\*\* o `mecanica/chassi_v2/` não está no repositório (não foi enviado): A foi reconstruída pela D-024 e pelas lições.
 
 Rigidez: a caixa traseira é fechada (piso, 2 paredes, parede traseira, quilha e tampo parafusado). O piso da frente
 tem 2 nervuras (os trilhos) e as paredes laterais. Os encaixes usam o rasgo escolhido no pente e levam cola; o tampo,
@@ -62,7 +61,7 @@ os pisos, a Jetson e a placa vão parafusados. O apoio em 3 pontos (2 rodas + es
 | Roda | v em vazio (7,2 V) | Força de partida | Limite em R100 | Volta* | Problema |
 |---|---|---|---|---|---|
 | 32 mm (StickyMAX) | 1,51 m/s | 25 N | diferencial (0,96 m/s) | 15,0 s | eixo a 16 mm: a esfera de 15 mm fica 5 mm alta |
-| **42 mm (temos 4)** | **1,98 m/s** | 19 N (4× a aderência) | aderência (0,94 m/s) | **12,6 s** | — |
+| **42 mm (temos 4)** | **1,98 m/s** | 19 N (4× a aderência) | aderência (0,94 m/s) | **12,6 s** | nenhum: já comprada, esfera encaixa sem calço |
 | 48 mm | 2,26 m/s | 17 N | aderência | 12,0 s | CG +3 mm; não comprada |
 | 65 mm | 3,06 m/s | 12 N | **tombamento** | 12,4 s | CG +11,5 mm |
 
@@ -117,9 +116,9 @@ e da ESP32. A largada segurada 3 s continua como reserva. Esquema, peças, compa
 | Gravar a ESP32 | USB-C na traseira da placa (trocar o cabo da Jetson pelo notebook, ou gravar pela Jetson) | tampo, traseira |
 | SSH | Wi-Fi (adaptador na USB livre) ou Ethernet; portas da Jetson para fora, lado esquerdo | lado esquerdo |
 | microSD | sai pela borda direita da Jetson; a parede direita só vai até x = 64 (verificado) | lado direito, meio |
-| Tirar o tampo sem mexer na Jetson | 4 M3 do tampo + 2 bornes OUT do XL4016 #2 + Dupont do VBAT e do J41 + 2 conectores dos motores + USB → tampo, ESP32 e placa de desligar saem juntos | — |
-| Reparo: fusível | lado direito, embaixo da borda da Jetson (verificado) | — |
-| Reparo: motor / roda | roda: puxar. Motor: conector branco + 2 M2 do suporte (por baixo; com o tampo fora, por cima) | — |
+| Tirar o tampo sem mexer na Jetson | 4 M3 do tampo + 2 bornes OUT do XL4016 #2 + Dupont do VBAT e do J41 + 2 conectores dos motores + USB → tampo, ESP32 e placa de desligar saem juntos | tampo |
+| Reparo: fusível | lado direito, embaixo da borda da Jetson (verificado) | piso dianteiro, direita |
+| Reparo: motor / roda | roda: puxar. Motor: conector branco + 2 M2 do suporte (por baixo; com o tampo fora, por cima) | eixo |
 
 Toda ligação entre módulos tem conector ou borne: XT60 (bateria), bornes (XL4016), P4 e USB (Jetson), conector branco
 (motores), Dupont (VBAT, J41) e flat (câmera). O fusível fica a 5 cm do XT60, antes de tudo.

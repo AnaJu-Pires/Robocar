@@ -349,10 +349,11 @@ def principal():
         linhas.append(f"| {'ok' if r.ok else '**FALHOU**'} | {r.grupo} | {r.nome} | {r.detalhe} |")
     linhas += ['', '## Cabos: rota e comprimento de corte', '',
                'Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos (motor, USB, flat, Dupont) so sao conferidos.', '',
-               '| cabo | bitola | de | para | rota (mm) | corte (mm) | disponivel | maior trecho solto (mm) | obs |', '|---|---|---|---|---|---|---|---|---|']
+               '| cabo | bitola | de | para | rota (mm) | corte (mm) | disponivel (mm) | maior trecho solto (mm) | obs |', '|---|---|---|---|---|---|---|---|---|']
     for t in tab_cabos:
-        corte = '—' if t['disponivel'] else f"{t['corte']:.0f}"
-        disp = f"{t['disponivel']:.0f}" if t['disponivel'] else '—'
+        corte = 'cabo pronto' if t['disponivel'] else f"{t['corte']:.0f}"
+        disp = f"{t['disponivel']:.0f}" if t['disponivel'] else 'do rolo'
+        t['obs'] = t['obs'] or 'soldar ou apertar nas duas pontas; termorretratil'
         linhas.append(f"| {t['nome']} | {t['bitola']} | {t['de']} | {t['para']} | {t['rota']:.0f} | {corte} | {disp} | "
                       f"{t['vao']:.0f} | {t['obs']} |")
     M_, c = modelo.cg(modelo.massas(m))

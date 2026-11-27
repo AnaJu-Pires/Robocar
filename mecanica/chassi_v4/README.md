@@ -6,17 +6,17 @@ perto do limite de 250). Tudo sai de `fonte/` (Python + CadQuery + ezdxf): o `ma
 
 ![Frente e lado direito](imagens/vista_3d.png)
 
-| | **v4 (3 andares)** | v3 | v1 (cortada) |
-|---|---|---|---|
-| Tamanho total (com plugues, cabos e câmera em toda a faixa) | **162 × 143 × 160 mm** | 240 × 140 × 154 mm | 246 × 123 mm |
-| Folga até o limite de 250 × 150 | **88 mm** no comprimento, 7 mm na largura | 10 mm / 10 mm | 4 mm |
-| Massa estimada | 657 g | 633 g | — |
-| Centro de massa (x à frente do eixo / y / altura) | 21,7 / −1,6 / **49,8 mm** | 16,8 / −1,0 / 36,1 mm | — |
-| Peso nas rodas de tração | 77 % | 86 % | — |
-| Tomba com | **0,77 g** → curva R100 a no máximo **0,80 m/s** ([D-032](../../docs/decisoes.md)) | 1,11 g | — |
-| Levanta a esfera com | 0,44 g (`controle.acel_max` = 2,0/s ≈ 0,4 g) | 0,47 g | — |
-| Peças de MDF | 19 (14 desenhos) | 18 | 10 |
-| Verificações | 51 ok (interferência com 14 volumes de acesso; câmera em 9 ângulos; 6 releem o DXF) · **30 testes negativos, todos pegos** · 10 medidas a conferir | 52 · 28 | nenhuma |
+| | **v4 (3 andares)** | v3 |
+|---|---|---|
+| Tamanho total (com plugues, cabos e câmera em toda a faixa) | **162 × 143 × 160 mm** | 240 × 140 × 154 mm |
+| Folga até o limite de 250 × 150 | **88 mm** no comprimento, 7 mm na largura | 10 mm / 10 mm |
+| Massa estimada | 657 g | 633 g |
+| Centro de massa (x à frente do eixo / y / altura) | 21,7 / −1,6 / **49,8 mm** | 16,8 / −1,0 / 36,1 mm |
+| Peso nas rodas de tração | 77 % | 86 % |
+| Tomba com | **0,77 g** → curva R100 a no máximo **0,80 m/s** ([D-032](../../docs/decisoes.md)) | 1,11 g |
+| Levanta a esfera com | 0,44 g (`controle.acel_max` = 2,0/s ≈ 0,4 g) | 0,47 g |
+| Peças de MDF | 19 (14 desenhos) | 18 |
+| Verificações | 51 ok (interferência com 14 volumes de acesso; câmera em 9 ângulos; 6 releem o DXF) · **30 testes negativos, todos pegos** · 10 medidas a conferir | 52 · 28 |
 
 ## 1. Quem fica em cada andar ([D-031](../../docs/decisoes.md))
 
@@ -82,8 +82,8 @@ abaixo (jumpers de 15 cm).
 | SSH | Wi-Fi (adaptador na USB livre) ou Ethernet: as portas da Jetson ficam viradas para trás | andar 2, trás |
 | microSD | sai pela borda da frente da Jetson, entre os andares 2 e 3 (verificado) | frente |
 | Fusível | por cima, atrás do andar 3 (verificado) | andar 2, trás |
-| Tirar o andar 3 sem mexer na Jetson | 4 parafusos M3 (porcas presas nos pilares) + Dupont do VBAT + conectores dos motores + USB | — |
-| Tirar a Jetson com o andar 2 | 4 parafusos M3 do andar 2 (porcas presas nas paredes do andar 1) + P4 + flat; a Jetson sai parafusada no andar 2 | — |
+| Tirar o andar 3 sem mexer na Jetson | 4 parafusos M3 (porcas presas nos pilares) + Dupont do VBAT + conectores dos motores + USB | andar 3 |
+| Tirar a Jetson com o andar 2 | 4 parafusos M3 do andar 2 (porcas presas nas paredes do andar 1) + P4 + flat; a Jetson sai parafusada no andar 2 | andar 2 |
 
 ## 6. Fiação, montagem e inspeção
 

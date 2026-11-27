@@ -177,7 +177,7 @@ O roteamento foi automático e conferido pelo DRC do KiCad (com paridade com o e
 **Consequências:** a corrente do motor (até 1,9 A) volta direto ao fio sem passar pelo plano embaixo da ESP32. O trecho mais estreito do GND, do driver até o fio, ficou com 1,5 mm. DRC 0 e paridade OK. Esquemático com PWR_FLAG em VM_E, VM_D e GND e tudo na grade de 1,27 mm (ERC do KiCad 10 sem os 3 erros e os 98 avisos; rodar de novo para confirmar).
 
 ### D-026 — Chassi v3: Jetson baixa sobre a bateria, caixa traseira com tampo da ESP32 e quilha central
-*25/11/2026 · substituída por D-031* (substitui o arranjo da v1 em `mecanica/chassi/`; o estudo v2.2 não está no repositório)
+*25/11/2026 · substituída por D-031* (substitui o arranjo da v1 em `mecanica/chassi/`)
 **Contexto:** a v1 ficou bamba (paredes paralelas sem travessa, sem parafuso embaixo, rasgo folgado), maior que o
 necessário e com furos errados; a Jetson (141 g, a peça mais pesada) ia no 2º andar. Com apoio em 3 pontos, o carro
 tomba em torno da linha roda–esfera: a ~46 mm de altura de CG, ele tombaria (0,97 g) antes de escorregar (μ ≈ 0,9)

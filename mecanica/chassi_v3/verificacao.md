@@ -71,21 +71,21 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (56 ok, 0 falhas).
 
 Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos (motor, USB, flat, Dupont) so sao conferidos.
 
-| cabo | bitola | de | para | rota (mm) | corte (mm) | disponivel | maior trecho solto (mm) | obs |
+| cabo | bitola | de | para | rota (mm) | corte (mm) | disponivel (mm) | maior trecho solto (mm) | obs |
 |---|---|---|---|---|---|---|---|---|
-| pigtail_xt60_fusivel | 0,75 mm2 vermelho + preto | XT60 do chassi (par solto na frente) | entrada da placa do fusivel | 45 | 70 | — | 28 | XT60 soldado nesta ponta; termorretratil |
-| fusivel_chave | 0,75 mm2 vermelho | saida do fusivel | chave geral (terminal 1) | 26 | 49 | — | 14 |  |
-| chave_xl | 0,75 mm2 vermelho + preto | chave geral (terminal 2) + GND do fusivel | IN+ / IN- do XL4016 #2 | 96 | 125 | — | 71 | o GND vem direto da placa do fusivel, junto |
-| jumper_in_xl | 0,75 mm2 vermelho + preto | IN+ / IN- do XL4016 #2 | IN+ / IN- do XL4016 #1 | 36 | 60 | — | 18 |  |
-| xl1_p4_jetson | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #1 (5,2 V) | plugue P4 da Jetson (J25) | 186 | 225 | — | 100 | P4 reto soldado; testar 5,2 V e polaridade antes de ligar |
-| vm_e | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #2 (7,2 V) | J2 da placa da ESP32 (VM esquerdo) | 136 | 170 | — | 93 | ja soldado na placa: so conferir o comprimento |
-| vm_d | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #2 (7,2 V) | J3 da placa da ESP32 (VM direito) | 86 | 115 | — | 70 | ja soldado na placa: so conferir o comprimento |
-| vbat | 0,2 mm2 (fio fino) | chave geral (terminal 2) | J1 (VBAT) da placa da ESP32 | 106 | 136 | — | 92 | conector de 1 via (Dupont) no meio para o tampo sair |
-| motor_esq | cabo de 6 vias do motor | conector branco do encoder (esq) | J10 + J12 | 89 | — | 150 | 89 | cabo original do motor; o comprimento disponivel e estimado |
-| motor_dir | cabo de 6 vias do motor | conector branco do encoder (dir) | J11 + J13 | 90 | — | 150 | 90 | cabo original do motor; o comprimento disponivel e estimado |
-| usb_jetson_esp32 | cabo USB-A / USB-C de dados | USB-C da ESP32 | USB-A da Jetson | 180 | — | 300 | 112 | um cabo de 20 cm basta se as pontas forem em angulo |
-| j41_desligar | 4 fios Dupont femea | J41 pinos 16, 17, 18 e 20 | placa de desligar | 79 | — | 150 | 64 | jumpers Dupont de 15 cm |
-| ffc_camera | flat 15 vias | CSI da Jetson | camera | 114 | — | 150 | 114 | pior angulo: 65 graus |
+| pigtail_xt60_fusivel | 0,75 mm2 vermelho + preto | XT60 do chassi (par solto na frente) | entrada da placa do fusivel | 45 | 70 | do rolo | 28 | XT60 soldado nesta ponta; termorretratil |
+| fusivel_chave | 0,75 mm2 vermelho | saida do fusivel | chave geral (terminal 1) | 26 | 49 | do rolo | 14 | soldar ou apertar nas duas pontas; termorretratil |
+| chave_xl | 0,75 mm2 vermelho + preto | chave geral (terminal 2) + GND do fusivel | IN+ / IN- do XL4016 #2 | 96 | 125 | do rolo | 71 | o GND vem direto da placa do fusivel, junto |
+| jumper_in_xl | 0,75 mm2 vermelho + preto | IN+ / IN- do XL4016 #2 | IN+ / IN- do XL4016 #1 | 36 | 60 | do rolo | 18 | soldar ou apertar nas duas pontas; termorretratil |
+| xl1_p4_jetson | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #1 (5,2 V) | plugue P4 da Jetson (J25) | 186 | 225 | do rolo | 100 | P4 reto soldado; testar 5,2 V e polaridade antes de ligar |
+| vm_e | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #2 (7,2 V) | J2 da placa da ESP32 (VM esquerdo) | 136 | 170 | do rolo | 93 | ja soldado na placa: so conferir o comprimento |
+| vm_d | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #2 (7,2 V) | J3 da placa da ESP32 (VM direito) | 86 | 115 | do rolo | 70 | ja soldado na placa: so conferir o comprimento |
+| vbat | 0,2 mm2 (fio fino) | chave geral (terminal 2) | J1 (VBAT) da placa da ESP32 | 106 | 136 | do rolo | 92 | conector de 1 via (Dupont) no meio para o tampo sair |
+| motor_esq | cabo de 6 vias do motor | conector branco do encoder (esq) | J10 + J12 | 89 | cabo pronto | 150 | 89 | cabo original do motor; o comprimento disponivel e estimado |
+| motor_dir | cabo de 6 vias do motor | conector branco do encoder (dir) | J11 + J13 | 90 | cabo pronto | 150 | 90 | cabo original do motor; o comprimento disponivel e estimado |
+| usb_jetson_esp32 | cabo USB-A / USB-C de dados | USB-C da ESP32 | USB-A da Jetson | 180 | cabo pronto | 300 | 112 | um cabo de 20 cm basta se as pontas forem em angulo |
+| j41_desligar | 4 fios Dupont femea | J41 pinos 16, 17, 18 e 20 | placa de desligar | 79 | cabo pronto | 150 | 64 | jumpers Dupont de 15 cm |
+| ffc_camera | flat 15 vias | CSI da Jetson | camera | 114 | cabo pronto | 150 | 114 | pior angulo: 65 graus |
 
 ## Massas (para refazer o CG depois de pesar)
 

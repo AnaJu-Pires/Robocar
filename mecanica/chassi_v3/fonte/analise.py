@@ -1,8 +1,7 @@
 """Analise de arquitetura e rodas do Robocar Blitz (chassi v3).
 
 Compara, com as MESMAS pecas e massas do modelo:
-  A  "v2.2 reconstruida": Jetson no andar de cima, acima da placa da ESP32 (o v2.2 nao esta no repositorio;
-     montado a partir da D-024 e das licoes: placa sobre o eixo com ~20 mm de espacador, bateria no meio)
+  A  Jetson no andar de cima, acima da placa da ESP32 (placa sobre o eixo, bateria no meio)
   B  v3 (escolhida): Jetson baixa sobre a bateria, caixa traseira com XL4016 e tampo da ESP32
   C  Jetson no piso (sem nada embaixo) e bateria atravessada na frente
 e as rodas de 32, 42, 48 e 65 mm, num modelo de volta (aceleracao, frenagem, curvas).
@@ -103,7 +102,7 @@ def layout_variantes(m):
     a = mover(base, jet, dx=-25, dz=zA)
     a = mover(a, {'bateria'}, dz=-(m.Z2 - m.Z1), novo_x=55)
     a = mover(a, {'placa_esp32', 'esp32', 'barras', 'drv8833', 'c470', 'tampo', 'placa_desligar'}, dz=-6)
-    var['A'] = dict(massas=a, L=137.0, compr=246.0, nome='A - v2.2 reconstruida: Jetson no andar de cima')
+    var['A'] = dict(massas=a, L=137.0, compr=246.0, nome='A - Jetson no andar de cima')
     # C: Jetson no piso (espacador de 6 mm), bateria atravessada na frente
     c = mover(base, jet, dz=-(P['JET_ESPACADOR'] - 6))
     c = mover(c, {'bateria'}, novo_x=146)

@@ -1,8 +1,7 @@
 """Analise de arquitetura e rodas do Robocar Blitz (chassi v3).
 
 Compara, com as MESMAS pecas e massas do modelo:
-  A  "v2.2 reconstruida": Jetson no andar de cima, acima da placa da ESP32 (o v2.2 nao esta no repositorio;
-     montado a partir da D-024 e das licoes: placa sobre o eixo com ~20 mm de espacador, bateria no meio)
+  A  Jetson no andar de cima, acima da placa da ESP32 (placa sobre o eixo, bateria no meio)
   B  v3 (escolhida): Jetson baixa sobre a bateria, caixa traseira com XL4016 e tampo da ESP32
   C  Jetson no piso (sem nada embaixo) e bateria atravessada na frente
 e as rodas de 32, 42, 48 e 65 mm, num modelo de volta (aceleracao, frenagem, curvas).

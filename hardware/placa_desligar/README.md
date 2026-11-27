@@ -60,9 +60,9 @@ J41 pino 20 (GND) ────────────────┴───�
 | R2 | 1 kΩ | |
 | R4 | 100 kΩ | |
 | R5 | 150 Ω (100–220 Ω) | |
-| — | placa perfurada 30 × 18 mm (12 × 7 furos) | 2 furos de 3,2 mm em cantos opostos (ver desenho) |
-| — | 4 jumpers Dupont fêmea de 15 cm (ou 1 conector fêmea 2 × 3) | pinos 16, 17, 18 e 20 do J41 |
-| — | 2 parafusos M3 × 10 + 2 espaçadores M3 de 3 mm + porcas | fixação no tampo |
+| PCB | placa perfurada 30 × 18 mm (12 × 7 furos) | 2 furos de 3,2 mm em cantos opostos (ver desenho) |
+| J1 | 4 jumpers Dupont fêmea de 15 cm (ou 1 conector fêmea 2 × 3) | pinos 16, 17, 18 e 20 do J41 |
+| M1, M2 | 2 parafusos M3 × 10 + 2 espaçadores M3 de 3 mm + porcas | fixação no andar 3 |
 
 ## Montagem na placa perfurada (vista dos componentes; a frente do carro fica à esquerda)
 

@@ -7,7 +7,7 @@ Massas e posicoes: as do modelo (`pecas.py`); nas variantes A e C so mudam de lu
 
 | | massa (g) | CG x / y / z (mm) | peso nas rodas | tomba a (g) | empina a (g) | curva R100 (m/s) | limite | volta 20 m (s) | comprimento (mm) |
 |---|---|---|---|---|---|---|---|---|---|
-| A - v2.2 reconstruida: Jetson no andar de cima | 633 | 9.8 / -1.0 / 45.5 | 93 % | 0.97 | 0.22 | 0.93 | tombamento | 13.5 | 246 |
+| A - Jetson no andar de cima | 633 | 9.8 / -1.0 / 45.5 | 93 % | 0.97 | 0.22 | 0.93 | tombamento | 13.5 | 246 |
 | B - v3: Jetson baixa sobre a bateria (escolhida) | 633 | 16.8 / -1.0 / 36.1 | 86 % | 1.11 | 0.47 | 0.94 | aderencia | 12.6 | 240 |
 | C - Jetson no piso, bateria atravessada na frente | 633 | 25.3 / -1.0 / 33.1 | 80 % | 1.14 | 0.77 | 0.94 | aderencia | 12.4 | 252 |
 
