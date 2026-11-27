@@ -36,4 +36,4 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 | medidas: --para-cortar com medidas estimadas | medidas | sim | conferir antes de cortar: jet_furo_d: diametro do furo (M2.5); define centros = borda - d |
 | dxf: DXF gravado com a Jetson 1 mm diferente da medida | dxf | sim | furos da Jetson no DXF: 86.30 x 57.30 mm (1 esperado) |
 
-Tempo: 120 s.
+Tempo: 118 s.

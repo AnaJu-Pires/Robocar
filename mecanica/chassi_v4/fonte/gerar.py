@@ -224,7 +224,7 @@ def imagens(m, pasta):
     render.vista3d(tri, os.path.join(pasta, 'vista_frente.png'), 0, 0, 'Vista de frente', lim, tamanho=(8, 7))
     render.vista3d(tri, os.path.join(pasta, 'vista_tras.png'), 0, 180, 'Vista de tras (chave, pino da bateria, portas da Jetson)', lim, tamanho=(8, 7))
     esp = ('andar3', 'pilar', 'poste', 'travessa', 'orelha', 'placa_camera', 'camera', 'placa_esp32', 'esp32', 'barras', 'drv8833',
-           'c470', 'plugue_usb_esp32', 'placa_desligar', 'botao_desligar', 'led_pode', 'cabo_')
+           'c470', 'plugue_usb_esp32', 'placa_desligar', 'botao_desligar', 'led_pode', 'led_codigo', 'cabo_')
     jet = ('andar2', 'jetson', 'plugue_p4', 'plugue_usb_a', 'espacador_jetson', 'placa_fusivel')
     sem3 = [it for it, n in zip(itens, nomes) if not n.startswith(esp)]
     render.vista3d(render.triangulos(sem3), os.path.join(pasta, 'vista_andar2.png'), 34, -55,

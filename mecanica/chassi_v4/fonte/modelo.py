@@ -276,6 +276,8 @@ def construir(P=None, verif=False):
              (0.1, 0.1, 0.1), 'placa_desligar')
     comprada('led_pode_desligar', cilindro((DX0 + 20, DY1 - dl / 2, zbd), (DX0 + 20, DY1 - dl / 2, zbd + 8), 3), 0,
              'eletronica', (0.9, 0.1, 0.1), 'placa_desligar')
+    comprada('led_codigo_rodando', cilindro((DX0 + 30, DY1 - dl / 2, zbd), (DX0 + 30, DY1 - dl / 2, zbd + 8), 3), 0,
+             'eletronica', (0.95, 0.75, 0.1), 'placa_desligar')       # D-033: pisca = seguir_linha.py rodando
     acesso('dedo_botao_desligar', cilindro((DX0 + 8, DY1 - dl / 2, zbd + 13), (DX0 + 8, DY1 - dl / 2, zbd + 50), 12),
            'apertar o botao de desligar a Jetson')
     m.desl_furos = [(DX0 + 3.5, DY1 - 3.5), (DX0 + dw - 3.5, DY1 - dl + 3.5)]
@@ -586,8 +588,9 @@ def construir(P=None, verif=False):
     pj = apoios['pf3_j41']
     cabo('j41_desligar', [(xj41, yj41, ZJ + JT + 10), (pj[0], pj[1], ZA3 - 4), (pj[0], pj[1], ZA3t + 4),
                           (m.desl_botao[0] + 12, m.desl_botao[1], m.desl_botao[2] + 3)],
-         3.0, '4 fios Dupont femea', 'J41 pinos 16, 17, 18 e 20', 'placa de desligar (andar 3)', apoio=['pf3_j41'], disponivel=150.0,
-         extra=0.0, obs='jumpers Dupont de 15 cm; sobem pela borda direita do andar 3')
+         3.5, '7 fios Dupont femea', 'J41 pinos 15 a 20 (conector 2x3) + pino 2 (5 V da luz)', 'placa de interface (andar 3)',
+         apoio=['pf3_j41'], disponivel=150.0, extra=0.0,
+         obs='jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 (D-033)')
     m.cabos_ffc = (jet_pt(np.mean(v('jet_csi_u')), 58) + (ZJ + JT + 4,))
     def ffc_rota(ang):
         partes_camera(ang)

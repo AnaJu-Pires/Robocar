@@ -14,7 +14,7 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (55 ok, 0 falhas).
 | ok | regulamento | 2 rodas tracionadas tocam o chao | z minimo das rodas: 0.00, 0.00 mm |
 | ok | regulamento | esfera no chao (carro nivelado) | fundo da esfera a +0.00 mm do chao (piso dianteiro a 15.0 mm, esfera de 15 mm) |
 | ok | regulamento | vao livre >= 8 mm (emendas do tapete) | 12.0 mm |
-| ok | interferencia | nenhuma sobreposicao | 95 solidos (13 volumes de acesso) |
+| ok | interferencia | nenhuma sobreposicao | 96 solidos (13 volumes de acesso) |
 | ok | camera | camera livre em toda a faixa | 25 a 65 graus, de 5 em 5 |
 | ok | camera | a camera nao ve o proprio carro no angulo nominal | 45 graus; livre ate 45 graus (campo vertical estimado 56 graus) |
 | ok | material | piso_traseiro | 13 furos, teia >= 2.0 mm, 1 peca |
@@ -83,7 +83,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | motor_esq | cabo de 6 vias do motor | conector branco do encoder (esq) | J12 + J10 | 122 | cabo pronto | 150 | 67 | cabo original do motor; o comprimento disponivel e estimado |
 | motor_dir | cabo de 6 vias do motor | conector branco do encoder (dir) | J13 + J11 | 125 | cabo pronto | 150 | 67 | cabo original do motor; o comprimento disponivel e estimado |
 | usb_jetson_esp32 | cabo USB-A / USB-C de dados | USB-C da ESP32 (andar 3, tras) | USB-A da Jetson (andar 2, tras) | 64 | cabo pronto | 300 | 64 | cabo curto: 15-20 cm bastam |
-| j41_desligar | 4 fios Dupont femea | J41 pinos 16, 17, 18 e 20 | placa de desligar (andar 3) | 90 | cabo pronto | 150 | 60 | jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 |
+| j41_desligar | 7 fios Dupont femea | J41 pinos 15 a 20 (conector 2x3) + pino 2 (5 V da luz) | placa de interface (andar 3) | 90 | cabo pronto | 150 | 60 | jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 (D-033) |
 | ffc_camera | flat 15 vias | CSI da Jetson | camera | 123 | cabo pronto | 150 | 123 | pior angulo: 65 graus |
 
 ## Massas (para refazer o CG depois de pesar)
@@ -117,7 +117,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | parede_frente_1 | 4.9 | 59 | 56 | 33 | calculada |
 | parede_frente_2 | 4.9 | 59 | -56 | 33 | calculada |
 | chave_geral | 4.0 | -39 | 28 | 41 | E |
-| placa_desligar | 4.0 | 23 | -50 | 106 | E |
+| placa_desligar | 4.0 | 28 | -50 | 106 | E |
 | cola_e_abracadeiras | 4.0 | 20 | 0 | 50 | calculada |
 | fio_vm_e | 3.1 | -0 | 27 | 66 | calculada |
 | poste_mastro_1 | 3.0 | 76 | 18 | 128 | calculada |

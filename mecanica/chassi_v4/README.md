@@ -28,7 +28,7 @@ Não são fotos: é o desenho que o chassi usa para cada peça, com as medidas e
 
 ```
  z (mm)
- 99-102   ANDAR 3  placa da ESP32 (largada, USB, LED e EN/BOOT por cima) + placa de desligar + mastro curto da câmera
+ 99-102   ANDAR 3  placa da ESP32 (largada, USB, LED e EN/BOOT por cima) + placa de interface + mastro curto da câmera
  50-53    ANDAR 2  Jetson de través (100 mm na largura), portas para TRÁS; atrás dela: placa do fusível
  12-18    ANDAR 1  motores no eixo · 2 XL4016 à frente do eixo · bateria atravessada atrás (sai pela direita) + chave
           trás ◄── x = −56 ─────── 0 (eixo) ─────────────────────────── 106 ──► frente
@@ -59,11 +59,13 @@ parte da altura e a largura total (143 mm) continua dentro dos 150.
 Ficam as de 42 mm ([D-027](../../docs/decisoes.md)): a análise da v4 dá o mesmo resultado
 (seção 2 de [analise.md](analise.md)). Na v4 a curva é limitada pelo software (0,80 m/s) e não pelo motor.
 
-## 3. Botão de desligar
+## 3. Placa de interface (botão de desligar, LEDs e luz da câmera)
 
-O mesmo do v3 ([hardware/placa_desligar/](../../hardware/placa_desligar/), [D-028](../../docs/decisoes.md)). Na v4 a
-plaquinha fica no **andar 3, à direita da placa da ESP32**: o botão e o LED ficam por cima e o J41 da Jetson fica logo
-abaixo (jumpers de 15 cm).
+[hardware/placa_desligar/](../../hardware/placa_desligar/) ([D-028](../../docs/decisoes.md) e D-033). Na v4 a
+plaquinha (**40 × 18 mm** desde 27/11) fica no **andar 3, à direita da placa da ESP32**: botão, LED vermelho
+("Jetson ligada / apagou = pode desligar a chave") e LED amarelo ("código rodando") ficam por cima, e o J41 da
+Jetson fica logo abaixo (7 jumpers de 15 cm). **Falta no modelo:** o suporte da luz em cima da lente, que entra
+quando a peça da luz for escolhida (fita 2835 ou LEDs de 5 mm).
 
 ## 4. Temperatura
 
@@ -81,7 +83,7 @@ abaixo (jumpers de 15 cm).
 | **Trocar a bateria** | chave OFF → separar o par XT60 (em pé, na ponta direita da bateria) → puxar o pino de trava por trás → deslizar a bateria para a direita | lado direito, atrás da roda |
 | Chave geral | gangorra na parede de trás do berço | traseira, à esquerda |
 | Largada | botão do J14, por cima | andar 3 |
-| Desligar a Jetson | botão da placa de desligar, 2 s; esperar o LED vermelho **apagar** | andar 3, direita |
+| Desligar a Jetson | botão da placa de interface, 2 s; esperar o LED vermelho **apagar**; só então a chave geral | andar 3, direita |
 | Trimpots dos XL4016 | chave de fenda **curta** (≤ 40 mm) pelos 4 furos de 7 mm do andar 2, na frente da Jetson | frente, entre os andares 2 e 3 |
 | Ângulo da câmera (25–65°) | soltar as 2 porcas borboleta, girar, ler o número gravado em cima do pivô, apertar | topo do mastro |
 | Gravar a ESP32 | USB-C na traseira da placa | andar 3, trás |
