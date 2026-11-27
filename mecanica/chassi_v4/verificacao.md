@@ -14,7 +14,7 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (55 ok, 0 falhas).
 | ok | regulamento | 2 rodas tracionadas tocam o chao | z minimo das rodas: 0.00, 0.00 mm |
 | ok | regulamento | esfera no chao (carro nivelado) | fundo da esfera a +0.00 mm do chao (piso dianteiro a 15.0 mm, esfera de 15 mm) |
 | ok | regulamento | vao livre >= 8 mm (emendas do tapete) | 12.0 mm |
-| ok | interferencia | nenhuma sobreposicao | 96 solidos (13 volumes de acesso) |
+| ok | interferencia | nenhuma sobreposicao | 98 solidos (13 volumes de acesso) |
 | ok | camera | camera livre em toda a faixa | 25 a 65 graus, de 5 em 5 |
 | ok | camera | a camera nao ve o proprio carro no angulo nominal | 45 graus; livre ate 45 graus (campo vertical estimado 56 graus) |
 | ok | material | piso_traseiro | 13 furos, teia >= 2.0 mm, 1 peca |
@@ -31,7 +31,7 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (55 ok, 0 falhas).
 | ok | material | travessa_mastro | 0 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | orelha_camera | 3 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | placa_camera | 5 furos, teia >= 2.0 mm, 1 peca |
-| ok | cg | massa total estimada | 657 g; CG x 21.7 / y -1.6 / z 49.8 mm |
+| ok | cg | massa total estimada | 657 g; CG x 21.7 / y -1.6 / z 49.9 mm |
 | ok | cg | CG centrado (|y| <= 3 mm) | -1.6 mm |
 | ok | cg | peso nas rodas entre 70 e 92 % | 77 % |
 | ok | cg | tomba so acima de 1.15 x a aceleracao lateral permitida | tomba com 0.77 g; permitido 0.65 g (curva R100 a ate 0.80 m/s; atrito 0.90) |
@@ -41,13 +41,13 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (55 ok, 0 falhas).
 | ok | cabos | chave_xl | rota 96 mm, corte 126 mm |
 | ok | cabos | jumper_in_xl | rota 37 mm, corte 61 mm |
 | ok | cabos | xl1_p4_jetson | rota 89 mm, corte 118 mm |
-| ok | cabos | vm_e | rota 172 mm, corte 209 mm |
-| ok | cabos | vm_d | rota 118 mm, corte 150 mm |
-| ok | cabos | vbat | rota 162 mm, corte 199 mm |
-| ok | cabos | motor_esq | rota 122 mm, corte 134 mm (tem 150) |
-| ok | cabos | motor_dir | rota 125 mm, corte 138 mm (tem 150) |
+| ok | cabos | vm_e | rota 178 mm, corte 216 mm |
+| ok | cabos | vm_d | rota 124 mm, corte 156 mm |
+| ok | cabos | vbat | rota 169 mm, corte 206 mm |
+| ok | cabos | motor_esq | rota 126 mm, corte 139 mm (tem 150) |
+| ok | cabos | motor_dir | rota 129 mm, corte 141 mm (tem 150) |
 | ok | cabos | usb_jetson_esp32 | rota 64 mm, corte 70 mm (tem 300) |
-| ok | cabos | j41_desligar | rota 90 mm, corte 99 mm (tem 150) |
+| ok | cabos | j41_desligar | rota 91 mm, corte 100 mm (tem 150) |
 | ok | cabos | ffc_camera | rota 123 mm, corte 135 mm (tem 150) |
 | ok | medidas | conferir antes de cortar: jet_furo_d | diametro do furo (M2.5); define centros = borda - d |
 | ok | medidas | conferir antes de cortar: jet_furo_u0 | distancia da ponta do P4 ao centro do 1o furo; None = furos centrados |
@@ -77,13 +77,13 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | chave_xl | 0,75 mm2 vermelho + preto | chave geral (terminal 2) + GND do fusivel | IN+ / IN- do XL4016 #1 | 96 | 126 | do rolo | 65 | sai pela janela da parede do berco e passa por cima dos motores |
 | jumper_in_xl | 0,75 mm2 vermelho + preto | IN+ / IN- do XL4016 #1 | IN+ / IN- do XL4016 #2 | 37 | 61 | do rolo | 37 | soldar ou apertar nas duas pontas; termorretratil |
 | xl1_p4_jetson | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #1 (5,2 V) | plugue P4 da Jetson (J25) | 89 | 118 | do rolo | 45 | P4 reto soldado; testar 5,2 V e polaridade antes de ligar |
-| vm_e | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #2 (7,2 V) | J2 da placa da ESP32 | 172 | 209 | do rolo | 97 | ja soldado na placa: so conferir o comprimento |
-| vm_d | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #2 (7,2 V) | J3 da placa da ESP32 | 118 | 150 | do rolo | 55 | ja soldado na placa: so conferir o comprimento |
-| vbat | 0,2 mm2 (fio fino) | chave geral (terminal 2) | J1 (VBAT) da placa da ESP32 | 162 | 199 | do rolo | 84 | conector de 1 via (Dupont) no meio para o andar 3 sair |
-| motor_esq | cabo de 6 vias do motor | conector branco do encoder (esq) | J12 + J10 | 122 | cabo pronto | 150 | 67 | cabo original do motor; o comprimento disponivel e estimado |
-| motor_dir | cabo de 6 vias do motor | conector branco do encoder (dir) | J13 + J11 | 125 | cabo pronto | 150 | 67 | cabo original do motor; o comprimento disponivel e estimado |
+| vm_e | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #2 (7,2 V) | J2 da placa da ESP32 | 178 | 216 | do rolo | 97 | ja soldado na placa: so conferir o comprimento |
+| vm_d | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #2 (7,2 V) | J3 da placa da ESP32 | 124 | 156 | do rolo | 55 | ja soldado na placa: so conferir o comprimento |
+| vbat | 0,2 mm2 (fio fino) | chave geral (terminal 2) | J1 (VBAT) da placa da ESP32 | 169 | 206 | do rolo | 83 | conector de 1 via (Dupont) no meio para o andar 3 sair |
+| motor_esq | cabo de 6 vias do motor | conector branco do encoder (esq) | J12 + J10 | 126 | cabo pronto | 150 | 84 | cabo original do motor; o comprimento disponivel e estimado |
+| motor_dir | cabo de 6 vias do motor | conector branco do encoder (dir) | J13 + J11 | 129 | cabo pronto | 150 | 84 | cabo original do motor; o comprimento disponivel e estimado |
 | usb_jetson_esp32 | cabo USB-A / USB-C de dados | USB-C da ESP32 (andar 3, tras) | USB-A da Jetson (andar 2, tras) | 64 | cabo pronto | 300 | 64 | cabo curto: 15-20 cm bastam |
-| j41_desligar | 7 fios Dupont femea | J41 pinos 15 a 20 (conector 2x3) + pino 2 (5 V da luz) | placa de interface (andar 3) | 90 | cabo pronto | 150 | 60 | jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 (D-033) |
+| j41_desligar | 8 fios Dupont femea | J41 pinos 15 a 20, 2 (5 V) e 6 (GND) | placa de interface (andar 3) | 91 | cabo pronto | 150 | 60 | jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 (D-033) |
 | ffc_camera | flat 15 vias | CSI da Jetson | camera | 123 | cabo pronto | 150 | 123 | pior angulo: 65 graus |
 
 ## Massas (para refazer o CG depois de pesar)
@@ -119,10 +119,10 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | chave_geral | 4.0 | -39 | 28 | 41 | E |
 | placa_desligar | 4.0 | 28 | -50 | 106 | E |
 | cola_e_abracadeiras | 4.0 | 20 | 0 | 50 | calculada |
-| fio_vm_e | 3.1 | -0 | 27 | 66 | calculada |
+| fio_vm_e | 3.2 | -2 | 29 | 72 | calculada |
 | poste_mastro_1 | 3.0 | 76 | 18 | 128 | calculada |
 | poste_mastro_2 | 3.0 | 76 | -18 | 128 | calculada |
-| fio_vm_d | 2.1 | -0 | -35 | 66 | calculada |
+| fio_vm_d | 2.2 | -2 | -36 | 72 | calculada |
 | pilar_tras_1 | 2.1 | -4 | 56 | 75 | calculada |
 | pilar_tras_2 | 2.1 | -4 | -56 | 75 | calculada |
 | pilar_frente_1 | 2.1 | 60 | 56 | 75 | calculada |
@@ -143,8 +143,8 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | espacador_jetson_4 | 1.0 | 69 | -43 | 56 | calculada |
 | travessa_mastro | 0.7 | 64 | -0 | 109 | calculada |
 | fio_jumper_in_xl | 0.7 | 26 | 0 | 28 | calculada |
-| fio_motor_dir | 0.6 | 12 | -27 | 75 | calculada |
-| fio_motor_esq | 0.6 | 12 | 28 | 75 | calculada |
+| fio_motor_dir | 0.6 | 27 | -23 | 80 | calculada |
+| fio_motor_esq | 0.6 | 27 | 24 | 80 | calculada |
 | espacador_xl1_4_4 | 0.5 | 34 | 6 | 20 | calculada |
 | espacador_xl1_61_4 | 0.5 | 91 | 6 | 20 | calculada |
 | espacador_xl1_61_44 | 0.5 | 91 | 46 | 20 | calculada |
@@ -153,7 +153,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | espacador_xl2_61_4 | 0.5 | 91 | -46 | 20 | calculada |
 | espacador_xl2_61_44 | 0.5 | 91 | -6 | 20 | calculada |
 | espacador_xl2_4_44 | 0.5 | 34 | -6 | 20 | calculada |
-| **total** | **657** | **21.7** | **-1.6** | **49.8** | |
+| **total** | **657** | **21.7** | **-1.6** | **49.9** | |
 
 ## Fixadores (contados pelos furos)
 

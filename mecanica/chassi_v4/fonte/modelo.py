@@ -10,6 +10,8 @@ comprimento, em vez de alargar o carro. Custo: CG mais alto (ver analise.md e a 
 construir(P) devolve um Modelo com chapas, compradas, acessos, cabos e apoios (mesma interface do v3).
 Eixos: x para a FRENTE (0 = eixo das rodas), y para a ESQUERDA, z para CIMA (0 = chao). mm.
 """
+import json
+import os
 import math
 import numpy as np
 import shapely.geometry as sg
@@ -45,7 +47,8 @@ PADRAO = dict(
     MU=0.9,
     CABO_FOLGA=0.10,
     LASTRO=None,
-    TRIMPOT_CHAVE=40.0,    # comprimento livre para a chave de fenda acima do andar 2 (chave curta)
+    TRIMPOT_CHAVE=40.0,
+    PF3_MOTOR=(53.5, 30.0),  # passa-fio dos motores no andar 3 (x, |y|): na frente da placa da ESP32, longe da placa de interface    # comprimento livre para a chave de fenda acima do andar 2 (chave curta)
     PILARES=((-14.0, 6.0), (50.0, 70.0)),   # x dos pilares andar 2 -> 3 (aba numa ponta, porca presa na outra)
     ESFERA_MARGEM=2.5,     # material entre o furo da esfera e a borda da frente
     CHAVE_Y=28.0,          # centro do recorte da chave na parede de tras do berco
@@ -266,21 +269,32 @@ def construir(P=None, verif=False):
     acesso('dedo_en_boot_esp32', cilindro((xu + 6, yu, zt + 11), (xu + 6, yu, zt + 60), 12),
            'botoes EN/BOOT da ESP32 (gravacao)', ignora=('esp32_devkit', 'barras_esp32'))
     m.esp_usb = (xu, yu, zu)
-    # placa de desligar: andar 3, faixa direita ao lado da ESP32 (perto do J41 da Jetson, acessivel por cima)
-    dw, dl, dh = v('desl_placa')
-    DX0, DY1 = 8.0, -(EW / 2 + 1.0)
+    # placa de interface (D-028/D-033): andar 3, faixa direita ao lado da ESP32. Posicao de cada peca e dos furos vem do
+    # desenho furo a furo (hardware/placa_desligar/layout.json, gerado e verificado por layout.py)
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'hardware', 'placa_desligar',
+                           'layout.json')) as f_:
+        LY = json.load(f_)
+    dw, dl, _ = LY['placa']
+    DX0, DY1 = 8.0, -(EW / 2 + 1.0)                      # canto de tras / de dentro
+    lp = lambda uw: (DX0 + uw[0], DY1 - uw[1])           # (u, w) do layout -> (x, y) no carro
     comprada('placa_desligar', caixa(DX0, DX0 + dw, DY1 - dl, DY1, ZA3t + 3, ZA3t + 4.6), 4.0, 'eletronica', (0.15, 0.4, 0.55))
     zbd = ZA3t + 4.6
-    m.desl_botao = (DX0 + 8, DY1 - dl / 2, zbd)
-    comprada('botao_desligar', caixa(DX0 + 5, DX0 + 11, DY1 - dl / 2 - 3, DY1 - dl / 2 + 3, zbd, zbd + 13), 0, 'eletronica',
-             (0.1, 0.1, 0.1), 'placa_desligar')
-    comprada('led_pode_desligar', cilindro((DX0 + 20, DY1 - dl / 2, zbd), (DX0 + 20, DY1 - dl / 2, zbd + 8), 3), 0,
-             'eletronica', (0.9, 0.1, 0.1), 'placa_desligar')
-    comprada('led_codigo_rodando', cilindro((DX0 + 30, DY1 - dl / 2, zbd), (DX0 + 30, DY1 - dl / 2, zbd + 8), 3), 0,
-             'eletronica', (0.95, 0.75, 0.1), 'placa_desligar')       # D-033: pisca = seguir_linha.py rodando
-    acesso('dedo_botao_desligar', cilindro((DX0 + 8, DY1 - dl / 2, zbd + 13), (DX0 + 8, DY1 - dl / 2, zbd + 50), 12),
-           'apertar o botao de desligar a Jetson')
-    m.desl_furos = [(DX0 + 3.5, DY1 - 3.5), (DX0 + dw - 3.5, DY1 - dl + 3.5)]
+    bx, by = lp(LY['botao'])
+    m.desl_botao = (bx, by, zbd)
+    comprada('botao_desligar', caixa(bx - 3, bx + 3, by - 3, by + 3, zbd, zbd + 13), 0, 'eletronica', (0.1, 0.1, 0.1),
+             'placa_desligar')
+    for nome_, chave_, cor_ in (('led_pode_desligar', 'led_vermelho', (0.9, 0.1, 0.1)),
+                                ('led_codigo_rodando', 'led_amarelo', (0.95, 0.75, 0.1))):
+        lx, ly_ = lp(LY[chave_])
+        comprada(nome_, cilindro((lx, ly_, zbd), (lx, ly_, zbd + 8), 3), 0, 'eletronica', cor_, 'placa_desligar')
+    for nome_, chave_, cor_ in (('j1_interface', 'j1', (0.1, 0.1, 0.1)), ('j2_luz', 'j2', (0.9, 0.9, 0.9))):
+        jj = LY[chave_]; jx, jy = lp(jj['centro'])
+        comprada(nome_, caixa(jx - jj['lu'] / 2, jx + jj['lu'] / 2, jy - jj['lw'] / 2, jy + jj['lw'] / 2, zbd,
+                              zbd + jj['altura']), 0, 'eletronica', cor_, 'placa_desligar')
+    jx, jy = lp(LY['j1']['centro'])
+    m.desl_j1 = (jx, jy, zbd + LY['j1']['altura'] + 3.0)
+    acesso('dedo_botao_desligar', cilindro((bx, by, zbd + 13), (bx, by, zbd + 50), 12), 'apertar o botao de desligar a Jetson')
+    m.desl_furos = [lp(LY['furos_m3'][k]) for k in ('MH1', 'MH2')]
 
     # ---------------------------------------------------------------------------- esfera
     ex_, ey_ = v('esfera_corpo'); EH = v('esfera_altura'); EXX = P['ESFERA_X']
@@ -440,7 +454,7 @@ def construir(P=None, verif=False):
         for k in range(2):
             f3.append(rasgo(pil_aba(k), sy_ * (Y_PIL + T / 2), 6, S, 'pilar'))
             f3.append(circ(pil_porca(k), sy_ * (Y_PIL + T / 2), 3.4, 'andar3', 'parafuso M3 do andar 3 (porca presa no pilar)'))
-    PF3_MOTOR = [(esp_pt(0, 30)[0], EW / 2 + 5.0), (esp_pt(0, 30)[0], -EW / 2 - 5.0)]
+    PF3_MOTOR = [(P['PF3_MOTOR'][0], P['PF3_MOTOR'][1]), (P['PF3_MOTOR'][0], -P['PF3_MOTOR'][1])]
     PF3_VM = [(esp_pt(7.9, 63.5)[0], EW / 2 + 5.5), (esp_pt(76.8, 63.5)[0], -EW / 2 - 5.5)]
     for (x, y) in PF3_MOTOR:
         f3.append(circ(x, y, 8.0, 'passa_fio_motor3', 'cabo do motor chega na placa'))
@@ -449,7 +463,7 @@ def construir(P=None, verif=False):
     for nome_, (x, y) in (('pf3_motor_e', PF3_MOTOR[0]), ('pf3_motor_d', PF3_MOTOR[1]), ('pf3_vm_e', PF3_VM[0]),
                           ('pf3_vm_d', PF3_VM[1])):
         apoios[nome_] = (x, y, ZA3 + T / 2)
-    PF3_J41 = (m.desl_botao[0] + 36.0, -EW / 2 - 9.0)
+    PF3_J41 = (52.0, -EW / 2 - 9.0)                   # na frente da placa de interface, ao lado do J1
     f3.append(circ(*PF3_J41, 7.0, 'passa_fio_j41', 'jumpers do J41 sobem para a placa de desligar'))
     apoios['pf3_j41'] = (PF3_J41[0], PF3_J41[1], ZA3 + T / 2)
     PY = 17.0
@@ -559,14 +573,14 @@ def construir(P=None, verif=False):
         x3, y3 = apoios[pf3][:2]
         pf2 = PF_P4 if sy_ > 0 else PF_VM
         cabo(f'vm_{lado}', [(xb2 - 3, yb2 - 4 * sy_, zi), (XL0 - 8, 30 * sy_, zi + 6), (pf2[0], pf2[1], ZA2 - 6), (pf2[0], pf2[1], ZA2t + 6),
-                            (x3, y3, zm), (x3, y3, ZA3t + 4), (alvo[0], alvo[1], zt + 2)],
+                            (x3, y3, zm), (x3, y3, ZA3t + 4), (x3, y3, zt + 4), (alvo[0], alvo[1], zt + 2)],
              4.0, '0,75 mm2 vermelho + preto', 'OUT+ / OUT- do XL4016 #2 (7,2 V)', f'J{2 if sy_ > 0 else 3} da placa da ESP32',
              apoio=['pf_p4' if sy_ > 0 else 'pf_vm', pf3], obs='ja soldado na placa: so conferir o comprimento')
     j1 = esp_pt(39.5, 8.5)
-    cabo('vbat', [chave, (PF_CH[0], PF_CH[1], ZA2 - 4), (PF_CH[0], PF_CH[1], ZA2t + 6), (PF_CH[0] + 10, PF_CH[1], zm),
-                  (apoios['pf3_motor_e'][0], apoios['pf3_motor_e'][1], ZA3 - 3),
-                  (apoios['pf3_motor_e'][0], apoios['pf3_motor_e'][1], ZA3t + 3), (j1[0], j1[1], zt + 2)],
-         1.6, '0,2 mm2 (fio fino)', 'chave geral (terminal 2)', 'J1 (VBAT) da placa da ESP32', apoio=['pf_chave', 'pf3_motor_e'],
+    pv3 = apoios['pf3_vm_e']
+    cabo('vbat', [chave, (PF_CH[0], PF_CH[1], ZA2 - 4), (PF_CH[0], PF_CH[1], ZA2t + 6), (pv3[0], pv3[1], zm),
+                  (pv3[0], pv3[1], ZA3t + 3), (pv3[0], pv3[1], zt + 4), (j1[0], j1[1], zt + 2)],
+         1.6, '0,2 mm2 (fio fino)', 'chave geral (terminal 2)', 'J1 (VBAT) da placa da ESP32', apoio=['pf_chave', 'pf3_vm_e'],
          obs='conector de 1 via (Dupont) no meio para o andar 3 sair')
     for lado, sy_ in (('esq', 1), ('dir', -1)):
         yc = sy_ * (Y_FIM + 2.5)
@@ -574,7 +588,7 @@ def construir(P=None, verif=False):
         j12 = esp_pt(11 if sy_ > 0 else 72, 45.4)
         pfm = PF_MOTOR[0 if sy_ > 0 else 1]; pf3 = apoios['pf3_motor_' + ('e' if sy_ > 0 else 'd')]
         cabo(f'motor_{lado}', [(0, yc, EZ + 12), (pfm[0], pfm[1], ZA2 - 4), (pfm[0], pfm[1], ZA2t + 4), (pf3[0], pf3[1], ZA3 - 3),
-                               (pf3[0], pf3[1], ZA3t + 3), (j10[0], j10[1], zt + 2)],
+                               (pf3[0], pf3[1], ZA3t + 3), (pf3[0], pf3[1], zt + 4), (j10[0], j10[1], zt + 2)],
              3.0, 'cabo de 6 vias do motor', f'conector branco do encoder ({lado})',
              f'J{12 if sy_ > 0 else 13} + J{10 if sy_ > 0 else 11}', apoio=['pf_motor_' + lado[0], 'pf3_motor_' + lado[0]],
              disponivel=v('motor_cabo'), extra=0.0, obs='cabo original do motor; o comprimento disponivel e estimado')
@@ -587,8 +601,8 @@ def construir(P=None, verif=False):
     xj41, yj41 = jet_pt(v('jet_j41_u')[0] + 10, JD - 4)
     pj = apoios['pf3_j41']
     cabo('j41_desligar', [(xj41, yj41, ZJ + JT + 10), (pj[0], pj[1], ZA3 - 4), (pj[0], pj[1], ZA3t + 4),
-                          (m.desl_botao[0] + 12, m.desl_botao[1], m.desl_botao[2] + 3)],
-         3.5, '7 fios Dupont femea', 'J41 pinos 15 a 20 (conector 2x3) + pino 2 (5 V da luz)', 'placa de interface (andar 3)',
+                          (pj[0], pj[1], m.desl_j1[2] + 4), (m.desl_j1[0], m.desl_j1[1], m.desl_j1[2])],
+         3.5, '8 fios Dupont femea', 'J41 pinos 15 a 20, 2 (5 V) e 6 (GND)', 'placa de interface (andar 3)',
          apoio=['pf3_j41'], disponivel=150.0, extra=0.0,
          obs='jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 (D-033)')
     m.cabos_ffc = (jet_pt(np.mean(v('jet_csi_u')), 58) + (ZJ + JT + 4,))

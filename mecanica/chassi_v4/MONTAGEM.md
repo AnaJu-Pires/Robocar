@@ -26,12 +26,12 @@ Os comprimentos vêm do modelo (`make chassi` refaz a tabela em [verificacao.md]
 | chave_xl | 0,75 mm² vermelho + preto | terminal 2 da chave (+) e GND do fusível (−) → IN do XL4016 #1 | **126 mm** | sai do berço pela janela da parede da frente e passa por cima dos motores |
 | jumper_in_xl | 0,75 mm² vermelho + preto | IN do #1 → IN do #2 | **61 mm** | entre os bornes (2 fios por borne: ilhós ou estanhar junto) |
 | xl1_p4_jetson | 0,75 mm² vermelho + preto | OUT do XL4016 #1 → P4 | **118 mm** | sobe pelo passa-fio esquerdo do andar 2 até o P4 (centro = +; conferir 5,2 V antes) |
-| vm_e | 0,75 mm² vermelho + preto | OUT do XL4016 #2 → J2 | rota 172 (precisa ≥ **210**) | passa-fio esquerdo do andar 2 → passa-fio esquerdo do andar 3 |
-| vm_d | 0,75 mm² vermelho + preto | OUT do XL4016 #2 → J3 | rota 118 (precisa ≥ **150**) | passa-fio direito do andar 2 → passa-fio direito do andar 3 |
-| vbat | 0,2 mm² | terminal 2 da chave → J1 | **199 mm** | passa-fio da chave → passa-fio do motor esquerdo no andar 3; **Dupont de 1 via** no meio |
-| motor_esq / _dir | cabo de 6 vias original | encoder → J12 + J10 / J13 + J11 | precisa ≥ 125 mm (assumi 150) | passa-fio atrás da Jetson (andar 2) → passa-fio do andar 3 |
+| vm_e | 0,75 mm² vermelho + preto | OUT do XL4016 #2 → J2 | rota 178 (precisa ≥ **216**) | passa-fio esquerdo do andar 2 → passa-fio esquerdo do andar 3 |
+| vm_d | 0,75 mm² vermelho + preto | OUT do XL4016 #2 → J3 | rota 124 (precisa ≥ **156**) | passa-fio direito do andar 2 → passa-fio direito do andar 3 |
+| vbat | 0,2 mm² | terminal 2 da chave → J1 | **206 mm** | passa-fio da chave → passa-fio do VM esquerdo no andar 3 (sobe antes de passar por cima da placa); **Dupont de 1 via** no meio |
+| motor_esq / _dir | cabo de 6 vias original | encoder → J12 + J10 / J13 + J11 | precisa ≥ 141 mm (assumi 150) | passa-fio atrás da Jetson (andar 2) → passa-fio do andar 3, **na frente da placa da ESP32** (junto dos conectores dos motores) |
 | usb_jetson_esp32 | USB-A ↔ USB-C | ESP32 (andar 3, trás) → Jetson (andar 2, trás) | precisa ≥ 70 mm | cabo de 15–20 cm |
-| j41_desligar | 4 Dupont fêmea 15 cm | J41 16, 17, 18, 20 → placa de desligar | precisa ≥ 90 mm | sobe pelo passa-fio da direita do andar 3 |
+| j41_desligar | 8 Dupont fêmea-fêmea 15 cm | J41 15–20, 2 e 6 → J1 da placa de interface | precisa ≥ 101 mm | sobe pelo passa-fio da direita do andar 3, na frente da placa; ver [pinos do J1](../../hardware/placa_desligar/README.md#montagem-furo-a-furo) |
 | ffc_camera | flat 15 vias | CSI → câmera | precisa de 135 mm a 65° (temos 150) | contorna a frente do andar 3; folga para girar a câmera |
 
 Regras conferidas pela verificação: nada a menos de 3 mm de roda ou redutor; nenhum cabo atravessa MDF sem
@@ -68,7 +68,7 @@ conferir o nivelamento.
 3. Encaixar o andar 2 nas abas das paredes e fechar com 4 parafusos M3 (porcas presas).
 4. P4 na Jetson; flat no CSI (Jetson desligada).
 
-**5. Andar 3:** placa da ESP32 (espaçadores de 5 mm) e placa de desligar (3 mm); cabos dos motores, VM e VBAT pelos
+**5. Andar 3:** placa da ESP32 (espaçadores de 5 mm) e placa de interface (3 mm); cabos dos motores, VM e VBAT pelos
 passa-fios; encaixar nos pilares e fechar com 4 M3; USB; Dupont do J41; câmera no mastro em 45°.
 
 **6. Conferência (T10/T18):** `make chassi-verificar` com as massas pesadas; medir com régua (≤ 250 × 150);

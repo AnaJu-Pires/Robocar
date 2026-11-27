@@ -80,6 +80,8 @@ CASOS = [
     caso('cabos: bitola de 86 mm (fios passam a menos de 3 mm da roda)', 'cabos', P=dict(BITOLA=86.0), contendo='roda'),
     caso('cabos: passa-fio do P4 apagado (fio atravessa o andar 2)', 'cabos', mutar=_tirar_passa_fio, contendo='atravessa'),
     caso('cabos: passa-fio apagado da lista de apoios', 'cabos', mutar=lambda m: m.apoios.pop('pf_p4'), contendo='nao existe'),
+    caso('cabos: passa-fio do motor de volta embaixo da placa de interface (cabo atravessa a placa)', 'cabos',
+         P=dict(PF3_MOTOR=(20.0, 45.0)), contendo='atravessa a placa'),
     caso('cabos: cabo USB de 50 mm', 'cabos', medida=('usb_cabo', 50.0), contendo='precisa'),
     caso('medidas: --para-cortar com medidas estimadas', 'medidas', contendo='conferir'),
     caso('dxf: DXF gravado com a Jetson 1 mm diferente da medida', 'dxf', contendo='Jetson'),

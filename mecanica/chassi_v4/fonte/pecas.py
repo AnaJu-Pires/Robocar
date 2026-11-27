@@ -80,7 +80,7 @@ M = {
     # Placa do fusivel (ja feita) e placa extra de desligar
     'fus_placa':        med((30.0, 30.0, 14.0), 'M', '30 x 30; altura com o fusivel estimada'),
     'fus_massa':        med(8.0, 'E'),
-    'desl_placa':       med((40.0, 18.0, 14.0), 'E', 'placa perfurada 16 x 7 furos (D-033); altura com o botao 6x6x13'),
+    'desl_placa':       med((40.0, 18.0, 14.0), 'V', 'placa de interface: medidas e posicoes em hardware/placa_desligar/layout.json'),
     # Chave, plugues, cabos
     'chave_recorte':    med((19.0, 13.0), 'E', 'KCD1-101: recorte 19 x 13; conferir a sua', afeta_corte=True),
     'chave_corpo':      med((21.0, 15.0, 18.0), 'E', 'moldura x profundidade atras do painel'),

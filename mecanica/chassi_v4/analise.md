@@ -8,9 +8,9 @@ Massas e posicoes: as do modelo (`pecas.py`); nas variantes B e C so mudam de an
 | | massa (g) | CG x / y / z (mm) | peso nas rodas | tomba a (g) | empina a (g) | curva R100 (m/s) | limite | volta 20 m (s) | comprimento (mm) |
 |---|---|---|---|---|---|---|---|---|---|
 | v3 (25/11): Jetson baixa sobre a bateria, 2 andares | 633 | 16.8 / -1.0 / 36.1 | 86 % | 1.11 | 0.47 | 0.94 | aderencia | 12.6 | 240 |
-| A - v4: XL4016 + bateria no piso, Jetson no 2o, ESP32 no 3o (escolhida) | 657 | 21.7 / -1.6 / 49.8 | 77 % | 0.77 | 0.44 | 0.80 | software | 13.6 | 162 |
-| B - Jetson no 3o, ESP32 no 2o (largada e USB da ESP32 ficam embaixo da Jetson) | 657 | 21.7 / -1.6 / 57.1 | 77 % | 0.67 | 0.38 | 0.77 | tombamento | 14.0 | 162 |
-| C - Jetson no piso, XL4016 no 2o (XL quente em cima do dissipador; +15 mm) | 657 | 21.7 / -1.6 / 47.8 | 80 % | 0.87 | 0.45 | 0.80 | software | 13.5 | 177 |
+| A - v4: XL4016 + bateria no piso, Jetson no 2o, ESP32 no 3o (escolhida) | 657 | 21.7 / -1.6 / 49.9 | 77 % | 0.77 | 0.44 | 0.80 | software | 13.6 | 162 |
+| B - Jetson no 3o, ESP32 no 2o (largada e USB da ESP32 ficam embaixo da Jetson) | 657 | 21.7 / -1.6 / 57.2 | 77 % | 0.67 | 0.38 | 0.77 | tombamento | 14.0 | 162 |
+| C - Jetson no piso, XL4016 no 2o (XL quente em cima do dissipador; +15 mm) | 657 | 21.7 / -1.6 / 47.9 | 80 % | 0.87 | 0.45 | 0.80 | software | 13.5 | 177 |
 
 Nas linhas da v4, a curva R100 ja respeita o limite por software de 0.65 g de aceleracao lateral (D-032).
 
@@ -21,10 +21,10 @@ Nas linhas da v4, a curva R100 ja respeita o limite por software de 0.65 g de ac
 
 | roda | v max em vazio (m/s) | forca de partida 2 motores (N) | z do CG (mm) | tomba a (g) | curva R100 (m/s) | limite | volta (s) | sem limite de empinar (s) | obs |
 |---|---|---|---|---|---|---|---|---|---|
-| 32 mm (mu 1.1) | 1.51 | 25.0 | 44.8 | 0.86 | 0.80 | software | 15.6 | 15.4 | StickyMAX: eixo a 16 mm; esfera de 15 mm fica 5 mm alta (precisa outra esfera) |
-| 42 mm (mu 0.9) | 1.98 | 19.1 | 49.8 | 0.77 | 0.80 | software | 13.6 | 13.3 | atual (4 compradas); esfera de 15 mm encaixa sem calco |
-| 48 mm (mu 0.9) | 2.26 | 16.7 | 52.8 | 0.73 | 0.80 | software | 13.2 | 12.8 | eixo 3 mm mais alto; nao comprada |
-| 65 mm (mu 0.9) | 3.06 | 12.3 | 61.3 | 0.63 | 0.74 | tombamento | 13.7 | 12.7 | eixo 11,5 mm mais alto; vao livre e CG sobem |
+| 32 mm (mu 1.1) | 1.51 | 25.0 | 44.9 | 0.86 | 0.80 | software | 15.6 | 15.4 | StickyMAX: eixo a 16 mm; esfera de 15 mm fica 5 mm alta (precisa outra esfera) |
+| 42 mm (mu 0.9) | 1.98 | 19.1 | 49.9 | 0.77 | 0.80 | software | 13.6 | 13.3 | atual (4 compradas); esfera de 15 mm encaixa sem calco |
+| 48 mm (mu 0.9) | 2.26 | 16.7 | 52.9 | 0.73 | 0.80 | software | 13.2 | 12.8 | eixo 3 mm mais alto; nao comprada |
+| 65 mm (mu 0.9) | 3.06 | 12.3 | 61.4 | 0.63 | 0.74 | tombamento | 13.7 | 12.7 | eixo 11,5 mm mais alto; vao livre e CG sobem |
 
 ## 3. Limite real: controle e visao
 

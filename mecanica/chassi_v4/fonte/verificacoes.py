@@ -263,12 +263,32 @@ def _cabo_ffc(m, ang):
            tuple(m.cam_ffc_pt)]
     return pts
 
+def _aparar(pts, d):
+    """Polilinha sem os primeiros e os ultimos d mm (None se o cabo for curto demais)."""
+    pts = [np.array(p, float) for p in pts]
+    L = geo.comprimento(pts)
+    if L <= 2 * d + 1.0:
+        return None
+    def ponto(s_):
+        acum = 0.0
+        for i, (a, b) in enumerate(zip(pts[:-1], pts[1:])):
+            ls = np.linalg.norm(b - a)
+            if acum + ls >= s_ and ls > 0:
+                return i, a + (b - a) * (s_ - acum) / ls
+            acum += ls
+        return len(pts) - 2, pts[-1]
+    i0, p0 = ponto(d); i1, p1 = ponto(L - d)
+    return [tuple(p0)] + [tuple(p) for p in pts[i0 + 1:i1 + 1]] + [tuple(p1)]
+
+
 def cabos(m, folga_roda=3.0):
     R = []
     mv = modelo.construir(m.P, verif=True)
     chapas = [dict(nome=n, solido=s, bb=bbox(s)) for n, s, _ in modelo.chapas_3d(mv)]
     girando = [dict(nome=p['nome'], solido=p['solido'], bb=bbox(p['solido'])) for p in mv.compradas
                if p['cat'] in ('roda', 'redutor')]
+    placas = [dict(nome=p['nome'], solido=p['solido'], bb=bbox(p['solido'])) for p in mv.compradas
+              if p['nome'].startswith('placa_')]
     lista = [dict(c) for c in mv.cabos]
     pior = max(np.arange(m.P['CAM_ANG'][0], m.P['CAM_ANG'][1] + 0.1, 5.0), key=lambda a: geo.comprimento(_cabo_ffc(mv, a)))
     lista.append(dict(nome='ffc_camera', pontos=_cabo_ffc(mv, pior), d=1.0, bitola='flat 15 vias', de='CSI da Jetson',
@@ -292,6 +312,13 @@ def cabos(m, folga_roda=3.0):
         for c in chapas:
             if bbox_toca(bb_e, c['bb']) and volume_comum(tubo_eixo, c['solido']) > 0.05:
                 prob.append(f'atravessa a chapa {c["nome"]}')
+        # nao atravessar placa de circuito (as pontas, onde o cabo se liga, ficam de fora)
+        meio = _aparar(pts, 8.0)
+        if meio:
+            tubo_m = geo.tubo(meio, max(0.6, cb['d'] * 0.4)); bb_m = bbox(tubo_m)
+            for c in placas:
+                if bbox_toca(bb_m, c['bb']) and volume_comum(tubo_m, c['solido']) > 0.05:
+                    prob.append(f'atravessa a {c["nome"]}')
         # abracadeiras: cada apoio tem de estar no caminho e o trecho solto <= 110 mm
         sup = [0.0, Lr]
         for a in cb['apoios']:

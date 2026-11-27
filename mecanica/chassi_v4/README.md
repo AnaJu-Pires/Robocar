@@ -38,7 +38,7 @@ Não são fotos: é o desenho que o chassi usa para cada peça, com as medidas e
 |---|---|
 | 1: XL4016 + bateria | são ~160 g: o mais baixo possível. Os XL4016 ficam à frente do eixo, com os bornes virados para ele e os trimpots para a frente, onde o andar 2 tem furos de 7 mm para a chave de fenda. A bateria fica atravessada atrás da roda e sai pela direita em segundos |
 | 2: Jetson | é a peça mais pesada (141 g): no meio, não em cima. Com 100 mm na largura e as portas para trás, os plugues P4 e USB ficam **dentro do comprimento** e o carro não alarga |
-| 3: ESP32 | é a mais leve (40 g) e a que se usa na corrida: largada, LED, USB de gravação e EN/BOOT ficam por cima, sem tirar nada. Os cabos para a Jetson, os motores e a placa de desligar são curtos |
+| 3: ESP32 | é a mais leve (40 g) e a que se usa na corrida: largada, LED, USB de gravação e EN/BOOT ficam por cima, sem tirar nada. Os cabos para a Jetson, os motores e a placa de interface são curtos |
 
 Comparação das ordens possíveis, com as mesmas peças ([analise.md](analise.md)):
 
@@ -64,8 +64,9 @@ Ficam as de 42 mm ([D-027](../../docs/decisoes.md)): a análise da v4 dá o mesm
 [hardware/placa_desligar/](../../hardware/placa_desligar/) ([D-028](../../docs/decisoes.md) e D-033). Na v4 a
 plaquinha (**40 × 18 mm** desde 27/11) fica no **andar 3, à direita da placa da ESP32**: botão, LED vermelho
 ("Jetson ligada / apagou = pode desligar a chave") e LED amarelo ("código rodando") ficam por cima, e o J41 da
-Jetson fica logo abaixo (7 jumpers de 15 cm). **Falta no modelo:** o suporte da luz em cima da lente, que entra
-quando a peça da luz for escolhida (fita 2835 ou LEDs de 5 mm).
+Jetson fica logo abaixo (8 jumpers de 15 cm). A posição da placa, dos 2 furos e das peças vem de
+`hardware/placa_desligar/layout.json` (D-034). **Falta no modelo:** a luz e o módulo da luz no mastro, que entram
+quando soubermos qual luz foi comprada.
 
 ## 4. Temperatura
 
@@ -98,7 +99,7 @@ quando a peça da luz for escolhida (fita 2835 ou LEDs de 5 mm).
 [MONTAGEM.md](MONTAGEM.md) traz os cabos (rota, corte, apoio) e a ordem de montagem. A tabela é gerada pelo modelo em
 [verificacao.md](verificacao.md). [INSPECAO.md](INSPECAO.md) traz o checklist do regulamento.
 
-**Atenção:** os fios do VM já soldados na placa da ESP32 precisam ter **≥ 210 mm (esquerdo) e ≥ 150 mm (direito)** na v4,
+**Atenção:** os fios do VM já soldados na placa da ESP32 precisam ter **≥ 216 mm (esquerdo) e ≥ 156 mm (direito)** na v4 (D-034),
 porque a placa está no andar 3. Se forem mais curtos, emende com 0,75 mm² e termorretrátil.
 
 ## 7. Pesos
@@ -119,7 +120,7 @@ Mesma organização do v3 (ver [o README do v3](../chassi_v3/README.md#arquivos)
 | parede_frente | 2 | laterais do andar 1; porcas presas do andar 2 |
 | andar2 | 1 | Jetson, placa do fusível, furos dos trimpots e passa-fios |
 | pilar_tras / pilar_frente | 2 + 2 | sustentam o andar 3; porcas presas |
-| andar3 | 1 | placa da ESP32, placa de desligar, mastro |
+| andar3 | 1 | placa da ESP32, placa de interface, mastro |
 | poste_mastro, travessa_mastro | 2 + 1 | mastro curto da câmera |
 | orelha_camera, placa_camera | 2 + 1 | giro da câmera |
 
