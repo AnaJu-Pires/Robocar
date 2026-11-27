@@ -8,7 +8,7 @@ VIDEO  ?=
 OPCOES ?=
 JETSON := cd jetson &&
 
-.PHONY: chassi chassi-verificar chassi-cortar chassi-negativos sim-esp32 ajuda testes benchmark calibrar visao gravar video carro bancada movimento servico diagnostico calibrar-auto config placa drc limpar
+.PHONY: metricas chassi chassi-verificar chassi-cortar chassi-negativos sim-esp32 ajuda testes benchmark calibrar visao gravar video carro bancada movimento servico diagnostico calibrar-auto config placa drc limpar
 
 ajuda:  ## lista os alvos
 	@echo "Alvos (make <alvo>):"
@@ -50,6 +50,9 @@ movimento:  ## sem camera: frente, giro 360 e re pela ESP32 (largada no botao; O
 
 servico:  ## instala o inicio automatico no boot (modo carro; pede a senha do sudo)
 	sudo bash jetson/servico/instalar.sh $(PORTA)
+
+metricas:  ## numeros da ultima corrida (ou LOG=dados/logs/x.csv; PULSOS=pulsos por volta da roda)
+	$(JETSON) $(PYTHON) metricas_log.py $(LOG) $(if $(PULSOS),--pulsos-volta $(PULSOS),)
 
 diagnostico:  ## junta logs, configuracao e fotos em ~/diagnostico_<data>.tar.gz
 	bash jetson/servico/diagnostico.sh

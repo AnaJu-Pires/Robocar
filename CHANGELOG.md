@@ -3,6 +3,9 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Adicionado (27/11/2026, rodada 1)
+- `make metricas` (`jetson/metricas_log.py`, `robocar/metricas.py`): números da corrida a partir do log CSV (tempo andando, distância e velocidade pelos encoders, vezes que perdeu a linha, % de quadros com linha, |erro| p50/p95, cruzamentos, fps real, maior travada, processamento, queda da bateria). 4 testes.
+- `docs/08_diario.md`: diário de engenharia das rodadas de otimização.
 ### Adicionado (26/11/2026, chassi v4)
 - `mecanica/chassi_v4/`: chassi de **3 andares** (D-031), 162 × 143 × 160 mm (o v3 tinha 240): XL4016 e bateria no piso (bateria atravessada, sai pela direita), Jetson de través no 2º andar com as portas para trás, placa da ESP32, placa de desligar e mastro curto da câmera no 3º. Bitola 124 mm. Andares 2 e 3 removíveis com porcas presas.
 - Curva limitada a 0,65 g (R100 a ≤ 0,80 m/s; D-032): o carro tomba com 0,77 g. A verificação de CG passa a comparar o tombamento com esse limite.
