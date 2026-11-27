@@ -1,5 +1,26 @@
 # Placa de interface: desligar a Jetson, LEDs e luz da câmera (placa perfurada, 40 × 18 mm)
 
+> **Montagem recomendada agora: sem placa (D-038).** O LED amarelo sai, porque o LED da ESP32 já mostra se o programa
+> roda. Botão e LED vermelho vão montados direto, com termorretrátil (ver "Montagem sem placa", logo abaixo). O
+> desenho em placa perfurada continua aqui como alternativa verificada.
+
+## Montagem sem placa (D-038)
+
+```
+BOTÃO (pulso, num furo do andar 3)        LED VERMELHO (num furo do andar 3, ao lado do botão)
+J41-17 (3V3) ── 10k ──┬── terminal A       J41-17 (3V3) ── 150 Ω ──► LED (+, perna longa)
+J41-18 ──────── 1k ───┘                     LED (−) ─────────────── C  BC337 (face reta para você: C B E)
+J41-20 (GND) ───────────── terminal B      J41-16 ──────── 10k ──── B
+                                           J41-6 (GND) ──────────── E
+```
+* Solde os resistores direto nos terminais (botão) e nas pernas (LED/BC337). Isole cada emenda com termorretrátil
+  e prenda tudo com cola quente embaixo do andar 3. Use **jumpers Dupont fêmea** na ponta que vai ao J41.
+* São 6 fios até o J41: 16, 17 (o 3V3 alimenta o botão e o LED: emenda em Y), 18, 20 e 6.
+* **Luz:** o módulo da luz (IRLZ44N + 1k na porta + 100k da porta ao GND) vai soldado nos fios da fita, igual; 3 fios
+  até o J41: 15 (controle), 2 (5 V) e 9 (GND).
+* Teste na bancada antes, igual ao passo 1 de "Instalar e testar" (mais abaixo).
+
+
 Uma plaquinha perfurada (**16 × 7 furos**) no **andar 3** do chassi v4, à direita da placa da ESP32, com 2 parafusos
 M3, mais um **módulo da luz** pequeno junto da luz, no mastro da câmera. Liga só na barra **J41 da Jetson** (8 jumpers:
 pinos 15–20, 2 e 6). A placa da ESP32 v0.8 **não muda**.

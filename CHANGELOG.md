@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (27/11/2026, rodada 2h)
+- **Controle: limite de curva de verdade** (D-039): `a_lat_max_g` = 0,65 estima a = v·ω pelos comandos das rodas e reduz as 2 rodas pelo mesmo fator (mesmo raio, menos velocidade). O limite da D-032 só existia no papel. 3 testes novos; simulação do firmware 26/26.
+- Placa de distribuição: esquemático do KiCad gerado e conferido pelo próprio KiCad (`kicad-cli`) contra o circuito e a placa, PDF do esquemático, STEP 3D; 8 testes negativos (novo: esquemático com o diodo invertido). Gerador de esquemático em `hardware/ferramentas/kicad_sch.py`.
+- Interface da Jetson sem placa corroída (D-038): botão e LED vermelho montados direto, com termorretrátil; LED amarelo dispensado (o LED da ESP32 já mostra se o programa roda). Teste T21 (tombamento na rampa).
 ### Alterado (27/11/2026, rodada 2f: chassi para cortar)
 - Chassi v4 é o escolhido (D-037). Furos de fixação das peças compradas viram **marcas gravadas** (círculo + cruz) para furar à mão; continuam cortados os que alinham chapas, encaixes e passa-fios. Auditoria do DXF confere e tem teste negativo novo.
 - Placa da luz acima do pivô da câmera (orelhas mais altas), com a fita COB na frente e o módulo da luz atrás; cabo `luz` preso na travessa do mastro. 176 × 143 × 181 mm (162 mm com a câmera em 45°), 667 g.

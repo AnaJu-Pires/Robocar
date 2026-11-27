@@ -379,3 +379,36 @@ para **181 mm** de altura (em 45°: 162 mm). Continua longe dos 250 × 150 mm. A
 **Pendente:** largura da fita e distância entre as marcas de corte. A placa da luz tem 28 × 18 mm, o que dá 2
 pedaços de até ~26 mm, ou 1 se a fita tiver mais de 9 mm de largura.
 
+### D-038 — Sem placa corroída para a interface da Jetson; LED amarelo sai (o LED da ESP32 já mostra)
+*27/11/2026 · aceita*
+**Contexto:** a equipe pediu a placa de interface em cobre corroído (esquemático, PCI e 3D) e depois perguntou se
+fazia sentido uma placa para isso.
+**Decisão: não faz.** Tentei: o circuito (botão, 2 LEDs com transistor, 8 a 9 resistores, conector de 8 vias) não fecha
+em face simples com as regras da v0.8 (trilha de 1 mm, folga de 0,5 mm) no espaço do andar 3 sem pontes de fio, e
+corroer mais uma placa a 3 dias do congelamento não compensa para miliampères. No lugar:
+* **LED amarelo sai.** O LED da placa da ESP32 já mostra se o programa da Jetson está rodando (apagado = sem
+  Jetson; pisca devagar = pronto; aceso = armado). O código do amarelo (gpio16) continua, sem efeito se nada estiver
+  ligado.
+* **Botão de desligar**: chave de pulso num furo do andar 3. Os 2 resistores (10k para o 3V3 e 1k em série no pino 18)
+  vão soldados nos terminais do botão, com termorretrátil.
+* **LED vermelho** ("Jetson ligada / pode desligar"): LED + BC337 + 150 Ω + 10k soldados direto nas pernas do LED,
+  com termorretrátil e cola quente.
+* **Luz**: módulo da luz (IRLZ44N + 1k + 100k) soldado nos fios da fita, igual.
+* O desenho em placa perfurada (`layout.py`) fica como alternativa já verificada, se aparecer uma placa perfurada.
+**Fica corroída:** a placa de distribuição (até 7 A). Ganhou esquemático e 3D no KiCad (D-036).
+
+### D-039 — Mantém o chassi de 3 andares (v4); o limite de curva agora está no código
+*27/11/2026 · aceita*
+**Contexto:** a equipe perguntou se o chassi de 3 andares não é arriscado (capotar) e se valia fazer os 2 e testar.
+**Números (analise.md, mesmas hipóteses):** v3: CG a 36 mm, tomba com 1,11 g (escorrega antes de tombar), 240 mm.
+v4: CG a 50 mm, tomba com 0,77 g (abaixo do atrito estimado de 0,9 g: pode tombar numa curva rápida), 176 mm.
+**Achado:** o limite de 0,65 g da D-032 **não estava no código**; o carro só estava seguro porque `v_max` = 0,35 é baixo.
+**Decisão:** manter o v4 e pôr o limite no controle (`a_lat_max_g` = 0,65). A aceleração lateral é estimada pelos
+comandos das rodas (a = v·ω); se passar do limite, as 2 rodas caem pelo mesmo fator. O raio da curva se mantém (o
+carro continua na linha) e só a velocidade cai. Com isso, tombar exige um erro de modelo de mais de 18 %, e o T21
+mede isso no carro real.
+**Por que não voltar ao v3:** 240 mm (a 10 mm do limite, e o menor ganha no desempate); não cabem a placa de
+distribuição, a luz e o painel. **Por que não fazer os 2:** dobra corte e montagem em 3 dias e a eletrônica teria de
+mudar de um para o outro. O que importa (o tombamento real) se mede no v4 em 5 min com uma rampa (T21).
+**Consequências:** R100 a no máximo ~0,80 m/s, igual à D-032, agora de verdade. 3 testes novos no controle.
+
