@@ -1,6 +1,6 @@
 # Verificacao automatica do chassi v4 (gerada por `fonte/gerar.py`)
 
-Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (58 ok, 0 falhas).
+Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (52 ok, 0 falhas).
 
 | | grupo | verificacao | detalhe |
 |---|---|---|---|
@@ -52,15 +52,9 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (58 ok, 0 falhas).
 | ok | cabos | j41_desligar | rota 91 mm, corte 100 mm (tem 150) |
 | ok | cabos | luz | rota 130 mm, corte 173 mm |
 | ok | cabos | ffc_camera | rota 123 mm, corte 135 mm (tem 150) |
-| ok | medidas | conferir antes de cortar: jet_furo_d | diametro do furo (M2.5); define centros = borda - d |
-| ok | medidas | conferir antes de cortar: jet_furo_u0 | distancia da ponta do P4 ao centro do 1o furo; None = furos centrados |
-| ok | medidas | conferir antes de cortar: jet_furo_v0 | distancia da borda das portas ao centro do furo; None = centrados |
-| ok | medidas | conferir antes de cortar: cam_furos | furos M2 21 x 12,5 mm |
 | ok | medidas | conferir antes de cortar: cam_lente | diametro e comprimento da lente a partir da face da placa |
 | ok | medidas | conferir antes de cortar: cam_suporte_lente | base quadrada do suporte da lente (passa no furo da placa da camera) |
 | ok | medidas | conferir antes de cortar: xl_altura | altura total (placa + dissipador) - loja diz 65 x 46 x 24 |
-| ok | medidas | conferir antes de cortar: xl_furos | centros dos 4 furos M3 |
-| ok | medidas | conferir antes de cortar: xl_trimpots | parafusos dos trimpots (l, w), regulagem por CIMA |
 | ok | medidas | conferir antes de cortar: chave_recorte | KCD1-101: recorte 19 x 13; conferir a sua |
 | ok | dxf | furos da Jetson no DXF | 85.30 x 57.30 mm (1 esperado) |
 | ok | dxf | furos da placa da ESP32 no DXF | 73.0 x 66.0 mm (1 esperado) |
@@ -174,7 +168,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | Parafuso M2 x 16 + porca (vem com o suporte do N20) | 4 |
 | Parafuso M2 x 8 + porca + arruela fina (camera) | 4 |
 | Parafuso M2.5 x 8 + porca (esfera) | 2 |
-| Parafuso M3 x 10 + espacador M3 x 3 mm + porca | 2 |
+| Parafuso M3 x 10 + espacador M3 x 3 mm + porca (placa/painel de interface) | 2 |
 | Parafuso M3 x 10 + espacador nylon M3 x 5 mm + porca | 4 |
 | Parafuso M3 x 10 + porca (pivo da camera, um de cada lado) | 2 |
 | Parafuso M3 x 10 + porca (une os 2 pisos) | 2 |
@@ -182,4 +176,5 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | Parafuso M3 x 12 + porca + espacador nylon M3 x 4 mm (ou 2 porcas) | 8 |
 | Parafuso M3 x 12 + porca M3 presa no bolso da parede (andar 2) | 4 |
 | Parafuso M3 x 12 + porca M3 presa no bolso do pilar (andar 3) | 4 |
+| Parafuso M3 x 16 + espacador nylon M3 x 10 mm + porca (placa de distribuicao) | 2 |
 | Pino de trava: arame/prego de 3 mm x 35 mm dobrado em L | 1 |

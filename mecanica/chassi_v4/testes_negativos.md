@@ -4,7 +4,7 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 
 | defeito plantado | verificacao | pegou? | o que ela disse |
 |---|---|---|---|
-| (nenhum: projeto como esta) | todas | passou, como deve | 58 verificacoes |
+| (nenhum: projeto como esta) | todas | passou, como deve | 52 verificacoes |
 | regulamento: comprimento > 250 mm (esfera 100 mm mais para a frente) | regulamento | sim | comprimento <= 250 mm: 261.6 mm (de x = -55.8 a 205.9, com plugues, cabos e camera em toda a faixa) |
 | regulamento: largura > 150 mm (bitola de 140 mm) | regulamento | sim | largura <= 150 mm: 159.0 mm (de y = -79.5 a 79.5) |
 | regulamento: pneu de 120 mm | regulamento | sim | diametro do pneu 20-113 mm: 120 mm |
@@ -34,7 +34,7 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 | cabos: passa-fio apagado da lista de apoios | cabos | sim | xl1_p4_jetson: apoio "pf_p4" nao existe nas chapas |
 | cabos: passa-fio do motor de volta embaixo da placa de interface (cabo atravessa a placa) | cabos | sim | motor_dir: atravessa a placa_desligar |
 | cabos: cabo USB de 50 mm | cabos | sim | usb_jetson_esp32: precisa de 70 mm e tem 50 mm |
-| medidas: --para-cortar com medidas estimadas | medidas | sim | conferir antes de cortar: jet_furo_d: diametro do furo (M2.5); define centros = borda - d |
+| medidas: --para-cortar com medidas estimadas | medidas | sim | conferir antes de cortar: cam_lente: diametro e comprimento da lente a partir da face da placa |
 | dxf: DXF gravado com a Jetson 1 mm diferente da medida | dxf | sim | furos da Jetson no DXF: 86.30 x 57.30 mm (1 esperado) |
 | dxf: furos das pecas compradas cortados em vez de gravados (equipe fura a mao) | dxf_cortados | sim | furos de fixacao das pecas compradas so gravados (furar a mao): 10 cortados (Jetson 2,9 / camera 2,2 / esfera 2,8 mm); esperado 0 |
 

@@ -124,7 +124,7 @@ def transformar(c, dx, dy, girar):
 # furos de fixacao de pecas compradas: com FURAR_A_MAO o laser so GRAVA (circulo do tamanho do furo + cruz no centro);
 # a equipe fura com a parafusadeira conferindo com a peca. Ficam cortados: encaixes, passa-fios, furos que alinham 2 chapas
 # (porca presa), pivo/arco da camera e pino da bateria.
-MARCAR = {'camera', 'desligar', 'distribuicao', 'esfera', 'esp32', 'jetson', 'suporte_motor', 'xl1', 'xl2'}
+MARCAR = {'camera', 'desligar', 'distribuicao', 'esfera', 'esp32', 'jetson', 'suporte_motor', 'xl1', 'xl2', 'trimpot'}
 FURAR_A_MAO = [True]
 
 def eh_marca(f, c=None):
@@ -309,7 +309,8 @@ FIXADORES = {
     'parafuso M2.5 do espacador da Jetson': ('Espacador M2.5 x 5 mm + parafuso M2.5 x 12 + porca (Jetson no andar 2)', 1),
     'parafuso M2.5 da esfera': ('Parafuso M2.5 x 8 + porca (esfera)', 1),
     'parafuso M3 da placa da ESP32': ('Parafuso M3 x 10 + espacador nylon M3 x 5 mm + porca', 1),
-    'parafuso M3 da placa de desligar': ('Parafuso M3 x 10 + espacador M3 x 3 mm + porca', 1),
+    'parafuso M3 da placa de desligar': ('Parafuso M3 x 10 + espacador M3 x 3 mm + porca (placa/painel de interface)', 1),
+    'parafuso M3 da placa de distribuicao (espacador de 10 mm)': ('Parafuso M3 x 16 + espacador nylon M3 x 10 mm + porca (placa de distribuicao)', 1),
     'parafuso M3 do andar 2 (porca presa na parede)': ('Parafuso M3 x 12 + porca M3 presa no bolso da parede (andar 2)', 1),
     'parafuso M3 do andar 3 (porca presa no pilar)': ('Parafuso M3 x 12 + porca M3 presa no bolso do pilar (andar 3)', 1),
     'pivo da camera (M3)': ('Parafuso M3 x 10 + porca (pivo da camera, um de cada lado)', 1),

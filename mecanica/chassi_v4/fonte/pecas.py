@@ -4,7 +4,8 @@ Fonte unica para o gerador do chassi (modelo.py), as verificacoes e a analise.
 Cada medida tem uma ORIGEM:
   'M'  medida pela equipe (paquimetro, balanca) ou informada como fato no pedido de 25/11
   'V'  de documento confiavel (datasheet, KiCad da nossa placa, pagina da loja)
-  'E'  estimada: CONFERIR antes de cortar se 'afeta_corte' for True
+  'E'  estimada: CONFERIR antes de cortar se 'afeta_corte' for True. Furos de fixacao de pecas compradas e os
+       furos dos trimpots sao so gravados e furados a mao (D-037): nao bloqueiam o corte
 Para atualizar depois de medir: troque o valor e a origem para 'M'. O gerador lista o que ainda falta.
 """
 
@@ -17,9 +18,9 @@ M = {
     # v = ao longo dos 80 mm (v = 0 na borda das portas), z = a partir da face de baixo da placa.
     'jet_placa':        med((100.0, 80.0, 1.6), 'V', 'placa P3449 100 x 80'),
     'jet_furos_borda':  med((88.0, 60.0), 'M', 'borda externa a borda externa dos furos (paquimetro)'),
-    'jet_furo_d':       med(2.7, 'E', 'diametro do furo (M2.5); define centros = borda - d', afeta_corte=True),
-    'jet_furo_u0':      med(None, 'E', 'distancia da ponta do P4 ao centro do 1o furo; None = furos centrados', afeta_corte=True),
-    'jet_furo_v0':      med(None, 'E', 'distancia da borda das portas ao centro do furo; None = centrados', afeta_corte=True),
+    'jet_furo_d':       med(2.7, 'E', 'diametro do furo (M2.5); define centros = borda - d'),
+    'jet_furo_u0':      med(None, 'E', 'distancia da ponta do P4 ao centro do 1o furo; None = furos centrados'),
+    'jet_furo_v0':      med(None, 'E', 'distancia da borda das portas ao centro do furo; None = centrados'),
     'jet_altura':       med(29.0, 'V', 'da face de baixo da placa ao topo do dissipador (Arducam: 100 x 80 x 29)'),
     'jet_dissipador':   med((22.0, 80.0, 30.0, 79.0), 'E', 'caixa do dissipador em u0, u1, v0, v1'),
     'jet_p4_u':         med(9.0, 'E', 'centro do jack J25 ao longo da borda das portas'),
@@ -32,7 +33,7 @@ M = {
     'jet_massa':        med(141.0, 'M', 'Jetson + camera = 149 g medido; camera estimada em 8 g'),
     # Camera IMX219-160
     'cam_placa':        med((25.0, 24.0, 1.0), 'E', 'placa 25 x 24 (formato da camera do RPi)'),
-    'cam_furos':        med((21.0, 12.5), 'E', 'furos M2 21 x 12,5 mm', afeta_corte=True),
+    'cam_furos':        med((21.0, 12.5), 'E', 'furos M2 21 x 12,5 mm'),
     'cam_lente':        med((12.0, 19.0), 'E', 'diametro e comprimento da lente a partir da face da placa', afeta_corte=True),
     'cam_suporte_lente': med(14.0, 'E', 'base quadrada do suporte da lente (passa no furo da placa da camera)', afeta_corte=True),
     'cam_massa':        med(8.0, 'E'),
@@ -66,8 +67,8 @@ M = {
     # XL4016 (2 unidades). l = ao longo dos 65 mm (l = 0 na ponta dos bornes), w = ao longo dos 48 mm
     'xl':               med((65.0, 48.0), 'M', 'com os dissipadores; bornes numa ponta, trimpots na outra'),
     'xl_altura':        med(24.0, 'E', 'altura total (placa + dissipador) - loja diz 65 x 46 x 24', afeta_corte=True),
-    'xl_furos':         med(((4.0, 4.0), (61.0, 4.0), (61.0, 44.0), (4.0, 44.0)), 'E', 'centros dos 4 furos M3', afeta_corte=True),
-    'xl_trimpots':      med(((60.0, 14.0), (60.0, 26.0)), 'E', 'parafusos dos trimpots (l, w), regulagem por CIMA', afeta_corte=True),
+    'xl_furos':         med(((4.0, 4.0), (61.0, 4.0), (61.0, 44.0), (4.0, 44.0)), 'E', 'centros dos 4 furos M3'),
+    'xl_trimpots':      med(((60.0, 14.0), (60.0, 26.0)), 'E', 'parafusos dos trimpots (l, w), regulagem por CIMA'),
     'xl_bornes':        med((0.0, 9.0, 11.0), 'E', 'bloco de bornes: l0, l1, altura'),
     'xl_massa':         med(45.0, 'E', 'PESAR: planilha da equipe 35-70 g'),
     # Placa da ESP32 v0.8 (hardware/placa_esp32, KiCad): verificada
