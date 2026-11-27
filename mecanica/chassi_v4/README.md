@@ -4,11 +4,11 @@
 |---|---|---|
 | v1 (`mecanica/chassi/`) | — | placa da ESP32 antiga (v0.7); não serve mais |
 | v3 (`mecanica/chassi_v3/`) | 240 mm | a 10 mm do limite de 250; só referência |
-| **v4 (este)** | **176 mm** (162 com a câmera em 45°) | 3 andares, todas as placas novas, luz da câmera, 51 verificações |
+| **v4 (este)** | **176 mm** (162 com a câmera em 45°) | 3 andares, todas as placas novas, luz da câmera, 70 verificações (21 de folga) |
 
 **Por que o v4:** é o único que tem lugar para tudo o que existe hoje (placa de distribuição, botão de desligar,
 luz da câmera) e passa em todas as verificações. É 64 mm mais curto que o v3 e, no desempate (§4.8), robô menor
-ganha. O preço é o centro de massa mais alto: tomba com 0,77 g, por isso a curva é limitada no software a 0,65 g
+ganha. O preço é o centro de massa mais alto: tomba com 0,76 g, por isso a curva é limitada no software a 0,65 g
 (D-032).
 
 **Furos:** os furos de fixação das peças compradas (Jetson, ESP32, XL4016, placa de distribuição, botão de desligar,
@@ -27,13 +27,21 @@ perto do limite de 250). Tudo sai de `fonte/` (Python + CadQuery + ezdxf): o `ma
 |---|---|---|
 | Tamanho total (com plugues, cabos e câmera em toda a faixa) | **162 × 143 × 160 mm** | 240 × 140 × 154 mm |
 | Folga até o limite de 250 × 150 | **88 mm** no comprimento, 7 mm na largura | 10 mm / 10 mm |
-| Massa estimada | 657 g | 633 g |
-| Centro de massa (x à frente do eixo / y / altura) | 21,7 / −1,6 / **49,8 mm** | 16,8 / −1,0 / 36,1 mm |
+| Massa estimada | 670 g | 633 g |
+| Centro de massa (x à frente do eixo / y / altura) | 21,6 / −1,6 / **50,5 mm** | 16,8 / −1,0 / 36,1 mm |
 | Peso nas rodas de tração | 77 % | 86 % |
-| Tomba com | **0,77 g** → curva R100 a no máximo **0,80 m/s** ([D-032](../../docs/decisoes.md)) | 1,11 g |
-| Levanta a esfera com | 0,44 g (`controle.acel_max` = 2,0/s ≈ 0,4 g) | 0,47 g |
+| Tomba com | **0,76 g** → curva R100 a no máximo **0,80 m/s** ([D-032](../../docs/decisoes.md)) | 1,11 g |
+| Levanta a esfera com | 0,43 g (`controle.acel_max` = 2,0/s ≈ 0,4 g) | 0,47 g |
 | Peças de MDF | 19 (14 desenhos) | 18 |
-| Verificações | 51 ok (interferência com 14 volumes de acesso; câmera em 9 ângulos; 6 releem o DXF) · **30 testes negativos, todos pegos** · 10 medidas a conferir | 52 · 28 |
+| Verificações | 70 ok (interferência com 13 volumes de acesso; **folga: 21 peças aumentadas além da medida ainda cabem**; câmera em 9 ângulos; 7 releem o DXF) · **34 testes negativos, todos pegos** · 1 medida a conferir no pente de teste (recorte da chave) | 52 · 28 |
+
+## Folga: cabe com sobra, não só "sem encostar" (D-041)
+
+A verificação de interferência só garante que nada se sobrepõe. A de **folga** pega 21 peças compradas, **aumenta
+cada uma além da medida** nos lados livres (≈ 1 mm nas medidas da equipe; a faixa das lojas nas estimadas: XL4016 até
+26 mm de altura, chave 2 mm mais funda, plugues 3 mm mais longos, botão 3 mm mais comprido…) e confere que ainda cabe
+no corte **nominal**. Resultado: todas cabem. Folgas que sobram, por exemplo: XL4016 ↔ parede 5,3 mm; bateria no berço
+0,5 mm de cada lado (proposital: ela não pode chacoalhar); trilho do pino de trava, conectores dos motores e encoders ≥ 1 mm.
 
 ## Peças compradas como estão no modelo
 
@@ -61,11 +69,11 @@ Comparação das ordens possíveis, com as mesmas peças ([analise.md](analise.m
 
 | Ordem | CG | Tomba com | Comprimento | Problema |
 |---|---|---|---|---|
-| **XL4016 + bateria / Jetson / ESP32 (escolhida)** | 49,8 mm | 0,77 g | 162 mm | precisa de limite de curva por software |
+| **XL4016 + bateria / Jetson / ESP32 (escolhida)** | 50,5 mm | 0,76 g | 162 mm | precisa de limite de curva por software |
 | XL4016 + bateria / ESP32 / Jetson | 57,1 mm | 0,67 g | 162 mm | tomba ainda antes; largada e USB da ESP32 embaixo da Jetson |
 | Jetson / XL4016 / ESP32 | 47,8 mm | 0,87 g | 177 mm | XL4016 aquecendo em cima do dissipador da Jetson; mais longo |
 
-**O custo dos 3 andares é o CG mais alto.** O carro tomba (levanta uma roda) com 0,77 g de aceleração lateral, antes
+**O custo dos 3 andares é o CG mais alto.** O carro tomba (levanta uma roda) com 0,76 g de aceleração lateral, antes
 dos 0,9 g em que o pneu escorrega. Por isso a curva de R100 tem de ser feita a **no máximo 0,80 m/s** (0,65 g), o que
 dá ~0,40 de `v` na escala do controle. Hoje o controle anda a `v_max` = 0,35 (≈ 0,7 m/s): está dentro. Ao subir a
 velocidade, a regra é a da [D-032](../../docs/decisoes.md). Bitola de 124 mm (era 104): a base mais larga compensa
@@ -139,7 +147,7 @@ Mesma organização do v3 (ver [o README do v3](../chassi_v3/README.md#arquivos)
 | pilar_tras / pilar_frente | 2 + 2 | sustentam o andar 3; porcas presas |
 | andar3 | 1 | placa da ESP32, botão de desligar, mastro |
 | poste_mastro, travessa_mastro | 2 + 1 | mastro curto da câmera |
-| orelha_camera, placa_camera | 2 + 1 | giro da câmera |
+| orelha_camera, placa_camera | 2 + 1 | giro da câmera; a câmera vai **na frente** da placa, em 4 espaçadores de 5 mm (D-041) |
 
 Fixadores contados pelos furos: [verificacao.md](verificacao.md#fixadores-contados-pelos-furos). Em relação ao v3, a v4
 **não precisa** de espaçadores M2.5 de 20 mm nem de parafusos de cabeça chata: são 4 espaçadores M2.5 de 5 mm, 8 porcas

@@ -4,7 +4,7 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 
 | defeito plantado | verificacao | pegou? | o que ela disse |
 |---|---|---|---|
-| (nenhum: projeto como esta) | todas | passou, como deve | 52 verificacoes |
+| (nenhum: projeto como esta) | todas | passou, como deve | 70 verificacoes |
 | regulamento: comprimento > 250 mm (esfera 100 mm mais para a frente) | regulamento | sim | comprimento <= 250 mm: 261.6 mm (de x = -55.8 a 205.9, com plugues, cabos e camera em toda a faixa) |
 | regulamento: largura > 150 mm (bitola de 140 mm) | regulamento | sim | largura <= 150 mm: 159.0 mm (de y = -79.5 a 79.5) |
 | regulamento: pneu de 120 mm | regulamento | sim | diametro do pneu 20-113 mm: 120 mm |
@@ -16,7 +16,7 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 | acesso: Jetson 20 mm para tras (em cima do fusivel) | interferencia | sim | jetson_hdmi_dp x placa_fusivel: 81.6 mm3 |
 | acesso: vao de 3 mm em cima do dissipador (sem ar) | interferencia | sim | andar3 x ar_dissipador: 7197.1 mm3 |
 | camera: pivo 30 mm mais baixo (camera bate no andar 3 em algum angulo) | camera | sim | 25 graus: orelha_camera_esq x jetson_dissipador: 55.2 mm3 |
-| camera: angulo nominal de 65 graus (a imagem pega o carro) | camera | sim | a camera nao ve o proprio carro no angulo nominal: 65 graus; livre ate 45 graus (campo vertical estimado 56 graus) |
+| camera: angulo nominal de 65 graus (a imagem pega o carro) | camera | sim | a camera nao ve o proprio carro no angulo nominal: 65 graus; livre ate 50 graus (campo vertical estimado 56 graus) |
 | material: furo da esfera a 0,5 mm da borda | material | sim | piso_dianteiro: furo "esfera" a 0.50 mm da borda (min 2.0) |
 | material: furo da esfera passa da borda (vira entalhe) | material | sim | piso_dianteiro: ENTALHE: furo "esfera" encosta ou passa da borda (vira entalhe sem querer); 18 furos viraram 17 buracos (furos sobrepostos ou na borda |
 | material: pilar em cima da porca do andar 2 (furos se juntam) | material | sim | andar2: pouco material entre furos: "parede_frente" x "pilar" (1.40 mm, min 2.0); FUROS SE JUNTAM: "andar2" x "pilar" (0.00 mm, min 2.0); pouco materi |
@@ -33,9 +33,11 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 | cabos: passa-fio do P4 apagado (fio atravessa o andar 2) | cabos | sim | xl1_p4_jetson: atravessa a chapa andar2 |
 | cabos: passa-fio apagado da lista de apoios | cabos | sim | xl1_p4_jetson: apoio "pf_p4" nao existe nas chapas |
 | cabos: passa-fio do motor embaixo da placa da ESP32 (cabo atravessa a placa) | cabos | sim | luz: atravessa a placa_esp32 |
+| folga: andar 2 com 1 mm de vao em cima dos XL4016 (um XL4016 2 mm mais alto nao cabe) | folga | sim | xl4016_1_jetson: cresce 0/1/0/1/0/2 mm (x-/x+/y-/y+/z-/z+): encosta em andar2 (3150 mm3) |
+| folga: XL4016 a 0,3 mm da parede (cabe, mas sem folga nenhuma) | folga | sim | xl4016_1_jetson: cresce 0/1/0/1/0/2 mm (x-/x+/y-/y+/z-/z+): encosta em parede_frente_1 (1538 mm3) |
 | cabos: cabo USB de 50 mm | cabos | sim | usb_jetson_esp32: precisa de 70 mm e tem 50 mm |
-| medidas: --para-cortar com medidas estimadas | medidas | sim | conferir antes de cortar: cam_lente: diametro e comprimento da lente a partir da face da placa |
+| medidas: --para-cortar com medidas estimadas | medidas | sim | conferir antes de cortar: chave_recorte: KCD1-101: lojas pedem 19,2 x 13,2 (faixa 18-19,2 x 12-13,2). Cortamos 19 x 13: se apertar, lixar 0,2 mm; se c |
 | dxf: DXF gravado com a Jetson 1 mm diferente da medida | dxf | sim | furos da Jetson no DXF: 86.30 x 57.30 mm (1 esperado) |
 | dxf: furos das pecas compradas cortados em vez de gravados (equipe fura a mao) | dxf_cortados | sim | furos de fixacao das pecas compradas so gravados (furar a mao): 10 cortados (Jetson 2,9 / camera 2,2 / esfera 2,8 mm); esperado 0 |
 
-Tempo: 157 s.
+Tempo: 147 s.

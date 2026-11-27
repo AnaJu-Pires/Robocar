@@ -430,3 +430,49 @@ propôs ligar a luz pelo USB.
 **Consequências:** chassi 669 g, tomba com 0,76 g (limite de software 0,65 g). Cabo USB da luz: ~40 cm, preso no
 passa-fio do VM esquerdo, no do motor esquerdo e na travessa do mastro.
 
+### D-041 — Revisão da arquitetura antes do corte: folga em todas as peças e câmera na frente da placa
+*27/11/2026 · aceita*
+**Contexto:** a equipe pediu uma revisão completa (chassi, placas, regras, peso, cabos) antes de congelar o hardware
+(30/11), com "uma leve segurança" para as peças caberem. Os sites das lojas e dos fabricantes não abrem daqui; as
+medidas vieram dos trechos de busca e de várias lojas (faixas, não um número só).
+**Decisão:**
+* **Nova verificação de folga:** 21 peças compradas são aumentadas além da medida (≈ 1 mm nas medidas da equipe; a
+  faixa das lojas nas estimadas) e têm de caber no corte nominal. Todas cabem. Dois testes negativos provam que ela pega
+  falta de folga.
+* **Câmera na frente da placa, em 4 espaçadores de 5 mm** (antes: atrás, com a lente passando por um furo quadrado de
+  14,6 mm). Nenhuma fonte informa o tamanho do suporte da lente da IMX219-160 (só "módulo 25 × 24 × 17,7 mm"), e os
+  furos M2 a 21 × 12,5 mm não deixam o furo passar de 14,8 mm. Na frente, o corte não depende disso; o flat sai por
+  baixo. Efeito: a câmera fica 9 mm mais à frente, o carro continua com 176 mm, e ela passa a ver sem o próprio carro
+  até 50° (era 45°).
+* **XL4016:** lojas dão 65–66 × 46–48 × 22–25 mm e 43–66 g. A folga aceita até 26 mm de altura; deixa de bloquear o
+  corte. Massa de 45 g mantida (é o caso pior para tombar).
+* **Chave KCD1-101:** recorte das lojas 19,2 × 13,2 (faixa 18–19,2 × 12–13,2). Fica 19 × 13 (lixar se apertar; maior
+  ficaria solta); conferir no pente de teste. A profundidade do corpo passou a ser medida da face de fora do painel
+  (como no desenho da chave): sobram 4 mm até a parede da frente do berço.
+* **Botão de desligar:** tipo PBS-33B (12 mm, NA, rosca M12 com porca; lojas: ~18 × 17,5 mm). No modelo: cabeça de
+  18 mm por cima, porca por baixo do andar 3.
+* **Placa da ESP32 v0.8 (pronta, não muda):** conferida no KiCad contra o chassi: 80 × 73 mm, furos a 73 × 66 mm,
+  J2/J3 (VM), J10/J11 (motores), J14 (largada), J1 (VBAT) e USB nos pontos que o modelo usa.
+* **Chassi mantido (v4):** 176 × 143 mm (74 mm e 7 mm abaixo do limite de 250 × 150), 670 g, 77 % do peso nas rodas,
+  tomba com 0,76 g (limite de software 0,65 g, D-039), levanta a esfera com 0,43 g. Alargar a bitola até o limite
+  (131 mm) daria só 0,80 g e zeraria a folga na largura: não compensa.
+**Consequências:** 70 verificações, 34 testes negativos. Fixadores da câmera: 4 parafusos M2 × 12 + porcas; os 4
+espaçadores são a sobra do pacote de 10 da Jetson.
+
+### D-042 — Zener de 9,1 V 5 W no VM (7,2 V): a frenagem não pode queimar os DRV8833
+*27/11/2026 · aceita*
+**Contexto:** o firmware usa *slow decay* (D-013). Quando o comando cai abaixo da velocidade da roda (frear antes da
+curva), a ponte vira um conversor elevador e **devolve energia para o VM**. O VM vem do XL4016 #2, que só fornece
+corrente, não absorve. Só os capacitores (470 µF × 2 na placa + os da saída do XL4016) seguram essa energia. Simulação
+([hardware/ferramentas/frenagem_vm.py](../hardware/ferramentas/frenagem_vm.py): 7,2 V, 900 rpm em vazio, 1,9 A travado,
+rendimento reverso da caixa de 0,3 a 0,7): baixar o comando de 0,7 para 0,4 leva o VM a **10,5–11,9 V**; frear de 0,7 a 0 em 100 ms (a
+rampa da ESP32), a **12,9 V**. O DRV8833 aceita 10,8 V de trabalho e **11,8 V absolutos**. Com *fast decay* não
+haveria volta de energia (7,2 V), mas o carro freia pior.
+**Decisão:** **zener de potência 1N5346B (9,1 V, 5 W)** no borne OUT do XL4016 #2, faixa no OUT+. Em 7,2 V não
+conduz (Vz mínimo 8,6 V); na frenagem segura o VM em ~10 V (0,4 A × 2 Ω). P6KE10A (TVS 10 V) serve também. Fica no
+XL4016 #2 porque a placa da ESP32 não muda e é o ponto comum dos dois VM. **Firmware (depois do congelamento,
+prioridade 1):** na desaceleração, alternar freio/roda livre (IN1 = IN2 = 1 / 0) em vez de baixar o PWM do
+acionamento; assim nem chega energia ao VM. O zener continua como proteção.
+**Consequências:** compra de 2 zeners (1 reserva), ~R$ 2 cada, na Santa Ifigênia. Teste T22 (VM máximo na frenagem).
+Sem o zener, **não** andar acima de 0,4 de comando.
+

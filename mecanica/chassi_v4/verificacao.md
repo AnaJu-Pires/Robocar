@@ -1,6 +1,6 @@
 # Verificacao automatica do chassi v4 (gerada por `fonte/gerar.py`)
 
-Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (52 ok, 0 falhas).
+Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (70 ok, 0 falhas).
 
 | | grupo | verificacao | detalhe |
 |---|---|---|---|
@@ -14,9 +14,30 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (52 ok, 0 falhas).
 | ok | regulamento | 2 rodas tracionadas tocam o chao | z minimo das rodas: 0.00, 0.00 mm |
 | ok | regulamento | esfera no chao (carro nivelado) | fundo da esfera a +0.00 mm do chao (piso dianteiro a 15.0 mm, esfera de 15 mm) |
 | ok | regulamento | vao livre >= 8 mm (emendas do tapete) | 12.0 mm |
-| ok | interferencia | nenhuma sobreposicao | 101 solidos (13 volumes de acesso) |
+| ok | interferencia | nenhuma sobreposicao | 105 solidos (13 volumes de acesso) |
+| ok | folga | encoder_esq | cresce 0.5/0.5/1/0/0/0.5 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | conector_motor_esq | cresce 0.5/0.5/1/0/0/1 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | encoder_dir | cresce 0.5/0.5/0/1/0/0.5 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | conector_motor_dir | cresce 0.5/0.5/0/1/0/1 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | xl4016_1_jetson | cresce 0/1/0/1/0/2 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | xl4016_2_motores | cresce 0/1/1/0/0/2 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | bateria | cresce 0.5/0.5/1/1/0/1 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | par_xt60 | cresce 1/1/1/1/1/1 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | jetson_dissipador | cresce 1/1/1/1/0/0 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | plugue_p4 | cresce 3/0/0.5/0.5/0.5/0.5 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | plugue_usb_a | cresce 3/0/1/1/1/1 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | chave_geral | cresce 0/2/0/0/0/0 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | fusivel_5x20 | cresce 0.5/0.5/0.5/0.5/0/1 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | esp32_devkit | cresce 0.5/0.5/0.5/0.5/0/1.5 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | drv8833_esq | cresce 0.5/0.5/0.5/0.5/0/1 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | drv8833_dir | cresce 0.5/0.5/0.5/0.5/0/1 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | c470_esq | cresce 0.5/0.5/0.5/0.5/0/1 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | c470_dir | cresce 0.5/0.5/0.5/0.5/0/1 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | plugue_usb_esp32 | cresce 3/0/1/1/1/1 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | botao_desligar | cresce 1/1/1/1/3/0 mm (x-/x+/y-/y+/z-/z+): cabe |
+| ok | folga | botao_capa | cresce 1/1/1/1/0/1 mm (x-/x+/y-/y+/z-/z+): cabe |
 | ok | camera | camera livre em toda a faixa | 25 a 65 graus, de 5 em 5 |
-| ok | camera | a camera nao ve o proprio carro no angulo nominal | 45 graus; livre ate 45 graus (campo vertical estimado 56 graus) |
+| ok | camera | a camera nao ve o proprio carro no angulo nominal | 45 graus; livre ate 50 graus (campo vertical estimado 56 graus) |
 | ok | material | piso_traseiro | 13 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | piso_dianteiro | 18 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | parede_berco_tras | 3 furos, teia >= 2.0 mm, 1 peca |
@@ -30,16 +51,16 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (52 ok, 0 falhas).
 | ok | material | poste_mastro | 3 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | travessa_mastro | 0 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | orelha_camera | 4 furos, teia >= 2.0 mm, 1 peca |
-| ok | material | placa_camera | 5 furos, teia >= 2.0 mm, 1 peca |
+| ok | material | placa_camera | 4 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | placa_luz | 1 furos, teia >= 2.0 mm, 1 peca |
-| ok | cg | massa total estimada | 669 g; CG x 21.5 / y -1.6 / z 50.6 mm |
+| ok | cg | massa total estimada | 670 g; CG x 21.6 / y -1.6 / z 50.5 mm |
 | ok | cg | CG centrado (|y| <= 3 mm) | -1.6 mm |
 | ok | cg | peso nas rodas entre 70 e 92 % | 77 % |
 | ok | cg | tomba so acima de 1.15 x a aceleracao lateral permitida | tomba com 0.76 g; permitido 0.65 g (curva R100 a ate 0.80 m/s; atrito 0.90) |
-| ok | cg | empina so acima de 0.40 g | 0.42 g -> rampa do firmware deve limitar a aceleracao abaixo disso |
+| ok | cg | empina so acima de 0.40 g | 0.43 g -> rampa do firmware deve limitar a aceleracao abaixo disso |
 | ok | cabos | pigtail_xt60_fusivel | rota 102 mm, corte 132 mm |
-| ok | cabos | fusivel_chave | rota 66 mm, corte 92 mm |
-| ok | cabos | chave_placa | rota 66 mm, corte 93 mm |
+| ok | cabos | fusivel_chave | rota 64 mm, corte 91 mm |
+| ok | cabos | chave_placa | rota 65 mm, corte 91 mm |
 | ok | cabos | alim_xl1 | rota 119 mm, corte 151 mm |
 | ok | cabos | alim_xl2 | rota 114 mm, corte 145 mm |
 | ok | cabos | xl1_p4_jetson | rota 89 mm, corte 118 mm |
@@ -51,11 +72,8 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (52 ok, 0 falhas).
 | ok | cabos | usb_jetson_esp32 | rota 64 mm, corte 70 mm (tem 300) |
 | ok | cabos | j41_desligar | rota 62 mm, corte 68 mm (tem 150) |
 | ok | cabos | luz | rota 311 mm, corte 402 mm |
-| ok | cabos | ffc_camera | rota 123 mm, corte 135 mm (tem 150) |
-| ok | medidas | conferir antes de cortar: cam_lente | diametro e comprimento da lente a partir da face da placa |
-| ok | medidas | conferir antes de cortar: cam_suporte_lente | base quadrada do suporte da lente (passa no furo da placa da camera) |
-| ok | medidas | conferir antes de cortar: xl_altura | altura total (placa + dissipador) - loja diz 65 x 46 x 24 |
-| ok | medidas | conferir antes de cortar: chave_recorte | KCD1-101: recorte 19 x 13; conferir a sua |
+| ok | cabos | ffc_camera | rota 115 mm, corte 127 mm (tem 150) |
+| ok | medidas | conferir antes de cortar: chave_recorte | KCD1-101: lojas pedem 19,2 x 13,2 (faixa 18-19,2 x 12-13,2). Cortamos 19 x 13: se apertar, lixar 0,2 mm; se cortasse maior, a chave ficaria solta. CONFERIR NO PENTE DE TESTE (teste_chave) |
 | ok | dxf | furos da Jetson no DXF | 85.30 x 57.30 mm (1 esperado) |
 | ok | dxf | furos da placa da ESP32 no DXF | 73.0 x 66.0 mm (1 esperado) |
 | ok | dxf | furos dos 2 XL4016 no DXF | 57.0 x 40.0 mm (2 esperados) |
@@ -71,8 +89,8 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | cabo | bitola | de | para | rota (mm) | corte (mm) | disponivel (mm) | maior trecho solto (mm) | obs |
 |---|---|---|---|---|---|---|---|---|
 | pigtail_xt60_fusivel | 0,75 mm2 vermelho + preto | XT60 do chassi (par solto, a direita da bateria) | BAT+ / BAT- da placa de distribuicao | 102 | 132 | do rolo | 70 | XT60 soldado nesta ponta; termorretratil |
-| fusivel_chave | 0,75 mm2 vermelho | CHAVE 1 (FUS+) da placa de distribuicao | chave geral (terminal 1) | 66 | 92 | do rolo | 42 | soldar ou apertar nas duas pontas; termorretratil |
-| chave_placa | 0,75 mm2 vermelho | chave geral (terminal 2) | CHAVE 2 (SW+) da placa de distribuicao | 66 | 93 | do rolo | 42 | soldar ou apertar nas duas pontas; termorretratil |
+| fusivel_chave | 0,75 mm2 vermelho | CHAVE 1 (FUS+) da placa de distribuicao | chave geral (terminal 1) | 64 | 91 | do rolo | 42 | soldar ou apertar nas duas pontas; termorretratil |
+| chave_placa | 0,75 mm2 vermelho | chave geral (terminal 2) | CHAVE 2 (SW+) da placa de distribuicao | 65 | 91 | do rolo | 42 | soldar ou apertar nas duas pontas; termorretratil |
 | alim_xl1 | 0,75 mm2 vermelho + preto | XL1 + / XL1 - da placa de distribuicao | IN+ / IN- do XL4016 #1 (Jetson) | 119 | 151 | do rolo | 69 | um par por conversor (sem jumper de um borne para o outro) |
 | alim_xl2 | 0,75 mm2 vermelho + preto | XL2 + / XL2 - da placa de distribuicao | IN+ / IN- do XL4016 #2 (motores) | 114 | 145 | do rolo | 72 | um par por conversor (sem jumper de um borne para o outro) |
 | xl1_p4_jetson | 0,75 mm2 vermelho + preto | OUT+ / OUT- do XL4016 #1 (5,2 V) | plugue P4 da Jetson (J25) | 89 | 118 | do rolo | 45 | P4 reto soldado; testar 5,2 V e polaridade antes de ligar |
@@ -84,7 +102,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | usb_jetson_esp32 | cabo USB-A / USB-C de dados | USB-C da ESP32 (andar 3, tras) | USB-A da Jetson (andar 2, tras) | 64 | cabo pronto | 300 | 64 | cabo curto: 15-20 cm bastam |
 | j41_desligar | 3 fios Dupont femea | J41 pinos 17 (3V3), 18 (botao) e 20 (GND) | botao de desligar (embaixo do andar 3) | 62 | cabo pronto | 150 | 62 | resistor de 10k soldado no botao, entre o 3V3 e o pino 18 (D-040) |
 | luz | cabo USB da propria fita (sem o controle de toque) | porta USB da Jetson (tras) | fita COB (atras da placa da luz) | 311 | 402 | do rolo | 101 | tirar o controle de toque (PWM faz faixas na imagem) e emendar a fita direto no cabo USB (D-040) |
-| ffc_camera | flat 15 vias | CSI da Jetson | camera | 123 | cabo pronto | 150 | 123 | pior angulo: 65 graus |
+| ffc_camera | flat 15 vias | CSI da Jetson | camera | 115 | cabo pronto | 150 | 115 | pior angulo: 65 graus |
 
 ## Massas (para refazer o CG depois de pesar)
 
@@ -109,21 +127,22 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | parede_berco_tras | 9.3 | -48 | -2 | 32 | calculada |
 | parede_berco_frente | 8.4 | -26 | -0 | 31 | calculada |
 | par_xt60 | 8.0 | -36 | -61 | 29 | calculada |
-| camera | 8.0 | 88 | 0 | 120 | E |
+| camera | 8.0 | 94 | 0 | 114 | E |
 | jetson_usb | 7.1 | 7 | -22 | 68 | M |
 | jetson_rj45 | 7.1 | 7 | -41 | 67 | M |
 | jetson_hdmi_dp | 7.1 | 7 | 7 | 64 | M |
-| botao_desligar | 6.0 | 40 | -50 | 89 | E |
+| botao_desligar | 6.0 | 40 | -50 | 88 | E |
 | esfera_base | 6.0 | 94 | -0 | 12 | E |
 | parede_frente_1 | 4.9 | 59 | 56 | 33 | calculada |
 | parede_frente_2 | 4.9 | 59 | -56 | 33 | calculada |
-| chave_geral | 4.0 | -39 | 28 | 41 | E |
+| chave_geral | 4.0 | -41 | 28 | 41 | E |
 | cola_e_abracadeiras | 4.0 | 20 | 0 | 50 | calculada |
 | fio_vm_e | 3.2 | -2 | 29 | 72 | calculada |
 | poste_mastro_1 | 3.0 | 76 | 18 | 128 | calculada |
 | poste_mastro_2 | 3.0 | 76 | -18 | 128 | calculada |
 | fio_vm_d | 2.2 | -2 | -36 | 72 | calculada |
 | fio_alim_xl1 | 2.1 | -3 | 20 | 52 | calculada |
+| placa_camera | 2.1 | 76 | -0 | 132 | calculada |
 | pilar_tras_1 | 2.1 | -4 | 56 | 75 | calculada |
 | pilar_tras_2 | 2.1 | -4 | -56 | 75 | calculada |
 | pilar_frente_1 | 2.1 | 60 | 56 | 75 | calculada |
@@ -136,7 +155,6 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | fio_pigtail_xt60_fusivel | 1.8 | -39 | -40 | 56 | calculada |
 | parede_berco_esq | 1.8 | -37 | 56 | 32 | calculada |
 | fio_xl1_p4_jetson | 1.6 | -5 | 35 | 49 | calculada |
-| placa_camera | 1.6 | 76 | -0 | 132 | calculada |
 | placa_luz | 1.3 | 105 | 0 | 161 | calculada |
 | fio_luz | 1.2 | 27 | 13 | 114 | calculada |
 | pino_trava | 1.0 | -40 | -55 | 19 | calculada |
@@ -147,7 +165,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | travessa_mastro | 0.7 | 64 | -0 | 109 | calculada |
 | fio_motor_dir | 0.6 | 27 | -23 | 80 | calculada |
 | fio_motor_esq | 0.6 | 27 | 24 | 80 | calculada |
-| fio_chave_placa | 0.6 | -34 | 34 | 60 | calculada |
+| fio_chave_placa | 0.6 | -35 | 34 | 60 | calculada |
 | fio_fusivel_chave | 0.6 | -40 | 34 | 60 | calculada |
 | espacador_xl1_4_4 | 0.5 | 34 | 6 | 20 | calculada |
 | espacador_xl1_61_4 | 0.5 | 91 | 6 | 20 | calculada |
@@ -159,15 +177,15 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | espacador_xl2_4_44 | 0.5 | 34 | -6 | 20 | calculada |
 | espacador_dist_14_4 | 0.5 | -37 | 27 | 58 | calculada |
 | espacador_dist_15_39 | 0.5 | -37 | -8 | 58 | calculada |
-| **total** | **669** | **21.5** | **-1.6** | **50.6** | |
+| **total** | **670** | **21.6** | **-1.6** | **50.5** | |
 
 ## Fixadores (contados pelos furos)
 
 | item | qtd |
 |---|---|
 | Espacador M2.5 x 5 mm + parafuso M2.5 x 12 + porca (Jetson no andar 2) | 4 |
+| Parafuso M2 x 12 + espacador nylon M2.5 x 5 mm (sobra do pacote da Jetson) + porca (camera na frente da placa) | 4 |
 | Parafuso M2 x 16 + porca (vem com o suporte do N20) | 4 |
-| Parafuso M2 x 8 + porca + arruela fina (camera) | 4 |
 | Parafuso M2.5 x 8 + porca (esfera) | 2 |
 | Parafuso M3 x 10 + espacador nylon M3 x 5 mm + porca | 4 |
 | Parafuso M3 x 10 + porca (pivo da camera, um de cada lado) | 2 |

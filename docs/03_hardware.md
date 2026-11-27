@@ -22,13 +22,16 @@ Também usamos dados da planilha de especificações da equipe (abas LIGACOES EL
 ## 2. Alimentação
 
 ```
-               ┌──────────── chicote de energia (plaquinha perfurada perto da bateria) ────────────┐
+              ┌──────── placa de distribuição (hardware/placa_distribuicao, andar 2) ────────┐
 LiPo 3S 11,1 V ─XT60─► fusível 7 A ─► chave ─┬─► XL4016 #1 → 5,2 V (limite ~5 A) ─► plug P4 ─► Jetson J25 (J48 fechado)
   (9,9–12,6 V)                               ├─► XL4016 #2 → 7,2 V (limite ~4 A) ─┬─► J2 da placa (DRV8833 esquerdo, 470 µF)
-                                             │                                     └─► J3 da placa (DRV8833 direito, 470 µF)
-                                             └─► fio fino ─► J1 da placa ─► divisor 220 k / 47 k ─► GPIO36 (ADC)
+                                             │   zener 9,1 V 5 W no OUT (D-042)   └─► J3 da placa (DRV8833 direito, 470 µF)
+                                             ├─► fio fino ─► J1 da placa ─► divisor 220 k / 47 k ─► GPIO36 (ADC)
+                                             └─► LED verde (chave ligada); diodo 1N5408 contra bateria invertida
 Jetson USB-A ─► ESP32 (dados + 5 V) ─► 3V3 da DevKit ─► encoders (J12, J13)
-GND comum: a corrente dos motores volta pelos fios pretos de J2/J3 até o XL4016 #2, não pelo cabo USB.
+Jetson USB-A ─► fita COB da câmera (sem o controle de toque, D-040)
+GND comum em estrela na placa de distribuição. A corrente dos motores volta pelos fios pretos de J2/J3 até o XL4016 #2;
+o cabo USB fecha um laço de terra e leva ~8 % dela nos picos (~0,3 A com os 2 motores travados): aceitável.
 ```
 
 **Por que assim** ([decisoes.md](decisoes.md) D-002): o DRV8833 aceita no máximo 10,8 V e a regra limita o motor a 12 V. Com a 3S cheia (12,6 V), os motores precisam de trilho regulado. O UBEC previsto no CSV (R$ 199,90) estava fora de estoque. Dois XL4016 iguais custam R$ 59,80 e um serve de reserva para o outro.
@@ -118,3 +121,7 @@ lado certo da placa. Pinos evitados: 0, 2, 5, 12, 15 (strapping), 1 e 3 (USB ser
 * Não alimentar a ESP32 pelo pino 5 V e pelo USB ao mesmo tempo.
 * Não conectar nem desconectar o cabo CSI com a Jetson energizada.
 * Carregar a LiPo **fora do robô**, dentro do Lipo Sack, supervisionada.
+* **Zener de 9,1 V 5 W no OUT do XL4016 #2** antes de andar rápido: na frenagem os motores devolvem energia ao VM, e o
+  XL4016 não a absorve (D-042).
+* **Chave desligada sempre que o robô não estiver em uso** (o LED verde da placa de distribuição avisa). Com a chave
+  ligada, a ESP32 para os motores em 9,6 V, mas a Jetson e os XL4016 continuam gastando a LiPo.

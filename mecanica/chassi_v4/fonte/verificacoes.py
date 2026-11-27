@@ -6,6 +6,7 @@
   material      - material minimo entre furos e entre furo e borda; corte que vira entalhe; peca que se solta
   cg            - centro de massa, tombamento na curva, empinar, peso nas rodas
   cabos         - comprimento (com sobra), distancia da roda e do redutor, nao atravessar chapa, abracadeiras
+  folga         - cada peca comprada, AUMENTADA alem da medida (lados livres), ainda cabe no corte nominal
 Rodar tudo: python3 gerar.py --so-verificar
 """
 import math
@@ -15,6 +16,8 @@ import shapely.geometry as sg
 from OCP.BRepAlgoAPI import BRepAlgoAPI_Common
 from OCP.GProp import GProp_GProps
 from OCP.BRepGProp import BRepGProp
+from OCP.gp import gp_GTrsf, gp_Mat, gp_XYZ
+from OCP.BRepBuilderAPI import BRepBuilderAPI_GTransform
 import modelo
 import geometria as geo
 from pecas import v, pendencias
@@ -81,6 +84,71 @@ def interferencias(lista_a, lista_b=None, tol=0.5):
         if vol > tol:
             achados.append((a['nome'], b['nome'], vol))
     return achados
+
+# ------------------------------------------------------------------------------------------- folga
+# Quanto cada peca comprada cresce no teste de folga, em mm: (x-, x+, y-, y+, z-, z+). So nos lados LIVRES (nao no
+# lado em que a peca se apoia ou se encaixa). Medidas da equipe (M): ~1 mm; estimadas (E): a faixa das lojas.
+CRESCE = {
+    'bateria':          (0.5, 0.5, 1.0, 1.0, 0.0, 1.0),   # 100 x 18 x 15 medida; berco de 19: LiPo um pouco inchada
+    'xl4016_1_jetson':  (0.0, 1.0, 0.0, 1.0, 0.0, 2.0),   # lojas: 65-66 x 47-48 x 22-25 mm (usamos 65 x 48 x 24)
+    'xl4016_2_motores': (0.0, 1.0, 1.0, 0.0, 0.0, 2.0),
+    'esp32_devkit':     (0.5, 0.5, 0.5, 0.5, 0.0, 1.5),
+    'jetson_dissipador': (1.0, 1.0, 1.0, 1.0, 0.0, 0.0),  # medida da Arducam; em cima e o vao de ar (proposital)
+    'plugue_p4':        (3.0, 0.0, 0.5, 0.5, 0.5, 0.5),   # plugue com capa mais comprida
+    'plugue_usb_a':     (3.0, 0.0, 1.0, 1.0, 1.0, 1.0),
+    'plugue_usb_esp32': (3.0, 0.0, 1.0, 1.0, 1.0, 1.0),
+    'chave_geral':      (0.0, 2.0, 0.0, 0.0, 0.0, 0.0),   # corpo atras do painel 2 mm mais fundo (a secao e a do recorte)
+    'botao_desligar':   (1.0, 1.0, 1.0, 1.0, 3.0, 0.0),   # corpo + terminais 25 mm
+    'botao_capa':       (1.0, 1.0, 1.0, 1.0, 0.0, 1.0),
+    'par_xt60':         (1.0, 1.0, 1.0, 1.0, 1.0, 1.0),
+    'fusivel_5x20':     (0.5, 0.5, 0.5, 0.5, 0.0, 1.0),
+    'drv8833_esq':      (0.5, 0.5, 0.5, 0.5, 0.0, 1.0),
+    'drv8833_dir':      (0.5, 0.5, 0.5, 0.5, 0.0, 1.0),
+    'c470_esq':         (0.5, 0.5, 0.5, 0.5, 0.0, 1.0),
+    'c470_dir':         (0.5, 0.5, 0.5, 0.5, 0.0, 1.0),
+    'encoder_esq':      (0.5, 0.5, 1.0, 0.0, 0.0, 0.5),
+    'encoder_dir':      (0.5, 0.5, 0.0, 1.0, 0.0, 0.5),
+    'conector_motor_esq': (0.5, 0.5, 1.0, 0.0, 0.0, 1.0),
+    'conector_motor_dir': (0.5, 0.5, 0.0, 1.0, 0.0, 1.0),
+}
+
+def crescer(sol, g):
+    """O mesmo solido esticado para ocupar a caixa [lo - g-, hi + g+] em cada eixo."""
+    lo, hi = bbox(sol)
+    L = hi - lo
+    gm, gp = np.array(g[0::2], float), np.array(g[1::2], float)
+    k = (L + gm + gp) / L
+    t = lo - gm - k * lo
+    gt = gp_GTrsf()
+    gt.SetVectorialPart(gp_Mat(k[0], 0, 0, 0, k[1], 0, 0, 0, k[2]))
+    gt.SetTranslationPart(gp_XYZ(*t))
+    return cq.Shape.cast(BRepBuilderAPI_GTransform(sol.wrapped, gt, True).Shape())
+
+def folga(m, cresce=None):
+    """Cada peca de CRESCE, aumentada, contra tudo o resto do modelo nominal (chapas, pecas e volumes de acesso)."""
+    cresce = CRESCE if cresce is None else cresce
+    mv = modelo.construir(m.P, verif=True)
+    lista = solidos(mv)
+    nomes = {s['nome'] for s in lista}
+    R = []
+    for nome in sorted(set(cresce) - nomes):
+        R.append(Resultado(False, 'folga', nome, 'peca do teste de folga nao existe mais no modelo'))
+    grandes = []
+    for s in lista:
+        if s['nome'] in cresce:
+            g = dict(s); g['solido'] = crescer(s['solido'], cresce[s['nome']]); g['bb'] = bbox(g['solido'])
+            grandes.append(g)
+    resto = [s for s in lista if s['nome'] not in cresce] + grandes
+    for g in grandes:
+        ach = interferencias([g], [o for o in resto if o is not g])
+        c = cresce[g['nome']]
+        txt = 'cresce ' + '/'.join(f'{x:g}' for x in c) + ' mm (x-/x+/y-/y+/z-/z+)'
+        if ach:
+            R.append(Resultado(False, 'folga', g['nome'], txt + ': encosta em ' +
+                               ', '.join(f'{b} ({vol:.0f} mm3)' for _, b, vol in ach)))
+        else:
+            R.append(Resultado(True, 'folga', g['nome'], txt + ': cabe'))
+    return R
 
 # ------------------------------------------------------------------------------------------- dimensoes
 def dimensoes(m):
@@ -355,6 +423,7 @@ def tudo(m, para_cortar=False):
     R = []
     R += regulamento(m)
     R += interferencia(m)
+    R += folga(m)
     R += camera(m)
     R += material(m)
     R += cg(m)

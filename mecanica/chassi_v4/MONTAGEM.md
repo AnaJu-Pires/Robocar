@@ -61,7 +61,9 @@ pesar e rodar `T=… FOLGA=… make chassi-cortar` até passar.
 2. Andar 1: piso traseiro + paredes do berço (trás, frente, esquerda); piso dianteiro + paredes da frente. Encaixar o
    piso dianteiro sobre o traseiro e pôr os 2 parafusos M3 dos pisos.
 3. Pilares no andar 2 (cola; abas nos rasgos). **Não** colar o andar 2 nas paredes nem o andar 3 nos pilares.
-4. Mastro: postes + travessa no andar 3 (cola). Câmera: placa da câmera entre as orelhas.
+4. Mastro: postes + travessa no andar 3 (cola). Câmera: placa da câmera entre as orelhas; a câmera vai **na frente** da
+   placa (lente para fora), em 4 espaçadores M2.5 de 5 mm com parafusos M2 × 12 e porca; o flat sai por baixo, entre a
+   placa e a câmera (encaixe o flat na câmera antes de parafusar).
 
 **2. Mecânica:** esfera (parafusos M2.5 por baixo, porcas em cima, entre os XL4016); motores nos suportes; rodas;
 conferir o nivelamento.
@@ -72,7 +74,8 @@ conferir o nivelamento.
 3. XL4016 no piso dianteiro (espaçadores de 4 mm), **bornes para trás** (#1 à esquerda).
 4. Chave na parede de trás do berço. `alim_xl1` no IN do #1 e `alim_xl2` no IN do #2 (descem pelo passa-fio na frente da
    placa de distribuição); `xl1_p4_jetson` no OUT do #1; `vm_e` e `vm_d` no OUT do #2 (os fios do VM vêm da placa da ESP32: deixe-os
-   soltos para cima por enquanto).
+   soltos para cima por enquanto). **No mesmo borne OUT do #2, o zener de 9,1 V 5 W (1N5346B): faixa (catodo) no OUT+,
+   outra perna no OUT−** (D-042; protege os DRV8833 na frenagem).
 
 **4. Andar 2**
 1. Placa de distribuição atrás, em 2 espaçadores M3 de 10 mm (furos no andar 2). Jetson nos espaçadores de 5 mm, portas para trás.
@@ -81,7 +84,7 @@ conferir o nivelamento.
 3. Encaixar o andar 2 nas abas das paredes e fechar com 4 parafusos M3 (porcas presas).
 4. P4 na Jetson; flat no CSI (Jetson desligada).
 
-**5. Andar 3:** placa da ESP32 (espaçadores de 5 mm) e botão de desligar (porca); cabos dos motores, VM e VBAT pelos
+**5. Andar 3:** placa da ESP32 (espaçadores de 5 mm) e botão de desligar (entra por cima, porca por baixo); cabos dos motores, VM e VBAT pelos
 passa-fios; encaixar nos pilares e fechar com 4 M3; USB; Dupont do J41; câmera no mastro em 45°.
 
 **6. Conferência (T10/T18):** `make chassi-verificar` com as massas pesadas; medir com régua (≤ 250 × 150);

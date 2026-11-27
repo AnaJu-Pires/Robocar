@@ -24,8 +24,9 @@ J41 pino 20 (GND) ────────────────── termina
 ```
 
 * Solde o 10k entre o fio do 3V3 e o terminal A; o 1k fica no meio do fio do pino 18. Termorretrátil em cada emenda.
-* O botão é de pulso **NA** (normalmente aberto), 12 mm, de painel (com porca). Qualquer cor; vermelho ajuda a não
-  confundir com a largada.
+* O botão é de pulso **NA** (normalmente aberto), 12 mm, de painel, tipo **PBS-33B** (rosca M12 com porca; cabeça de
+  ~18 mm; lojas: "push button 12 mm sem trava"). Entra por cima do andar 3; a porca aperta por baixo. Qualquer cor;
+  vermelho ajuda a não confundir com a largada.
 * O furo de 12 mm vem **gravado** no andar 3 (não cortado): conferir o botão comprado e furar com broca de 12 mm (ou
   fura menor e alarga com estilete/lima).
 

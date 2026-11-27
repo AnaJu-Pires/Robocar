@@ -82,6 +82,9 @@ CASOS = [
     caso('cabos: passa-fio apagado da lista de apoios', 'cabos', mutar=lambda m: m.apoios.pop('pf_p4'), contendo='nao existe'),
     caso('cabos: passa-fio do motor embaixo da placa da ESP32 (cabo atravessa a placa)', 'cabos',
          P=dict(PF3_MOTOR=(20.0, 45.0)), contendo='atravessa a placa'),
+    caso('folga: andar 2 com 1 mm de vao em cima dos XL4016 (um XL4016 2 mm mais alto nao cabe)', 'folga',
+         P=dict(AR_ANDAR2=1.0), contendo='xl4016'),
+    caso('folga: XL4016 a 0,3 mm da parede (cabe, mas sem folga nenhuma)', 'folga', P=dict(XL_Y=(7.0, -2.0)), contendo='parede'),
     caso('cabos: cabo USB de 50 mm', 'cabos', medida=('usb_cabo', 50.0), contendo='precisa'),
     caso('medidas: --para-cortar com medidas estimadas', 'medidas', contendo='conferir'),
     caso('dxf: DXF gravado com a Jetson 1 mm diferente da medida', 'dxf', contendo='Jetson'),
@@ -132,7 +135,7 @@ def rodar(c):
             if c['mutar']:
                 c['mutar'](m)
         f = {'regulamento': V.regulamento, 'interferencia': V.interferencia, 'camera': V.camera, 'material': V.material,
-             'cg': V.cg, 'cabos': lambda m_: V.cabos(m_)[0] if not c['mutar'] else _cabos_mutado(m_, c['mutar']),
+             'cg': V.cg, 'folga': V.folga, 'cabos': lambda m_: V.cabos(m_)[0] if not c['mutar'] else _cabos_mutado(m_, c['mutar']),
              'medidas': lambda m_: V.medidas(para_cortar=True), 'dxf': lambda m_: _dxf_desatualizado(),
              'dxf_cortados': lambda m_: _dxf_furos_cortados()}[c['verif']]
         return f(m)

@@ -40,7 +40,7 @@ GRUPOS = [
      [('bat', 'bateria'), ('bat_cabo', 'fios do XT60'), ('xt60', 'corpo do XT60')]),
     ('Camera IMX219-160 no suporte (45 graus)', None,
      [('cam_placa', 'placa'), ('cam_furos', 'furos M2'), ('cam_lente', 'lente (diametro, comprimento)'),
-      ('cam_suporte_lente', 'base do suporte da lente'), ('ffc_compr', 'cabo flat')]),
+      ('ffc_compr', 'cabo flat')]),
 ]
 
 def figura(m, arq, img_esp=None):

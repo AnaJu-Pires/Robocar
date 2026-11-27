@@ -34,8 +34,8 @@ M = {
     # Camera IMX219-160
     'cam_placa':        med((25.0, 24.0, 1.0), 'E', 'placa 25 x 24 (formato da camera do RPi)'),
     'cam_furos':        med((21.0, 12.5), 'E', 'furos M2 21 x 12,5 mm'),
-    'cam_lente':        med((12.0, 19.0), 'E', 'diametro e comprimento da lente a partir da face da placa', afeta_corte=True),
-    'cam_suporte_lente': med(14.0, 'E', 'base quadrada do suporte da lente (passa no furo da placa da camera)', afeta_corte=True),
+    'cam_lente':        med((14.0, 17.0), 'E', 'diametro e comprimento da lente a partir da face da placa (loja: modulo 25 x 24 x '
+                            '17,7 mm); a camera fica na frente da placa (D-041): nao afeta o corte'),
     'cam_massa':        med(8.0, 'E'),
     'cam_vfov':         med(56.0, 'E', 'campo de visao vertical no modo 1280x720 (fracao do sensor x 160 graus)'),
     'ffc_compr':        med(150.0, 'E', 'cabo flat da camera'),
@@ -66,11 +66,12 @@ M = {
     'xt60':             med((16.0, 15.5, 8.0), 'V', 'comprimento x largura x altura do corpo'),
     # XL4016 (2 unidades). l = ao longo dos 65 mm (l = 0 na ponta dos bornes), w = ao longo dos 48 mm
     'xl':               med((65.0, 48.0), 'M', 'com os dissipadores; bornes numa ponta, trimpots na outra'),
-    'xl_altura':        med(24.0, 'E', 'altura total (placa + dissipador) - loja diz 65 x 46 x 24', afeta_corte=True),
+    'xl_altura':        med(24.0, 'E', 'altura total (placa + dissipador). Lojas: 22-25 mm. O teste de folga aceita ate 26; se o seu '
+                            'tiver mais, troque o espacador de 4 mm por porca (2 mm)'),
     'xl_furos':         med(((4.0, 4.0), (61.0, 4.0), (61.0, 44.0), (4.0, 44.0)), 'E', 'centros dos 4 furos M3'),
     'xl_trimpots':      med(((60.0, 14.0), (60.0, 26.0)), 'E', 'parafusos dos trimpots (l, w), regulagem por CIMA'),
     'xl_bornes':        med((0.0, 9.0, 11.0), 'E', 'bloco de bornes: l0, l1, altura'),
-    'xl_massa':         med(45.0, 'E', 'PESAR: planilha da equipe 35-70 g'),
+    'xl_massa':         med(45.0, 'E', 'PESAR: lojas 43-66 g; 45 e o caso pior para tombar (peso baixo na frente ajuda)'),
     # Placa da ESP32 v0.8 (hardware/placa_esp32, KiCad): verificada
     'esp_placa':        med((80.0, 73.0, 1.6), 'V'),
     'esp_furos':        med(((3.5, 3.5), (76.5, 3.5), (76.5, 69.5), (3.5, 69.5)), 'V', 'M3 nos cantos (u, v)'),
@@ -81,10 +82,12 @@ M = {
     # Placa do fusivel (ja feita) e placa extra de desligar
     'fus_placa':        med((32.0, 44.0, 22.0), 'V', 'placa de distribuicao (hardware/placa_distribuicao): 32 x 44; altura com espacador de 10 mm e fusivel'),
     'fus_massa':        med(12.0, 'E', 'placa + fusivel + diodo + 2 espacadores'),
-    'botao_painel':     med((12.0, 10.0, 8.0, 20.0), 'E', 'botao de pulso de painel 12 mm (NA): furo, capa, altura da capa, corpo embaixo; furar a mao'),
+    'botao_painel':     med((12.0, 18.0, 9.0, 22.0), 'E', 'botao de pulso 12 mm NA tipo PBS-33B (lojas: ~18 x 17,5 mm, rosca M12 com porca): '
+                            'furo, cabeca, altura da cabeca, corpo + terminais embaixo; furar a mao'),
     # Chave, plugues, cabos
-    'chave_recorte':    med((19.0, 13.0), 'E', 'KCD1-101: recorte 19 x 13; conferir a sua', afeta_corte=True),
-    'chave_corpo':      med((21.0, 15.0, 18.0), 'E', 'moldura x profundidade atras do painel'),
+    'chave_recorte':    med((19.0, 13.0), 'E', 'KCD1-101: lojas pedem 19,2 x 13,2 (faixa 18-19,2 x 12-13,2). Cortamos 19 x 13: '
+                            'se apertar, lixar 0,2 mm; se cortasse maior, a chave ficaria solta. CONFERIR NO PENTE DE TESTE (teste_chave)', afeta_corte=True),
+    'chave_corpo':      med((21.0, 15.0, 18.0), 'E', 'moldura 21 x 15; profundidade atras do painel (da face de fora), com os terminais'),
     'p4_plugue':        med((30.0, 10.0), 'E', 'P4 reto soldavel: comprimento x diametro'),
     'usb_a_plugue':     med((32.0, 16.0, 9.0), 'E', 'USB-A reto com capa'),
     'usb_cabo':         med(300.0, 'E', 'cabo USB Jetson-ESP32'),

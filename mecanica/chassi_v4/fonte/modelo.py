@@ -42,6 +42,7 @@ PADRAO = dict(
     CAM_ANG=(25.0, 65.0),
     CAM_ANG_NOMINAL=45.0,
     CAM_C=-17.0,
+    CAM_ESPACADOR=5.0,     # espacador M2.5 de nylon (sobra do pacote da Jetson) entre a placa da camera e a camera
     MESA=(390.0, 270.0),
     MIN_TEIA=2.0,
     MU=0.9,
@@ -225,7 +226,8 @@ def construir(P=None, verif=False):
     # chave na parede de TRAS do berco, virada para tras; o corpo fica dentro do berco, por cima da bateria
     CHY = P['CHAVE_Y']; CHZ = ZA2 - 2.5 - cr_h / 2
     CHX = PAR_T0 + T + c_d / 2
-    comprada('chave_geral', caixa(PAR_T0 - 0.01, PAR_T0 + T + c_d, CHY - cr_w / 2 + 0.3, CHY + cr_w / 2 - 0.3, CHZ - cr_h / 2 + 0.3,
+    # c_d = profundidade atras do painel medida da face de FORA (como no desenho da chave): o corpo passa pelo MDF
+    comprada('chave_geral', caixa(PAR_T0 - 0.01, PAR_T0 + c_d, CHY - cr_w / 2 + 0.3, CHY + cr_w / 2 - 0.3, CHZ - cr_h / 2 + 0.3,
                                   CHZ + cr_h / 2 - 0.3), 4.0, 'eletronica', (0.1, 0.1, 0.1))
     comprada('chave_moldura', caixa(PAR_T0 - 3, PAR_T0, CHY - c_w / 2, CHY + c_w / 2, CHZ - c_h / 2, CHZ + c_h / 2), 0,
              'eletronica', (0.1, 0.1, 0.1), 'chave_geral')
@@ -292,7 +294,7 @@ def construir(P=None, verif=False):
     m.desl_botao = (BTN[0], BTN[1], ZA3t)
     comprada('botao_desligar', cilindro((*BTN, ZA3 - bcorpo), (*BTN, ZA3), bd + 1.0), 6.0, 'eletronica', (0.1, 0.1, 0.1))
     comprada('botao_capa', cilindro((*BTN, ZA3t), (*BTN, ZA3t + bh), bcap), 0, 'eletronica', (0.8, 0.1, 0.1), 'botao_desligar')
-    comprada('botao_porca', cilindro((*BTN, ZA3t), (*BTN, ZA3t + 2.0), 16.0), 0, 'eletronica', (0.6, 0.6, 0.6), 'botao_desligar')
+    comprada('botao_porca', cilindro((*BTN, ZA3 - 3.0), (*BTN, ZA3), 18.0), 0, 'eletronica', (0.6, 0.6, 0.6), 'botao_desligar')
     acesso('dedo_botao_desligar', cilindro((*BTN, ZA3t + bh), (*BTN, ZA3t + bh + 40), 12),
            'apertar o botao de desligar a Jetson', ignora=('botao_desligar',))
 
@@ -516,13 +518,14 @@ def construir(P=None, verif=False):
     orelha.qtd = 2
     chapas.append(orelha)
     cfx, cfy = v('cam_furos')
-    lente_q = v('cam_suporte_lente') + 0.6
+    # camera presa na FRENTE da placa, em 4 espacadores (D-041): o corte nao depende do tamanho do suporte da lente
+    # (nenhuma fonte o informa) e o flat sai por baixo, entre a placa e a camera
+    CAM_ESP = P['CAM_ESPACADOR']
     base_pc = ret(-YO, CC - 15, YO, CC + 15)
     abas_pc = [ret(YO, CC - 8, YO + T, CC + 8), ret(-YO - T, CC - 8, -YO, CC + 8)]
-    fpc = [Furo(ret_c(0, CC, lente_q, lente_q), 'lente', funcao='suporte da lente passa pela placa')]
-    fpc += [circ(sx_ * cfx / 2, CC + sy_ * cfy / 2, 2.2, 'camera', 'parafuso M2 da camera') for sx_ in (1, -1) for sy_ in (1, -1)]
+    fpc = [circ(sx_ * cfx / 2, CC + sy_ * cfy / 2, 2.2, 'camera', 'parafuso M2 da camera') for sx_ in (1, -1) for sy_ in (1, -1)]
     placa_cam = Chapa('placa_camera', base_pc, fpc, abas_pc, frames=[], textos=[('CIMA ^', 0, CC + 12.5, 2.2)],
-                      descricao='camera presa por tras, lente para a frente')
+                      descricao='camera na frente, em 4 espacadores')
     placa_cam.qtd = 1
     chapas.append(placa_cam)
     # placa da luz: a fita COB cola na frente (aponta para onde a camera olha e gira junto); o modulo da luz (IRLZ44N)
@@ -546,14 +549,18 @@ def construir(P=None, verif=False):
         out.append(('luz_cob', caixa_local(frp, -YO + 1.0, YO - 1.0, LUZ_Y0 + 1.0, LUZ_Y1 - 1.0, T, T + 2.0), 'camera'))
         m.luz_modulo_pt = aplicar(frp, -YO + 4.0, LUZ_Y0 + 4.0, -4.0)   # emenda dos fios da fita, atras da placa
         pw_, ph_, pt_ = v('cam_placa')
-        out.append(('camera_placa', caixa_local(frp, -pw_ / 2, pw_ / 2, CC - ph_ / 2, CC + ph_ / 2, -1.5 - pt_, -1.5), 'camera'))
+        zc0 = T + CAM_ESP                                 # costas da placa da camera
+        for sx_ in (1, -1):
+            for sy_ in (1, -1):
+                out.append((f'espacador_camera_{sx_}_{sy_}', cilindro(aplicar(frp, sx_ * cfx / 2, CC + sy_ * cfy / 2, T),
+                                                                    aplicar(frp, sx_ * cfx / 2, CC + sy_ * cfy / 2, zc0), 4.6), 'camera'))
+        out.append(('camera_placa', caixa_local(frp, -pw_ / 2, pw_ / 2, CC - ph_ / 2, CC + ph_ / 2, zc0, zc0 + pt_), 'camera'))
         ld, ll = v('cam_lente')
-        out.append(('camera_lente', cilindro(aplicar(frp, 0, CC, -1.5), aplicar(frp, 0, CC, -1.5 + ll), ld), 'camera'))
-        out.append(('camera_conector_ffc', caixa_local(frp, -10, 10, CC - ph_ / 2, CC - ph_ / 2 + 5.5, -1.5 - pt_ - 3, -1.5 - pt_),
-                    'camera'))
-        m.cam_ffc_pt = aplicar(frp, 0, CC - ph_ / 2 - 1, -1.5 - pt_ - 1.5)
-        m.cam_ffc_baixo = aplicar(frp, 0, CC - 15 - 8, -1.5 - pt_ - 3)
-        m.cam_centro = aplicar(frp, 0, CC, -1.5 + ll)
+        out.append(('camera_lente', cilindro(aplicar(frp, 0, CC, zc0 + pt_), aplicar(frp, 0, CC, zc0 + pt_ + ll), ld), 'camera'))
+        out.append(('camera_conector_ffc', caixa_local(frp, -10, 10, CC - ph_ / 2, CC - ph_ / 2 + 5.5, zc0 - 3, zc0), 'camera'))
+        m.cam_ffc_pt = aplicar(frp, 0, CC - ph_ / 2 - 1, zc0 - 1.5)
+        m.cam_ffc_baixo = aplicar(frp, 0, CC - 15 - 8, T + 1.5)
+        m.cam_centro = aplicar(frp, 0, CC, zc0 + pt_ + ll)
         return out
     m.partes_camera = partes_camera
 
@@ -572,7 +579,7 @@ def construir(P=None, verif=False):
                                   (PF_XT[0], PF_XT[1], pfz), (PF_XT[0], PF_XT[1], zp + 4), (*dp(6.5, 40.0), zp + 4), pad(6.5, 40.0)],
          4.0, '0,75 mm2 vermelho + preto', 'XT60 do chassi (par solto, a direita da bateria)', 'BAT+ / BAT- da placa de distribuicao',
          apoio=['pf_xt60'], obs='XT60 soldado nesta ponta; termorretratil')
-    chave = (PAR_T0 + T + c_d - 2, CHY, CHZ)
+    chave = (PAR_T0 + c_d - 2, CHY, CHZ)
     cabo('fusivel_chave', [pad(6.5, 4.0), (*dp(6.5, 4.0), zp + 4), (PF_CH[0], PF_CH[1], zp + 4), (PF_CH[0], PF_CH[1], ZA2 - 4), chave],
          2.6, '0,75 mm2 vermelho', 'CHAVE 1 (FUS+) da placa de distribuicao', 'chave geral (terminal 1)', apoio=['pf_chave'])
     cabo('chave_placa', [chave, (PF_CH[0], PF_CH[1], ZA2 - 4), (PF_CH[0], PF_CH[1], zp + 4), (*dp(21.0, 4.0), zp + 4), pad(21.0, 4.0)],

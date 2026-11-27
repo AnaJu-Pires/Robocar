@@ -3,6 +3,12 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (27/11/2026, rodada 2l: revisão da arquitetura)
+- Verificação de **folga** no chassi (D-041): 21 peças aumentadas além da medida têm de caber no corte; 2 testes negativos novos (34 no total).
+- Câmera na **frente** da placa, em 4 espaçadores de 5 mm: o corte não depende mais do suporte da lente (D-041).
+- Medidas pesquisadas (XL4016, KCD1, PBS-33B, IMX219-160, fita COB); XL4016 deixa de bloquear o corte; profundidade da chave pela face de fora; botão com cabeça de 18 mm e porca por baixo.
+- Placa da ESP32 v0.8 conferida contra o chassi (KiCad).
+- **Zener de 9,1 V 5 W no VM** (D-042): a frenagem em slow decay subiria o VM a 10,5–12,9 V (limite do DRV8833: 11,8 V). Teste T22; simulação em `hardware/ferramentas/frenagem_vm.py`.
 ### Alterado (27/11/2026, rodada 2k: interface final)
 - Interface da Jetson (D-040): só um botão de pulso de painel de 12 mm (furo gravado no andar 3, corpo embaixo, 10k/1k soldados nele) e 3 jumpers ao J41; sem LEDs; luz da câmera no USB da Jetson, sem o controle de toque. Sai o desenho em placa perfurada (`layout.py`, `make placa-interface`) e o passa-fio do J41. Chassi: cabo do J41 direto ao botão (68 mm) e cabo USB da luz (~40 cm) com 3 pontos de amarração.
 - Placa de distribuição: o `.kicad_pcb` gravado estava vazio (a placa era criada com `NewBoard` no próprio arquivo e os testes negativos a apagavam); agora nasce num arquivo temporário e o programa confere a placa gravada. Modelos 3D na variável do KiCad 10; imagem 3D.

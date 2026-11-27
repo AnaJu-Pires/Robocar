@@ -314,7 +314,7 @@ FIXADORES = {
     'parafuso M3 do andar 3 (porca presa no pilar)': ('Parafuso M3 x 12 + porca M3 presa no bolso do pilar (andar 3)', 1),
     'pivo da camera (M3)': ('Parafuso M3 x 10 + porca (pivo da camera, um de cada lado)', 1),
     'trava do angulo (M3)': ('Parafuso M3 x 10 + porca borboleta (trava do angulo, um de cada lado)', 1),
-    'parafuso M2 da camera': ('Parafuso M2 x 8 + porca + arruela fina (camera)', 1),
+    'parafuso M2 da camera': ('Parafuso M2 x 12 + espacador nylon M2.5 x 5 mm (sobra do pacote da Jetson) + porca (camera na frente da placa)', 1),
     'pino que trava a bateria (tirar com a mao)': ('Pino de trava: arame/prego de 3 mm x 35 mm dobrado em L', 0.5),
 }
 
