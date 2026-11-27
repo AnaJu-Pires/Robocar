@@ -354,3 +354,28 @@ isso. No painel passam miliampères, e o desenho furo a furo já é verificado.
 **Consequências:** chassi com +7 g (664 g), CG 50,1 mm, tomba com 0,78 g. Cabos `chave_xl` e `jumper_in_xl` saem;
 entram `chave_placa`, `alim_xl1` (151 mm) e `alim_xl2` (145 mm). DRC limpo e 7 testes negativos na placa.
 
+### D-037 — Chassi a cortar: v4, com luz na câmera e furos de fixação feitos à mão
+*27/11/2026 · aceita*
+**Contexto:** a equipe pediu para escolher o chassi a usar, quer furar à mão os furos ("fica mais certinho") e comprou
+a fita COB 5 V branco frio para a luz.
+**Decisão:**
+* **Cortar o v4.** É o único com lugar para tudo o que existe hoje e passa nas 51 verificações. O v1 (placa da ESP32
+  v0.7) e o v3 (240 mm) ficam só como referência.
+* **Furos de fixação das peças compradas: o laser grava (círculo + cruz), a equipe fura.** São Jetson, ESP32, XL4016,
+  placas de interface e de distribuição, câmera, esfera e suportes dos motores. Furando com a peça na mão, uma medida
+  estimada errada não estraga a chapa. Continuam **cortados** os furos que alinham duas chapas (porca presa, pivô e
+  arco da câmera, pino da bateria): furados à mão em duas peças separadas, quase nunca alinham. Também continuam
+  cortados os encaixes, passa-fios e recortes, que não dá para fazer com broca. Os gabaritos do pente continuam
+  cortados e servem de guia para a broca. A auditoria do DXF confere que nenhum furo de peça comprada foi cortado
+  (teste negativo novo).
+* **Luz: placa da luz acima do pivô da câmera, no mesmo plano da placa da câmera.** As orelhas da câmera crescem para
+  cima. A fita aponta para onde a câmera olha e acompanha o ângulo (25–65°). O módulo da luz (IRLZ44N) fica atrás e
+  o cabo sobe por trás da câmera, preso na travessa do mastro. Embaixo da câmera não cabe: a placa bateria no andar 3
+  ao girar.
+**Custo:** com a câmera em 65°, a placa da luz avança e o carro passa de 162 para **176 mm** de comprimento e de 160
+para **181 mm** de altura (em 45°: 162 mm). Continua longe dos 250 × 150 mm. A altura não aparece nas medidas do
+§3.2.2 que temos (comprimento e largura); **confirmar na inspeção**. +3 g; tomba com 0,77 g (limite de software
+0,65 g).
+**Pendente:** largura da fita e distância entre as marcas de corte. A placa da luz tem 28 × 18 mm, o que dá 2
+pedaços de até ~26 mm, ou 1 se a fita tiver mais de 9 mm de largura.
+

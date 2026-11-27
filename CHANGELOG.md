@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (27/11/2026, rodada 2f: chassi para cortar)
+- Chassi v4 é o escolhido (D-037). Furos de fixação das peças compradas viram **marcas gravadas** (círculo + cruz) para furar à mão; continuam cortados os que alinham chapas, encaixes e passa-fios. Auditoria do DXF confere e tem teste negativo novo.
+- Placa da luz acima do pivô da câmera (orelhas mais altas), com a fita COB na frente e o módulo da luz atrás; cabo `luz` preso na travessa do mastro. 176 × 143 × 181 mm (162 mm com a câmera em 45°), 667 g.
+- Placa de distribuição: aviso para **não usar 1N4728** (zener de 3,3 V) no D1; sem 1N5408/1N400x, o D1 fica vazio.
 ### Alterado (27/11/2026, rodada 2d: energia)
 - `hardware/placa_distribuicao/` (`make placa-distribuicao`): placa de distribuição corroída, 32 × 44 mm, face simples (D-036). Bateria → fusível 7 A → chave → SW+ em estrela para os 2 XL4016, VBAT, LED "chave ligada" e diodo de proteção contra bateria invertida. Gerada pelo KiCad com DRC, conferência pino a pino, só B.Cu e largura mínima de 3 mm nos caminhos de corrente; 7 testes negativos; PDF 1:1 para transferência e furação.
 - Chassi v4: a placa entra no lugar da placa de fusível de 30 × 30 (espaçadores de 10 mm, 2 furos e um passa-fio novo no andar 2); fios novos (`chave_placa`, `alim_xl1`, `alim_xl2`; sai o jumper de um borne para o outro).

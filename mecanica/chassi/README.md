@@ -1,4 +1,6 @@
-# Robocar Blitz — chassi em chapas cortadas a laser (v1)
+# Robocar Blitz — chassi em chapas cortadas a laser (v1, substituído pelo [v4](../chassi_v4/))
+
+> **Não cortar este.** O chassi a cortar é o [v4](../chassi_v4/) (D-031, D-037).
 
 Chassi de dois andares, todo em **MDF de 3 mm**. O andar 2 (o da Jetson) pode ser de **acrílico de 3 mm**.
 As chapas se encaixam por **abas e rasgos** e são coladas, menos o andar 2, que vai **parafusado** para poder ser tirado.
