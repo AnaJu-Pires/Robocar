@@ -6,6 +6,12 @@ entre o plugue USB e o P4, em **2 espaçadores M3 de 10 mm**. Decisão: [D-036](
 
 ![Cobre visto de cima (azul = cobre embaixo)](imagens/cobre_vista_de_cima.png)
 
+Arquivos do KiCad: `placa_distribuicao.kicad_sch` (esquemático; PDF em `placa_distribuicao_esquematico.pdf`),
+`placa_distribuicao.kicad_pcb` (placa) e `placa_distribuicao.step` (3D). Abrem no KiCad 7 a 10. O esquemático é
+conferido pelo próprio KiCad contra o circuito e contra a placa a cada `make placa-distribuicao`.
+
+![Esquemático](imagens/esquematico.png)
+
 ## Circuito
 
 ```
@@ -96,5 +102,5 @@ make placa-distribuicao
 
 Roda `placa.py` (Python do KiCad): monta a placa, roda o DRC (cobre, furos, bordas, corpos, ligações), confere pino a
 pino contra o circuito, confere que só há cobre embaixo e que todo caminho de corrente tem ≥ 3 mm, e grava o
-`.kicad_pcb`, os PDFs 1:1, a furação e as imagens. `python3 placa.py --negativos` planta 7 defeitos e confere que
-cada um é pego.
+`.kicad_pcb`, os PDFs 1:1, a furação e as imagens. `python3 placa.py --negativos` planta 8 defeitos (um deles, um esquemático com o diodo invertido) e confere
+que cada um é pego.

@@ -24,8 +24,12 @@ import tempfile
 
 import pcbnew
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'ferramentas'))
+import kicad_sch  # noqa: E402
+
 AQUI = os.path.dirname(os.path.abspath(__file__))
 PCB = os.path.join(AQUI, 'placa_distribuicao.kicad_pcb')
+SCH = os.path.join(AQUI, 'placa_distribuicao.kicad_sch')
 FP = '/usr/share/kicad/footprints'
 for cand in (os.environ.get('KICAD_FOOTPRINT_DIR', ''), '/usr/share/kicad/footprints',
              'C:/Program Files/KiCad/10.0/share/kicad/footprints'):
@@ -318,7 +322,41 @@ def negativos():
          sem_cobre=[(13.0, 10.6, 29.0, 11.4)])
     f = dict(FIX); f['H2'] = (28.5, 7.5)
     caso('parafuso em cima do fio do XL1+', 'DRC', fix=f)
+    # esquematico: o KiCad le um esquematico com o diodo invertido e a conferencia tem de acusar
+    with tempfile.TemporaryDirectory() as d:
+        p2 = copy.deepcopy(PECAS); p2['D1'] = p2['D1'][:5] + ({'1': 'GND', '2': 'SW+'},) + p2['D1'][6:]
+        arq = os.path.join(d, 'x.kicad_sch')
+        esquematico(arq, p2)
+        err = kicad_sch.conferir(arq, REDES)
+        casos.append(('esquematico com o diodo de protecao invertido', any('rede' in e for e in err), err[:1]))
     return casos
+
+
+SIMBOLO = {'F1': ('Device:Fuse', '7A 5x20'), 'D1': ('Device:D', '1N5408'),
+           'R1': ('Device:R', '4k7'), 'D2': ('Device:LED', 'verde 3 mm')}
+ROTULO_FIO = {'J_BATP': 'BAT+ (XT60)', 'J_BATN': 'BAT- (XT60)', 'J_CH1': 'CHAVE 1', 'J_CH2': 'CHAVE 2', 'J_XL1P': 'XL4016 #1 IN+',
+              'J_XL2P': 'XL4016 #2 IN+', 'J_XL1N': 'XL4016 #1 IN-', 'J_XL2N': 'XL4016 #2 IN-', 'J_VBAT': 'VBAT (ESP32 J1)'}
+
+
+def esquematico(arq=SCH, pecas=PECAS):
+    """Esquematico do KiCad com as mesmas pecas e redes da placa (conferido pelo kicad-cli contra REDES)."""
+    e = kicad_sch.Esquema('placa_distribuicao', 'Robocar Blitz - placa de distribuicao de energia', '2026-11-27')
+    lugar = {'J_BATP': (38.1, 50.8), 'F1': (76.2, 50.8), 'J_CH1': (114.3, 50.8), 'J_CH2': (152.4, 50.8),
+             'J_XL1P': (215.9, 50.8), 'J_XL2P': (215.9, 66.04), 'J_VBAT': (215.9, 81.28), 'D1': (177.8, 101.6),
+             'R1': (139.7, 96.52), 'D2': (139.7, 124.46), 'J_BATN': (38.1, 139.7), 'J_XL1N': (215.9, 124.46),
+             'J_XL2N': (215.9, 139.7)}
+    rot = {'F1': 90, 'D1': 90, 'D2': 270}
+    for ref, (lib, nome, x, y, ang, pinos, rotulo) in pecas.items():
+        if ref.startswith('J_'):
+            sim, val = 'Connector_Generic:Conn_01x01', ROTULO_FIO[ref]
+        else:
+            sim, val = SIMBOLO[ref]
+        e.peca(ref, sim, val, f'{lib}:{nome}', *lugar[ref], rot.get(ref, 0), pinos)
+    e.texto('Bateria -> fusivel -> chave -> SW+ em estrela para os 2 XL4016 (D-036). D1 em paralelo: bateria invertida '
+            'queima o fusivel. LED verde = chave ligada.', 25.4, 25.4, 1.27)
+    e.texto('D1: 1N5408 (ou 1N4007). Sem eles, deixe VAZIO. NUNCA 1N4728: e zener de 3,3 V e vira curto na bateria.',
+            25.4, 30.48, 1.27)
+    e.gravar(arq)
 
 
 def saidas():
@@ -328,6 +366,20 @@ def saidas():
         os.path.join(F, '1_cobre_transferencia_1x1.pdf'))
     cli('pdf', '--layers', 'F.SilkS,F.Fab,Edge.Cuts', '-o', os.path.join(F, '2_montagem.pdf'))
     cli('drill', '--format', 'excellon', '--drill-origin', 'plot', '--excellon-separate-th', '-o', F + '/')
+    env = dict(os.environ)
+    for var in ('KICAD6_3DMODEL_DIR', 'KICAD7_3DMODEL_DIR', 'KICAD10_3DMODEL_DIR'):
+        env.setdefault(var, '/usr/share/kicad/3dmodels')
+    subprocess.run(['kicad-cli', 'pcb', 'export', 'step', '--subst-models', '--force', '-o',
+                    os.path.join(AQUI, 'placa_distribuicao.step'), PCB], check=True, stdout=subprocess.DEVNULL,
+                   stderr=subprocess.DEVNULL, env=env)
+    subprocess.run(['kicad-cli', 'sch', 'export', 'pdf', '-o', os.path.join(AQUI, 'placa_distribuicao_esquematico.pdf'), SCH],
+                   check=True, stdout=subprocess.DEVNULL)
+    with tempfile.TemporaryDirectory() as d:
+        pdf = os.path.join(d, 'e.pdf')
+        subprocess.run(['kicad-cli', 'sch', 'export', 'pdf', '-o', pdf, SCH], check=True, stdout=subprocess.DEVNULL)
+        subprocess.run(['pdftoppm', '-r', '150', '-png', '-singlefile', pdf, os.path.join(d, 'e')], check=True)
+        subprocess.run(['convert', os.path.join(d, 'e.png'), '-trim', '+repage', '-bordercolor', 'white', '-border', '20',
+                        os.path.join(AQUI, 'imagens', 'esquematico.png')], check=True)
     with tempfile.TemporaryDirectory() as d:
         for nomeimg, camadas, extra in (('cobre_vista_de_cima.png', 'B.Cu,F.SilkS,Edge.Cuts', []),
                                         ('lado_do_cobre.png', 'B.Cu,Edge.Cuts', ['--mirror'])):
@@ -350,8 +402,11 @@ def principal():
             print('o projeto sem defeito NAO passa:', base)
         print('TODOS OS DEFEITOS FORAM PEGOS' if ok else 'FALHOU')
         return 0 if ok else 1
+    esquematico()
     b = montar()
     erros = verificar(b)
+    # paridade: o que o KiCad le do esquematico = o circuito = as ilhas e pinos da placa
+    erros += kicad_sch.conferir(SCH, REDES)
     for e in erros:
         print('ERRO:', e)
     if erros:
