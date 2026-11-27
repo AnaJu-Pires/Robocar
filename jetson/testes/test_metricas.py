@@ -32,6 +32,14 @@ class TestMetricas(unittest.TestCase):
         self.assertAlmostEqual(m["linha_vista_pct"], 100.0 * 6 / 9)
         self.assertNotIn("distancia_m", m)           # sem pulsos por volta: so os pulsos
 
+    def test_conta_avancos_sem_linha(self):
+        ls = [linha(0.0), linha(0.1, "AVANCANDO", erro=""), linha(0.2, "AVANCANDO", erro=""), linha(0.3),
+              linha(0.4, "AVANCANDO", erro=""), linha(0.5, "PARADO", erro="")]
+        m = metricas.calcular(ls)
+        self.assertEqual(m["seguiu_reto_sem_linha_vezes"], 2)
+        self.assertEqual(m["perdeu_linha_vezes"], 0)
+        self.assertEqual(m["quadros_andando"], 5)
+
     def test_queda_da_bateria(self):
         ls = [linha(0.0, vbat="12.4"), linha(0.1, vbat="11.6"), linha(0.2, vbat="")]
         m = metricas.calcular(ls)

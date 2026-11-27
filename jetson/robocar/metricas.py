@@ -28,12 +28,12 @@ def _pct(lista, p):
 def calcular(linhas, pulsos_por_volta=None, diametro_roda_m=0.042):
     """linhas: lista de dicts (cabecalho do CSV). Devolve dict com as metricas da corrida.
 
-    So conta o trecho em que o controle estava andando (SEGUINDO ou BUSCANDO).
+    So conta o trecho em que o controle estava andando (SEGUINDO, AVANCANDO ou BUSCANDO).
     """
-    andando = [r for r in linhas if r.get("estado") in ("SEGUINDO", "BUSCANDO")]
+    andando = [r for r in linhas if r.get("estado") in ("SEGUINDO", "AVANCANDO", "BUSCANDO")]
     m = {"quadros_total": len(linhas), "quadros_andando": len(andando)}
     if not andando:
-        m["aviso"] = "o robo nao andou neste log (nenhum quadro em SEGUINDO/BUSCANDO)"
+        m["aviso"] = "o robo nao andou neste log (nenhum quadro em SEGUINDO/AVANCANDO/BUSCANDO)"
         return m
     t = [_num(r.get("t")) for r in andando]
     t = [x for x in t if x is not None]
@@ -48,16 +48,20 @@ def calcular(linhas, pulsos_por_volta=None, diametro_roda_m=0.042):
     m["erro_abs_p50"] = _pct(erros, 50)
     m["erro_abs_p95"] = _pct(erros, 95)
 
-    # eventos: entrou em BUSCANDO (linha perdida) e cruzamentos detectados (bordas de subida)
-    buscas, cruz = 0, 0
+    # eventos: entrou em BUSCANDO (linha perdida na curva), em AVANCANDO (sumiu indo reto/cruzamento)
+    # e cruzamentos detectados (bordas de subida)
+    buscas, avancos, cruz = 0, 0, 0
     ant_estado, ant_cruz = None, "0"
     for r in andando:
         if r.get("estado") == "BUSCANDO" and ant_estado != "BUSCANDO":
             buscas += 1
+        if r.get("estado") == "AVANCANDO" and ant_estado != "AVANCANDO":
+            avancos += 1
         if r.get("cruzamento") == "1" and ant_cruz != "1":
             cruz += 1
         ant_estado, ant_cruz = r.get("estado"), r.get("cruzamento")
     m["perdeu_linha_vezes"] = buscas
+    m["seguiu_reto_sem_linha_vezes"] = avancos
     m["cruzamentos_detectados"] = cruz
 
     proc = [_num(r.get("proc_ms")) for r in andando]
@@ -100,7 +104,8 @@ def texto(m):
     ordem = [("aviso", "AVISO", "%s"), ("duracao_s", "tempo andando (s)", "%.2f"),
              ("distancia_m", "distancia pelos encoders (m)", "%.2f"),
              ("velocidade_media_m_s", "velocidade media (m/s)", "%.2f"),
-             ("perdeu_linha_vezes", "vezes que perdeu a linha", "%d"),
+             ("perdeu_linha_vezes", "vezes que perdeu a linha (curva: girou)", "%d"),
+             ("seguiu_reto_sem_linha_vezes", "vezes que seguiu reto sem linha", "%d"),
              ("linha_vista_pct", "quadros com a linha (%)", "%.1f"),
              ("erro_abs_p50", "|erro| mediano", "%.3f"), ("erro_abs_p95", "|erro| p95", "%.3f"),
              ("cruzamentos_detectados", "cruzamentos detectados", "%d"),

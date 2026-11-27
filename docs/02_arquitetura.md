@@ -29,10 +29,14 @@ Motivo da divisão: o Linux da Jetson não é tempo real. Pausas de dezenas de m
 **Jetson** ([controle.py](../jetson/robocar/controle.py)):
 
 ```
-AGUARDANDO ──largada──► SEGUINDO ◄──linha volta── BUSCANDO
-                          │  └──linha some──────────►│
-                          └──marca do box──► PARADO ◄─┴── perdida > tempo_busca_s
+                         ┌──linha some indo reto ou em cruzamento──► AVANCANDO (reto) ──> avanco_s ──┐
+                         │◄───────────────linha volta───────────────────┘                           │
+AGUARDANDO ──largada──► SEGUINDO ◄──linha volta── BUSCANDO (gira)                                     ▼
+                          │  └──linha some na curva──►│ ──> tempo_busca_s ──────────────────────► PARADO
+                          └──marca do box (opcional)──────────────────────────────────────────────► PARADO
 ```
+PARADO por "fim da linha" é o caminho normal para **parar no box**: a câmera vê o fim da linha antes de as
+rodas chegarem nele, então o robô segue reto `avanco_s` e só então para (com freio). Ver [D-038](decisoes.md).
 
 **ESP32** ([robocar_esp32.ino](../firmware/robocar_esp32/robocar_esp32.ino)):
 

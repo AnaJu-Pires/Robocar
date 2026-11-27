@@ -5,14 +5,42 @@ Saida: comandos normalizados das rodas esquerda/direita em [-1, 1] (a ESP32 apli
 Estados:
   AGUARDANDO -> espera a largada (botao da ESP32) ou inicio manual
   SEGUINDO   -> PD no erro lateral + termo de antecipacao (erro da faixa mais distante)
-  BUSCANDO   -> linha perdida: gira para o ultimo lado visto por ate 'tempo_busca_s'
-  PARADO     -> fim (linha perdida por muito tempo, marca do box ou comando)
+  AVANCANDO  -> linha sumiu indo reto (ou num cruzamento): segue reto por ate 'avanco_s'; se a linha
+                volta, SEGUINDO; se nao volta, PARADO ("fim da linha": e assim que o robo entra no box,
+                porque a camera ve o fim da linha antes de as rodas chegarem nele)
+  BUSCANDO   -> linha sumiu numa curva: gira para o ultimo lado visto por ate 'tempo_busca_s'
+  PARADO     -> fim (fim da linha, linha perdida por muito tempo, marca do box ou comando)
 """
 
 AGUARDANDO = "AGUARDANDO"
 SEGUINDO = "SEGUINDO"
 BUSCANDO = "BUSCANDO"
+AVANCANDO = "AVANCANDO"
 PARADO = "PARADO"
+
+
+class FreioFinal(object):
+    """Ao parar: mantem a ESP32 armada com motores em zero (= freio no DRV8833) por 'freio_s' e so
+    depois manda desarmar. Desarmada, a ESP32 poe o driver para dormir e a roda fica solta (o robo
+    desliza para fora do box)."""
+
+    def __init__(self, freio_s):
+        self.freio_s = max(0.0, float(freio_s))
+        self.t_desarmar = None
+
+    def parou(self, t):
+        """Chamar uma vez, quando o controle entra em PARADO."""
+        self.t_desarmar = t + self.freio_s
+
+    def cancelar(self):
+        self.t_desarmar = None
+
+    def hora_de_desarmar(self, t):
+        """True uma unica vez, quando o tempo de freio acabou."""
+        if self.t_desarmar is not None and t >= self.t_desarmar:
+            self.t_desarmar = None
+            return True
+        return False
 
 
 def _limitar(x, lo, hi):
@@ -39,6 +67,8 @@ class Controlador(object):
         self.t_marca = None
         self.v_ant = 0.0     # ultima velocidade comum aplicada (para limitar a subida: acel_max)
         self.t_v = None
+        self.ult_erro = 0.0  # ultimo erro perto/longe vistos (decide AVANCANDO x BUSCANDO)
+        self.ult_erro_longe = 0.0
 
     def iniciar(self, t):
         self._zerar()
@@ -67,6 +97,8 @@ class Controlador(object):
 
         erro = det["erro"]
         if erro is None:
+            if self.estado == AVANCANDO or (self.estado == SEGUINDO and self._indo_reto(det)):
+                return self._avancar(t, info)
             return self._buscar(t, info)
 
         self.estado = SEGUINDO
@@ -87,6 +119,7 @@ class Controlador(object):
             v = min(v, self.v_ant + a * max(0.0, t - self.t_v))
         self.v_ant, self.t_v = v, t
 
+        self.ult_erro, self.ult_erro_longe = erro, erro_longe
         lado = erro if abs(erro) > 0.02 else erro_longe
         if abs(lado) > 0.02:
             self.ultimo_lado = 1.0 if lado > 0 else -1.0
@@ -106,6 +139,27 @@ class Controlador(object):
         if self.t_marca is None and self.cont_marca >= p["frames_confirmacao"]:
             self.t_marca = t
         return self.t_marca is not None and t - self.t_marca >= p["atraso_s"]
+
+    def _indo_reto(self, det):
+        """A linha sumiu com o robo indo reto (fim da linha / box) ou num cruzamento largo?"""
+        lim = self.c["reto_max_erro"]
+        if self.c["avanco_s"] <= 0:
+            return False
+        if det.get("cruzamento"):
+            return True
+        return abs(self.ult_erro) <= lim and abs(self.ult_erro_longe) <= lim
+
+    def _avancar(self, t, info):
+        if self.estado != AVANCANDO:
+            self.estado = AVANCANDO
+            self.t_perdeu = t
+        if t - self.t_perdeu > self.c["avanco_s"]:
+            self.parar("fim da linha")
+            return 0.0, 0.0, info
+        self.e_ant = None
+        v = min(self.v_ant, self.c["v_avanco"]) if self.v_ant > 0 else self.c["v_avanco"]
+        info["v"] = v
+        return v, v, info
 
     def _buscar(self, t, info):
         if self.estado != BUSCANDO:

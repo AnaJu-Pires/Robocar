@@ -3,6 +3,9 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (27/11/2026, seguir a linha: fim da linha, cruzamento e freio)
+- Controle: novo estado **AVANCANDO** (D-038). Linha some indo reto (`|erro|`, `|erro_longe|` ≤ `reto_max_erro` 0,25) ou num cruzamento: segue reto a no máximo `v_avanco` (0,25) por até `avanco_s` (0,35 s); a linha voltou → segue; não voltou → PARADO "fim da linha" (box). Na curva continua girando (BUSCANDO). `avanco_s` = 0 volta ao comportamento antigo.
+- `seguir_linha.py`: ao parar, mantém zero armado (freio) por `parada.freio_s` (0,5 s) antes de desarmar; antes desarmava na hora e a roda ficava solta. `make metricas` conta "vezes que seguiu reto sem linha". 9 testes novos.
 ### Alterado (27/11/2026, rodada 2f: chassi para cortar)
 - Chassi v4 é o escolhido (D-037). Furos de fixação das peças compradas viram **marcas gravadas** (círculo + cruz) para furar à mão; continuam cortados os que alinham chapas, encaixes e passa-fios. Auditoria do DXF confere e tem teste negativo novo.
 - Placa da luz acima do pivô da câmera (orelhas mais altas), com a fita COB na frente e o módulo da luz atrás; cabo `luz` preso na travessa do mastro. 176 × 143 × 181 mm (162 mm com a câmera em 45°), 667 g.

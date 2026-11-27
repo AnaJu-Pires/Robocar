@@ -58,7 +58,9 @@ jetson/
 * Velocidade: `v = v_max − (v_max − v_min) · min(1, max(|erro|, |erro_longe|) / severidade_max)`. O robô freia **antes** da curva.
 * Rodas: `esquerda = v + u`, `direita = v − u`, normalizadas para que nenhuma passe de 1.
 * Subida de `v` limitada a `acel_max` (fração do PWM por segundo, padrão 2,0 ≈ 0,4 g): o chassi v3 levanta a esfera acima de ~0,47 g ([D-030](decisoes.md)). Só a subida: frear e virar continuam imediatos. Na largada, 0 → 0,35 leva 0,18 s.
-* Linha perdida: gira para o último lado visto por até `tempo_busca_s`; depois PARADO. Isso também cobre o caso de a linha terminar dentro do box.
+* Linha sumiu **indo reto** (último `|erro|` e `|erro_longe|` ≤ `reto_max_erro`) ou num **cruzamento**: estado AVANCANDO, segue reto a no máximo `v_avanco` por até `avanco_s`. Se a linha volta, segue normalmente (cruzamento, falha na fita); se não volta, PARADO "fim da linha" — é assim que o robô entra no box e para ([D-038](decisoes.md)).
+* Linha sumiu **numa curva**: BUSCANDO, gira para o último lado visto por até `tempo_busca_s`; depois PARADO.
+* Ao parar (PARADO), a Jetson ainda manda motores em zero por `parada.freio_s` (a ESP32 armada com zero = freio) e só então desarma; desarmada, a roda fica solta.
 * Marca do box (opcional): parada após `tempo_minimo_s` e `frames_confirmacao` quadros seguidos.
 * Os ganhos atuais (`kp` 0,6, `kd` 0,05, `k_frente` 0,3, `v_max` 0,35) são **iniciais e conservadores**. O ajuste é feito na pista com os logs.
 
@@ -76,7 +78,7 @@ jetson/
 | Limiar com calibração ruim ou luz variando | `visao.razao_min`, `razao_max`, `suavizar_limiar` |
 | Bifurcação e box | `visao.preferencia_bifurcacao`, `visao.marca_frac_escura`, `parada.*` |
 | Comportamento na pista | `controle.kp`, `kd`, `k_frente`, `v_max`, `v_min`, `severidade_max`, `acel_max` |
-| Perda de linha | `controle.tempo_busca_s`, `v_busca` |
+| Perda de linha, fim da linha e box | `controle.reto_max_erro`, `avanco_s`, `v_avanco`, `tempo_busca_s`, `v_busca`, `parada.freio_s` |
 
 ## 6. Dados de teste
 

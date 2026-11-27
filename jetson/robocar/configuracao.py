@@ -62,6 +62,11 @@ PADRAO = {
         "severidade_max": 0.6,        # erro a partir do qual a velocidade cai para v_min
         "acel_max": 2.0,              # subida maxima da velocidade comum (fracao do PWM por s; 0 = sem limite).
                                       # 2,0/s ~ 0,4 g com a roda de 42 mm: abaixo de 0,47 g, onde o chassi v3 empina
+        "reto_max_erro": 0.25,        # linha some com |erro| e |erro_longe| ate isso = "indo reto" -> AVANCANDO
+        "avanco_s": 0.35,             # AVANCANDO: segue reto ate isso sem linha e para ("fim da linha" = box).
+                                      # Ajustar na pista: a camera ve o fim da linha ~15-20 cm antes das rodas
+                                      # (estimativa). 0 = desliga (volta ao comportamento antigo: girar)
+        "v_avanco": 0.25,             # velocidade maxima ao seguir reto sem linha
         "v_busca": 0.45,              # giro no lugar ao perder a linha; 0,25 nao movia o carro no chao
         "tempo_busca_s": 1.0,         # linha perdida por mais tempo -> PARADO
         "margem_centro": 0.12,        # so para o rotulo ESQUERDA/RETO/DIREITA
@@ -71,6 +76,7 @@ PADRAO = {
         "tempo_minimo_s": 5.0,        # ignora marcas logo apos a largada
         "frames_confirmacao": 3,
         "atraso_s": 0.0,              # tempo entre ver a marca e parar
+        "freio_s": 0.5,               # ao parar: motores em zero ARMADO (= freio) antes de desarmar (roda solta)
     },
     "esp32": {
         "porta": None,                # ex.: "/dev/ttyUSB0"

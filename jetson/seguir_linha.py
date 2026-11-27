@@ -112,6 +112,7 @@ def main():
         print("AVISO: calibracao com contraste baixo (razao %.2f); usando %.2f. Melhore a pista/luz e recalibre."
               % (detector.razao_calibrada, detector.razao))
     ctrl = controle.Controlador(cfg["controle"], cfg["parada"])
+    freio = controle.FreioFinal(cfg["parada"]["freio_s"])
     margem = cfg["controle"]["margem_centro"]
     janela = cfg["exibicao"]["janela"]
     a_cada = max(1, int(cfg["exibicao"]["a_cada_n_frames"]))
@@ -182,6 +183,7 @@ def main():
                     armar_pendente = False
                 armado = bool(tel and tel["armado"])
                 if armado and not armado_ant:
+                    freio.cancelar()
                     detector.resetar()
                     ctrl.iniciar(t)
                     print(">>> LARGADA")
@@ -195,10 +197,11 @@ def main():
                 link.enviar_motores(esq, dir_)  # enviado sempre: mantem o link "vivo" na ESP32
             if ctrl.estado == controle.PARADO and estado_ant != controle.PARADO:
                 print(">>> PARADO:", ctrl.motivo)
-                if link:
-                    link.parar()
+                freio.parou(t)          # zero armado = freio; desarma (roda solta) so depois de freio_s
+            if link and freio.hora_de_desarmar(t):
+                link.parar()
             estado_ant = ctrl.estado
-            leds.vivo(t, ctrl.estado in (controle.SEGUINDO, controle.BUSCANDO))
+            leds.vivo(t, ctrl.estado in (controle.SEGUINDO, controle.AVANCANDO, controle.BUSCANDO))
             proc_ms = 0.9 * proc_ms + 0.1 * (time.time() - t0) * 1000.0
 
             dt, t_ant = t - t_ant, t

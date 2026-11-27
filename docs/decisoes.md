@@ -379,3 +379,21 @@ para **181 mm** de altura (em 45°: 162 mm). Continua longe dos 250 × 150 mm. A
 **Pendente:** largura da fita e distância entre as marcas de corte. A placa da luz tem 28 × 18 mm, o que dá 2
 pedaços de até ~26 mm, ou 1 se a fita tiver mais de 9 mm de largura.
 
+### D-038 — Fim da linha: seguir reto e frear (parar dentro do box); cruzamento sem faixa válida: reto
+*27/11/2026 · aceita*
+**Contexto:** o robô parava por "linha perdida" quando a linha sumia da faixa mais próxima da imagem. A câmera fica
+~14 cm à frente do eixo, a ~12,5 cm de altura, a 45° (chassi do STEP da equipe, 27/11): ela perde o fim da linha
+uns 15–20 cm (ESTIMATIVA) antes de as rodas chegarem nele. Depois girava 1 s no lugar e parava com a roda solta
+(o `$S` desarma e o DRV8833 dorme). Resultado provável: parar **antes** do box, ou girando. Num cruzamento em que
+nenhuma faixa fica válida por um quadro, o robô também começava a girar. O regulamento conta "paradas inesperadas"
+como erro (§4.8) e exige parar sozinho no box (§3.2.4).
+**Decisão:** se a linha some com o robô indo reto (último `|erro|` e `|erro_longe|` ≤ `reto_max_erro`) ou com
+cruzamento detectado, estado AVANCANDO: reto a no máximo `v_avanco` por até `avanco_s`. Linha voltou → SEGUINDO;
+não voltou → PARADO "fim da linha". Na curva, BUSCANDO como antes. Ao parar, a Jetson segura motores em zero com a
+ESP32 armada (freio) por `parada.freio_s` e só então desarma.
+**Por que por tempo e não pelos encoders:** o encoder esquerdo deu 0 em todas as 28 corridas de 22/11 (logs do cartão);
+o tempo funciona já. Quando os encoders forem validados (T06/T07), dá para trocar por distância.
+**Consequências:** `avanco_s` precisa ser ajustado com a geometria real do box (treino de 04/12; ver o roteiro de
+testes). Uma perda de linha numa reta no meio da pista agora termina em parada depois de `avanco_s`, em vez de girar;
+`avanco_s` = 0 volta ao comportamento antigo. Sem mudança no protocolo nem no firmware.
+

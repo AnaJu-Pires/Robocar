@@ -3,8 +3,9 @@ import unittest
 from robocar import configuracao, controle
 
 
-def det(erro, erro_longe=None, marca=False):
-    return {"erro": erro, "erro_longe": erro if erro_longe is None else erro_longe, "marca": marca}
+def det(erro, erro_longe=None, marca=False, cruzamento=False):
+    return {"erro": erro, "erro_longe": erro if erro_longe is None else erro_longe, "marca": marca,
+            "cruzamento": cruzamento}
 
 
 class TestControlador(unittest.TestCase):
@@ -60,6 +61,47 @@ class TestControlador(unittest.TestCase):
         self.c.atualizar(det(None), 0.05 + self.cfg["controle"]["tempo_busca_s"] + 0.01)
         self.assertEqual(self.c.estado, controle.PARADO)
 
+    def test_fim_da_linha_indo_reto_segue_reto_e_para(self):
+        # box: a camera perde o fim da linha antes de as rodas chegarem nele -> segue reto e para
+        avanco = self.cfg["controle"]["avanco_s"]
+        self.c.iniciar(0.0)
+        self.c.atualizar(det(0.05, 0.1), 1.0)
+        esq, dir_, info = self.c.atualizar(det(None), 1.02)
+        self.assertEqual(self.c.estado, controle.AVANCANDO)
+        self.assertEqual(esq, dir_, "sem linha indo reto: as duas rodas iguais (reto, sem girar)")
+        self.assertGreater(esq, 0.0)
+        self.assertLessEqual(esq, self.cfg["controle"]["v_avanco"])
+        self.c.atualizar(det(None), 1.02 + avanco - 0.01)
+        self.assertEqual(self.c.estado, controle.AVANCANDO)
+        self.assertEqual(self.c.atualizar(det(None), 1.02 + avanco + 0.01)[:2], (0.0, 0.0))
+        self.assertEqual(self.c.estado, controle.PARADO)
+        self.assertEqual(self.c.motivo, "fim da linha")
+
+    def test_linha_volta_depois_do_buraco_continua_seguindo(self):
+        # cruzamento/falha curta na linha reta: segue reto e retoma quando a linha reaparece
+        self.c.iniciar(0.0)
+        self.c.atualizar(det(0.0), 1.0)
+        self.c.atualizar(det(None), 1.02)
+        self.c.atualizar(det(None), 1.10)
+        self.assertEqual(self.c.estado, controle.AVANCANDO)
+        self.c.atualizar(det(0.02), 1.12)
+        self.assertEqual(self.c.estado, controle.SEGUINDO)
+
+    def test_cruzamento_sem_faixa_valida_segue_reto_mesmo_com_erro(self):
+        self.c.iniciar(0.0)
+        self.c.atualizar(det(0.4), 1.0)                     # vinha corrigindo para a direita
+        esq, dir_, _ = self.c.atualizar(det(None, cruzamento=True), 1.02)
+        self.assertEqual(self.c.estado, controle.AVANCANDO)
+        self.assertEqual(esq, dir_)
+
+    def test_avanco_desligado_volta_a_girar(self):
+        self.cfg["controle"]["avanco_s"] = 0.0
+        self.c = controle.Controlador(self.cfg["controle"], self.cfg["parada"])
+        self.c.iniciar(0.0)
+        self.c.atualizar(det(0.0), 1.0)
+        self.c.atualizar(det(None), 1.02)
+        self.assertEqual(self.c.estado, controle.BUSCANDO)
+
     def test_marca_ignorada_antes_do_tempo_minimo(self):
         self.c.iniciar(0.0)
         self.c.atualizar(det(0.0, marca=True), 0.5)
@@ -71,6 +113,28 @@ class TestControlador(unittest.TestCase):
         self.c.atualizar(det(0.0, marca=True), 1.1)
         self.c.atualizar(det(0.0, marca=True), 1.2)
         self.assertEqual(self.c.estado, controle.PARADO)
+
+
+class TestFreioFinal(unittest.TestCase):
+
+    def test_desarma_uma_vez_depois_do_freio(self):
+        f = controle.FreioFinal(0.5)
+        self.assertFalse(f.hora_de_desarmar(10.0))
+        f.parou(10.0)
+        self.assertFalse(f.hora_de_desarmar(10.4))
+        self.assertTrue(f.hora_de_desarmar(10.5))
+        self.assertFalse(f.hora_de_desarmar(11.0))
+
+    def test_sem_freio_desarma_na_hora(self):
+        f = controle.FreioFinal(0.0)
+        f.parou(3.0)
+        self.assertTrue(f.hora_de_desarmar(3.0))
+
+    def test_nova_largada_cancela(self):
+        f = controle.FreioFinal(0.5)
+        f.parou(1.0)
+        f.cancelar()
+        self.assertFalse(f.hora_de_desarmar(2.0))
 
 
 if __name__ == "__main__":
