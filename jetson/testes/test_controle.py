@@ -51,6 +51,40 @@ class TestControlador(unittest.TestCase):
         _, _, i = self.c.atualizar(det(0.0, 0.0), 0.02)
         self.assertAlmostEqual(i["v"], self.cfg["controle"]["v_max"], places=6)
 
+    def _a_lat_g(self, esq, dir_):
+        c = self.cfg["controle"]
+        ve, vd = esq * c["v_por_comando_m_s"], dir_ * c["v_por_comando_m_s"]
+        return abs((ve + vd) / 2 * (ve - vd) / c["bitola_m"]) / 9.81
+
+    def _em_regime(self, d, ajustes=None):
+        cfg = configuracao.carregar_config(ajustes=ajustes or {})
+        c = controle.Controlador(cfg["controle"], cfg["parada"])
+        c.iniciar(0.0)
+        out = None
+        for k in range(1, 200):                       # 4 s: passa a rampa do acel_max
+            out = c.atualizar(d, k * 0.02)
+        return out
+
+    def test_curva_fechada_respeita_limite_lateral(self):
+        # correcao forte (linha bem a direita): sem o limite daria > 1 g com o v4 (que tomba com ~0,77 g)
+        esq, dir_, info = self._em_regime(det(0.5, 0.6), {"controle": {"v_max": 0.6, "v_min": 0.5}})
+        self.assertLessEqual(self._a_lat_g(esq, dir_), self.cfg["controle"]["a_lat_max_g"] + 1e-6)
+        self.assertAlmostEqual(info["a_lat_g"], self.cfg["controle"]["a_lat_max_g"], places=6)
+
+    def test_limite_mantem_o_raio_da_curva(self):
+        a = self._em_regime(det(0.5, 0.6), {"controle": {"v_max": 0.6, "v_min": 0.5}})
+        b = self._em_regime(det(0.5, 0.6), {"controle": {"v_max": 0.6, "v_min": 0.5, "a_lat_max_g": 0}})
+        self.assertGreater(self._a_lat_g(b[0], b[1]), self.cfg["controle"]["a_lat_max_g"])   # sem limite: passaria
+        # mesmas proporcoes entre as rodas (mesmo raio), so mais devagar
+        self.assertAlmostEqual(a[0] / a[1], b[0] / b[1], places=6)
+        self.assertLess(abs(a[0]), abs(b[0]))
+
+    def test_reta_nao_e_afetada_pelo_limite(self):
+        esq, dir_, info = self._em_regime(det(0.0, 0.0))
+        self.assertAlmostEqual(esq, self.cfg["controle"]["v_max"], places=6)
+        self.assertAlmostEqual(esq, dir_, places=9)
+        self.assertAlmostEqual(info["a_lat_g"], 0.0, places=9)
+
     def test_linha_perdida_busca_e_depois_para(self):
         self.c.iniciar(0.0)
         self.c.atualizar(det(0.3), 0.02)

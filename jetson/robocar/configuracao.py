@@ -62,6 +62,9 @@ PADRAO = {
         "severidade_max": 0.6,        # erro a partir do qual a velocidade cai para v_min
         "acel_max": 2.0,              # subida maxima da velocidade comum (fracao do PWM por s; 0 = sem limite).
                                       # 2,0/s ~ 0,4 g com a roda de 42 mm: abaixo de 0,47 g, onde o chassi v3 empina
+        "a_lat_max_g": 0.65,          # limite de curva (D-032): o chassi v4 tomba com ~0,77 g. 0 = sem limite
+        "v_por_comando_m_s": 1.98,    # m/s com comando 1,0 (roda de 42 mm, 7,2 V, em vazio: superestima = seguro)
+        "bitola_m": 0.124,            # centro a centro das rodas (chassi v4)
         "v_busca": 0.45,              # giro no lugar ao perder a linha; 0,25 nao movia o carro no chao
         "tempo_busca_s": 1.0,         # linha perdida por mais tempo -> PARADO
         "margem_centro": 0.12,        # so para o rotulo ESQUERDA/RETO/DIREITA

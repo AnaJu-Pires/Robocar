@@ -95,8 +95,28 @@ class Controlador(object):
         m = max(abs(esq), abs(dir_))
         if m > 1.0:
             esq, dir_ = esq / m, dir_ / m
+        esq, dir_, info["a_lat_g"] = self._limitar_curva(esq, dir_)
         info["v"], info["u"] = v, u
         return esq, dir_, info
+
+    def _limitar_curva(self, esq, dir_):
+        """Limite de aceleracao lateral (D-032): o chassi v4 tomba com ~0,77 g.
+
+        a = v * omega, com v = media das rodas e omega = diferenca / bitola (comandos em m/s pela razao em vazio,
+        que superestima a velocidade real: o limite fica do lado seguro). Se passar de a_lat_max_g, as DUAS rodas
+        sao reduzidas pelo mesmo fator (a cai com o quadrado): o raio da curva e mantido, so a velocidade cai.
+        Devolve (esq, dir, a_lat em g depois do limite).
+        """
+        c = self.c
+        amax = c.get("a_lat_max_g") or 0.0
+        k = c.get("v_por_comando_m_s", 1.98)
+        b = c.get("bitola_m", 0.124)
+        ve, vd = esq * k, dir_ * k
+        a = abs((ve + vd) / 2.0 * (ve - vd) / b) / 9.81
+        if amax > 0 and a > amax:
+            f = (amax / a) ** 0.5
+            esq, dir_, a = esq * f, dir_ * f, amax
+        return esq, dir_, a
 
     def _chegou(self, det, t):
         p = self.p
