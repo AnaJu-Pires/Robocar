@@ -1,10 +1,13 @@
 # Robocar Blitz - botao de desligar a Jetson (J41 pino 18) e LED "pode desligar a chave" (J41 pino 16).
+# Tambem exporta os pinos 15 (luz da camera) e 19 (LED codigo rodando) para o programa do robo.
 # NAO copie este arquivo a mao: instale com  sudo bash jetson/servico/instalar.sh
 # Roda como root (GPIO pelo sysfs) e nao depende do robocar.service nem da ESP32.
 
 [Unit]
 Description=Robocar Blitz - botao de desligar e LED pode-desligar (J41)
 StartLimitIntervalSec=0
+# libera os pinos da luz da camera e do LED codigo-rodando antes do programa do robo (D-033)
+Before=robocar.service
 
 [Service]
 Type=simple

@@ -22,6 +22,7 @@ import numpy as np
 
 from robocar import configuracao
 from robocar.camera import Camera
+from robocar.leds import LedsRobo
 
 SEPARACAO_MIN = 25.0   # abaixo disso o Otsu nao achou linha, so ruido do chao
 CONTRASTE_MIN = 60.0   # abaixo disso a linha se confunde com o chao (22/11/2026: 106/66 falhou)
@@ -130,6 +131,15 @@ def main():
     args = ap.parse_args()
 
     cfg = configuracao.carregar_config()
+    leds = LedsRobo()
+    leds.luz(True)          # calibrar com a mesma luz da corrida (D-033)
+    try:
+        return calibrar(cfg, args)
+    finally:
+        leds.apagar()
+
+
+def calibrar(cfg, args):
     cam = Camera(cfg["camera"], args.fonte)
     print("Fonte:", cam.descricao)
     if args.auto:

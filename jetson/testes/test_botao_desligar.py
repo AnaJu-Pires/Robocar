@@ -9,6 +9,7 @@ import time
 import unittest
 
 from robocar.botao_desligar import GpioSysfs, MaquinaBotao, GPIO_BOTAO, GPIO_LED
+from robocar.leds import GPIO_LUZ, GPIO_VIVO
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 PROGRAMA = os.path.join(AQUI, '..', 'servico', 'botao_desligar.py')
@@ -21,7 +22,7 @@ def gravar(caminho, texto):
 
 def sysfs_falso(base, valor_botao='1'):
     gravar(os.path.join(base, 'export'), '')
-    for n, val in ((GPIO_BOTAO, valor_botao), (GPIO_LED, '0')):
+    for n, val in ((GPIO_BOTAO, valor_botao), (GPIO_LED, '0'), (GPIO_LUZ, '1'), (GPIO_VIVO, '1')):
         d = os.path.join(base, 'gpio%d' % n)
         os.makedirs(d)
         gravar(os.path.join(d, 'direction'), 'in')
@@ -124,6 +125,11 @@ class TestPrograma(unittest.TestCase):
         self.assertTrue(os.path.exists(self.marca), 'nao chamou o comando de desligar')
         self.assertEqual(ler(self.base, GPIO_LED, 'value'), '1')
         self.assertIn(b'desligando', r.stdout)
+        # D-033: luz da camera e LED codigo-rodando ficam como saida em 0 e graváveis pelo usuario do robo
+        for n in (GPIO_LUZ, GPIO_VIVO):
+            self.assertEqual(ler(self.base, n, 'direction'), 'low')
+            modo = os.stat(os.path.join(self.base, 'gpio%d' % n, 'value')).st_mode & 0o777
+            self.assertEqual(modo, 0o666, 'gpio%d nao foi liberado para o programa do robo' % n)
 
     def test_sigterm_deixa_led_aceso(self):
         p = subprocess.Popen([sys.executable, PROGRAMA, '--sysfs', self.base, '--comando', 'true'],

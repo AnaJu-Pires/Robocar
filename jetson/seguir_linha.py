@@ -23,6 +23,7 @@ import cv2
 
 from robocar import configuracao, controle, desenho, protocolo
 from robocar.camera import Camera
+from robocar.leds import FALHAS_APAGA_LUZ, LedsRobo
 from robocar.registro import GravadorVideo, LogCSV
 from robocar.visao import DetectorLinha
 
@@ -34,6 +35,7 @@ def argumentos():
     ap.add_argument("--config", help="arquivo de configuracao (padrao: config/config.json)")
     ap.add_argument("--fonte", help="csi | indice da webcam | arquivo de video")
     ap.add_argument("--esp32", help="porta serial da ESP32, ex.: /dev/ttyUSB0")
+    ap.add_argument("--sem-leds", action="store_true", help="nao mexe na luz da camera nem no LED codigo-rodando")
     ap.add_argument("--sem-janela", action="store_true", help="nao abre janelas (uso no carro)")
     ap.add_argument("--limiar-fixo", type=float, help="ignora a calibracao e usa este limiar (0-255)")
     ap.add_argument("--gravar", nargs="?", const=AUTO, help="grava os quadros (.avi); padrao em dados/gravacoes/")
@@ -97,7 +99,13 @@ def main():
     elif cfg["visao"]["limiar_modo"] == "adaptativo":
         print("AVISO: sem config/calibracao.json - rode calibrar.py. Usando razao padrao.")
 
-    cam = Camera(cfg["camera"], args.fonte)
+    leds = LedsRobo(ativo=not args.sem_leds)
+    leds.luz(True)          # antes de abrir a camera: a exposicao automatica ja converge com a luz acesa
+    try:
+        cam = Camera(cfg["camera"], args.fonte)
+    except Exception:
+        leds.apagar()
+        raise
     print("Fonte:", cam.descricao)
     detector = DetectorLinha(cfg["visao"], calib)
     if detector.razao != detector.razao_calibrada:
@@ -146,11 +154,15 @@ def main():
                     print("Fim do video.")
                     break
                 falhas += 1
+                leds.vivo(t, False)
+                if falhas >= FALHAS_APAGA_LUZ:
+                    leds.luz(False)     # luz apagada = camera sem quadros
                 if falhas > 30:
                     print("ERRO: a camera parou de enviar quadros.")
                     break
                 continue
             falhas = 0
+            leds.luz(True)
             if gravador:
                 gravador.escrever(cinza)
 
@@ -186,6 +198,7 @@ def main():
                 if link:
                     link.parar()
             estado_ant = ctrl.estado
+            leds.vivo(t, ctrl.estado in (controle.SEGUINDO, controle.BUSCANDO))
             proc_ms = 0.9 * proc_ms + 0.1 * (time.time() - t0) * 1000.0
 
             dt, t_ant = t - t_ant, t
@@ -239,6 +252,7 @@ def main():
     except KeyboardInterrupt:
         print("\nInterrompido pelo usuario.")
     finally:
+        leds.apagar()
         if link:
             link.fechar()
         cam.liberar()

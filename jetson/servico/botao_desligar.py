@@ -21,8 +21,22 @@ import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from robocar.botao_desligar import GpioSysfs, MaquinaBotao, GPIO_BOTAO, GPIO_LED  # noqa: E402
+from robocar.leds import GPIO_LUZ, GPIO_VIVO  # noqa: E402
 
 PERIODO_S = 0.05
+
+
+def liberar_leds_do_robo(sysfs):
+    """Luz da camera (gpio194) e LED codigo-rodando (gpio16), D-033: saida em 0 e escrita liberada para o
+    programa do robo (que roda sem sudo). Falha aqui so avisa: o botao de desligar continua funcionando."""
+    for n in (GPIO_LUZ, GPIO_VIVO):
+        g = GpioSysfs(n, sysfs)
+        try:
+            g.exportar()
+            g.como_saida(0)
+            os.chmod(os.path.join(g.dir, 'value'), 0o666)
+        except (IOError, OSError) as e:
+            print('AVISO: gpio%d (LEDs do robo) indisponivel: %s' % (n, e))
 
 
 def principal(argv=None):
@@ -42,6 +56,7 @@ def principal(argv=None):
     except (IOError, OSError) as e:
         print('ERRO no GPIO (%s). Rode como root; confira se o SPI do J41 nao foi ligado no jetson-io.' % e)
         return 1
+    liberar_leds_do_robo(args.sysfs)
 
     def sair(sig, frame):
         try:
