@@ -66,6 +66,9 @@ placa:  ## regenera as saidas da placa da ESP32 (PDFs 1:1, furacao, STEP, imagen
 placa-interface:  ## placa de interface (desligar/LEDs/luz): verifica o desenho furo a furo, grava layout.json e a imagem, roda os negativos
 	cd hardware/placa_desligar && $(PYTHON) layout.py && $(PYTHON) layout.py --negativos
 
+placa-distribuicao:  ## placa de distribuicao (fusivel/chave/saidas): gera, roda DRC e verificacoes, grava PDFs 1:1; roda os negativos
+	cd hardware/placa_distribuicao && $(PYTHON) placa.py && $(PYTHON) placa.py --negativos
+
 drc:  ## placa da ESP32: DRC + so B.Cu + paridade esquema x placa (precisa do Python do KiCad)
 	$(PYTHON) hardware/placa_esp32/verificar.py
 
