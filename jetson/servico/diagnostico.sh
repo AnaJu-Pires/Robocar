@@ -1,7 +1,7 @@
 #!/bin/bash
 # Junta num arquivo so o que precisa para diagnosticar um problema no carro.
 # Uso (na Jetson):  make diagnostico      -> ~/diagnostico_<data>.tar.gz
-# Depois, no PC:    scp blitz@192.168.55.1:~/diagnostico_*.tar.gz .
+# Depois, no PC:    scp blitz@blitz-desktop.local:~/diagnostico_*.tar.gz .
 set -u
 REPO=$(cd "$(dirname "$0")/../.." && pwd)
 NOME=diagnostico_$(date +%Y%m%d_%H%M%S)
@@ -34,4 +34,4 @@ fi
 tar czf "$HOME/$NOME.tar.gz" -C "$TMP" "$NOME"
 rm -rf "$TMP"
 echo "Pronto: $HOME/$NOME.tar.gz ($(du -h "$HOME/$NOME.tar.gz" | cut -f1))"
-echo "No PC:  scp blitz@192.168.55.1:~/$NOME.tar.gz ."
+echo "No PC:  scp blitz@blitz-desktop.local:~/$NOME.tar.gz ."

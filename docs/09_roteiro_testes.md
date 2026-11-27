@@ -7,13 +7,19 @@ Em cada etapa: rode os comandos, confira o **critério**, e me mande o que está
 
 ## Como trabalhar pelo SSH
 
-* Cabo micro-USB do PC na Jetson. No **PowerShell do Windows** (ou no Ubuntu do WSL):
+* **Pela rede (recomendado):** cabo de rede da Jetson no roteador, o mesmo do PC. A Jetson ganha internet (para o
+  `git`) e o PC a acha pelo nome. No **PowerShell do Windows**:
   ```bash
-  ssh blitz@192.168.55.1
+  ssh blitz@blitz-desktop.local
   ```
+  Se o nome não responder, pegue o IP da Jetson na lista de aparelhos do roteador (ex.: http://192.168.15.1) e use
+  `ssh blitz@IP`. Nos comandos abaixo, troque `blitz-desktop.local` pelo IP se for o caso.
+* **Pelo cabo micro-USB** (`ssh blitz@192.168.55.1`): **não use no PC com Windows 11 da equipe.** Em 27/11 o
+  Windows reconheceu a Jetson como "UsbNcm Host Device", não recebeu endereço, e desativar o adaptador ou tirar o cabo
+  **travou e reiniciou o PC** várias vezes (falha do driver do Windows, não da Jetson).
 * Trazer arquivos da Jetson para o PC (rode **no PC**, não dentro do SSH). Exemplo para uma pasta de fotos:
   ```bash
-  scp -r blitz@192.168.55.1:Robocar/dados/capturas/PASTA .
+  scp -r blitz@blitz-desktop.local:Robocar/dados/capturas/PASTA .
   ```
   O `make diagnostico` junta logs, configuração e fotos num arquivo só e mostra o `scp` para trazê-lo.
 * **Não** use `ssh -X` nem os comandos com janela (`make visao`, `make calibrar`, `make bancada`): pelo SSH use
