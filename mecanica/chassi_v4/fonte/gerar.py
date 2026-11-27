@@ -213,13 +213,23 @@ def png_folha(folha, arq, mesa, titulo):
     fig.savefig(arq, facecolor='white'); plt.close(fig)
 
 # ------------------------------------------------------------------------------------------- STEP e imagens
-def montagem(m, ang=None, cabos=True):
+def montagem(m, ang=None, cabos=True, reais=False):
+    """reais=True: placas do KiCad, motor N20 e rodas de verdade no lugar das caixas (so para o STEP; ver modelos_reais)."""
     asm = cq.Assembly(name='robocar_blitz_v4')
     itens = []
     for nome, sol, ch in modelo.chapas_3d(m, ang):
         asm.add(cq.Workplane().add(sol), name=nome, color=cq.Color(*render.COR_MDF[:3]))
         itens.append((sol, render.COR_MDF))
+    tira = set()
+    if reais:
+        import modelos_reais
+        novos, tira = modelos_reais.pecas(m)
+        for nome, sol, cor in novos:
+            asm.add(cq.Workplane().add(sol), name=nome, color=cq.Color(*cor))
+            itens.append((sol, cor + (1.0,)))
     for p in m.compradas + modelo.camera_compradas(m, m.P['CAM_ANG_NOMINAL'] if ang is None else ang):
+        if p['nome'] in tira:
+            continue
         asm.add(cq.Workplane().add(p['solido']), name=p['nome'], color=cq.Color(*p['cor']))
         itens.append((p['solido'], tuple(p['cor']) + (1.0,)))
     if cabos:
@@ -460,7 +470,7 @@ def principal():
     pdf_1x1(teste, os.path.join(pasta_c, 'TESTE_cortar_primeiro_1x1_A3.pdf'), ['Robocar Blitz v4 - CORTAR PRIMEIRO: pente, furos e gabaritos'],
             (270.0, 180.0), nota)
     # ---- STEP e imagens
-    asm, _ = montagem(m)
+    asm, _ = montagem(m, reais=True)
     asm.save(os.path.join(out, 'chassi_montado.step'))
     if not a.sem_imagens:
         os.makedirs(os.path.join(out, 'imagens'), exist_ok=True)

@@ -43,6 +43,19 @@ cada uma além da medida** nos lados livres (≈ 1 mm nas medidas da equipe; a f
 no corte **nominal**. Resultado: todas cabem. Folgas que sobram, por exemplo: XL4016 ↔ parede 5,3 mm; bateria no berço
 0,5 mm de cada lado (proposital: ela não pode chacoalhar); trilho do pino de trava, conectores dos motores e encoders ≥ 1 mm.
 
+## STEP montado (`chassi_montado.step`, abre no Onshape/FreeCAD)
+
+O STEP usa as peças de verdade onde existe modelo que pode entrar no repositório:
+* **placa da ESP32 v0.8** e **placa de distribuição**: os STEP exportados do KiCad de vocês, nas posições dos furos;
+* **motores N20**: modelo de [wcrl/Build-the-Bot](https://github.com/wcrl/Build-the-Bot) (licença MIT,
+  `modelos_3d/LICENSE_n20_motor_wcrl.txt`) + o encoder do modelo;
+* **rodas 42 × 19**: pneu, aro e cubo com furo em D.
+
+Jetson Nano, bateria (100 × 18 × 15), XL4016, câmera, chave e botão são as caixas medidas do modelo (não achei modelo
+com licença livre; o da NVIDIA não abre daqui). As verificações sempre usam as caixas, que são o envelope: o modelo de
+verdade fica dentro delas (só os terminais das placas passam 1,5 mm por baixo, no vão dos espaçadores). No Onshape:
+Import → "Combine to a single Part Studio".
+
 ## Peças compradas como estão no modelo
 
 Não são fotos: é o desenho que o chassi usa para cada peça, com as medidas e de onde veio cada uma (medido, documento ou **ESTIMADO**). Ponha a peça real ao lado: o que estiver estimado e for diferente, corrija em `fonte/pecas.py` e rode `make chassi`. A placa da ESP32 é o render do KiCad da placa de vocês.
