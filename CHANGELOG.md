@@ -3,6 +3,10 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (27/11/2026, rodada 2d: energia)
+- `hardware/placa_distribuicao/` (`make placa-distribuicao`): placa de distribuição corroída, 32 × 44 mm, face simples (D-036). Bateria → fusível 7 A → chave → SW+ em estrela para os 2 XL4016, VBAT, LED "chave ligada" e diodo de proteção contra bateria invertida. Gerada pelo KiCad com DRC, conferência pino a pino, só B.Cu e largura mínima de 3 mm nos caminhos de corrente; 7 testes negativos; PDF 1:1 para transferência e furação.
+- Chassi v4: a placa entra no lugar da placa de fusível de 30 × 30 (espaçadores de 10 mm, 2 furos e um passa-fio novo no andar 2); fios novos (`chave_placa`, `alim_xl1`, `alim_xl2`; sai o jumper de um borne para o outro).
+- O botão de largada no painel foi desfeito: a equipe já tem um botão no J14 (placa da ESP32 sem mudança). A placa de interface volta a 16 × 7 furos.
 ### Alterado (27/11/2026, rodada 2c: painel do operador)
 - Placa de interface vira o painel do operador (17 × 7 furos, 43 × 18 mm; D-035): botão de LARGADA (S3) no lugar do jumper J14, ligado por 2 fios Dupont, ao lado do botão de DESLIGAR e dos LEDs. 11 testes negativos no desenho (novo: botão de largada ligado ao GND da Jetson).
 - Chassi v4: botão de largada, J3 e cabo `largada_j14` no modelo; o acesso ao botão de largada passa para o painel.

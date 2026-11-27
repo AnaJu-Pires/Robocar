@@ -323,7 +323,8 @@ cabos só olhava MDF e rodas.
 ~139–141 mm de corte (tem 150). 51 verificações + 31 testes negativos no chassi; 10 na placa.
 
 ### D-035 — Painel do operador: largada e desligar juntos; placa da ESP32 continua 8 × 8
-*27/11/2026 · aceita*
+*27/11/2026 · em parte desfeita no mesmo dia: a equipe já tem um botão de largada soldado no J14; o S3 saiu do painel.
+Continua valendo: placa da ESP32 v0.8 sem mudança*
 **Contexto:** a equipe prefere botão no lugar do jumper de largada (J14) e uma placa só, do tamanho da anterior
 (8 × 8), se possível com o fusível. Todas as peças da placa da ESP32 estão em barra de pinos (trocar é fácil).
 **Decisão:** a placa da ESP32 v0.8 fica como está (8 × 8). A placa de interface vira o **painel do operador**
@@ -335,4 +336,21 @@ nela exigiria aumentar a placa para o lado e mudar de novo os passa-fios do VM e
 que já estava livre e não aumenta o chassi. Os 3,3 V da Jetson ficam fora da placa que tem o VM dos motores.
 **Consequências:** 11 testes negativos no desenho do painel; o acesso ao botão de largada no chassi passou para o
 painel; novo cabo `largada_j14` (2 Dupont de 10 cm). Uma v0.9 integrada pode ser estudada depois de 05/12.
+
+### D-036 — Placa de distribuição corroída: bateria → fusível → chave → conversores em estrela
+*27/11/2026 · aceita*
+**Contexto:** a placa do fusível era improvisada (cobre dividido em + e −, fusível e fios soldados). No modelo, o
+XL4016 #2 pegava energia no borne do #1, e o VBAT era emendado no terminal da chave.
+**Decisão:** placa corroída de face simples, 32 × 44 mm (`hardware/placa_distribuicao/placa.py`, gerada e verificada
+pelo KiCad). Tem 4 ilhas: BAT+ e FUS+ separadas pelo fusível 5 × 20 de 7 A; SW+ alimentada pelo fio que volta da
+chave; GND. Saídas: um par para cada XL4016 (em estrela), VBAT, LED verde "chave ligada" e D1 1N5408 em paralelo
+(catodo no SW+) como proteção contra bateria invertida (queima o fusível; sem perda no uso normal). Cobre de 3 mm ou
+mais em todo caminho de corrente, pinos ligados direto. Andar 2, em espaçadores de 10 mm, com um passa-fio novo para
+os pares dos XL4016.
+**Por quê:** a corrente dos motores deixa de passar pelo borne e pelo fio do XL4016 da Jetson. Cada emenda vira um furo
+com solda. O LED evita esquecer a chave ligada e descarregar a LiPo.
+**Por que corroída, e o painel do J41 em placa perfurada:** aqui passam até 7 A, e placa perfurada não tem cobre para
+isso. No painel passam miliampères, e o desenho furo a furo já é verificado.
+**Consequências:** chassi com +7 g (664 g), CG 50,1 mm, tomba com 0,78 g. Cabos `chave_xl` e `jumper_in_xl` saem;
+entram `chave_placa`, `alim_xl1` (151 mm) e `alim_xl2` (145 mm). DRC limpo e 7 testes negativos na placa.
 
