@@ -38,7 +38,7 @@ class LedsRobo(object):
             else:
                 faltando.append('gpio%d' % numero)
         if faltando and avisar:
-            avisar('LEDs: sem %s (normal no PC; na Jetson confira o servico botao-desligar).' % ', '.join(faltando))
+            avisar('LEDs do J41: desligados (sem %s). Normal: o painel do J41 nao e usado (D-039).' % ', '.join(faltando))
 
     def _por(self, nome, v):
         g = self.pinos.get(nome)

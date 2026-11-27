@@ -125,6 +125,10 @@ def main():
     elif cfg["visao"]["limiar_modo"] == "adaptativo":
         print("AVISO: sem config/calibracao.json - rode calibrar.py. Usando razao padrao.")
 
+    cfg["camera"], texto_cam = configuracao.camera_com_calibracao(cfg["camera"], calib)
+    if texto_cam:
+        print("Camera:", texto_cam)
+
     leds = LedsRobo(ativo=not args.sem_leds)
     leds.luz(True)          # antes de abrir a camera: a exposicao automatica ja converge com a luz acesa
     try:

@@ -135,6 +135,24 @@ def carregar_calibracao(caminho=None):
         return json.load(f)
 
 
+def camera_com_calibracao(cfg_camera, calib):
+    """Exposicao/ganho escolhidos no calibrar.py (teclas E/G) e salvos na calibracao.json.
+
+    A calibracao (branco/preto) so vale com a mesma exposicao; por isso ela fica junto. O config.json
+    tem prioridade: se 'camera.exposicao_ns' estiver definido la, a calibracao nao muda nada.
+    Devolve (cfg_camera, texto) - texto vazio se nada mudou.
+    """
+    cam = dict(cfg_camera)
+    if not calib or cam.get("exposicao_ns") or not calib.get("exposicao_ns"):
+        return cam, ""
+    cam["exposicao_ns"] = int(calib["exposicao_ns"])
+    if calib.get("ganho") and not cam.get("ganho"):
+        cam["ganho"] = calib["ganho"]
+    cam["trava_balanco_branco"] = True
+    return cam, "exposicao %.1f ms, ganho %s (da calibracao)" % (
+        cam["exposicao_ns"] / 1e6, cam["ganho"] if cam.get("ganho") else "auto")
+
+
 def salvar_calibracao(branco, preto, extras=None, caminho=None):
     if branco <= preto:
         raise ValueError("branco (%.1f) deve ser maior que preto (%.1f)" % (branco, preto))

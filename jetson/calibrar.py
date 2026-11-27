@@ -7,6 +7,9 @@ Acrescentado:
   S  salva em config/calibracao.json (lido automaticamente pelo seguir_linha.py)
   A  calibracao automatica (Otsu) com linha e fundo visiveis no retangulo
   C  alterna a regiao: "inferior" (a mesma do seguidor - recomendado) ou "central" (original)
+  E  troca a exposicao (auto, 1, 2, 3, 4, 6, 8 ms) e G o ganho (auto, 1, 2, 4, 8): reabre a camera
+     e mostra o contraste AO VIVO; a exposicao e o ganho vao junto para a calibracao.json e o
+     seguir_linha.py passa a usar os mesmos (o config.json tem prioridade, se definir)
   janela de mascara com o limiar atual e aviso de contraste baixo
 
 Uso: python3 calibrar.py [--fonte csi|0|video.avi]
@@ -27,6 +30,18 @@ from robocar.leds import LedsRobo
 SEPARACAO_MIN = 25.0   # abaixo disso o Otsu nao achou linha, so ruido do chao
 CONTRASTE_MIN = 60.0   # abaixo disso a linha se confunde com o chao (22/11/2026: 106/66 falhou)
 ESCALA = 2
+EXPOSICOES_NS = [None, 1000000, 2000000, 3000000, 4000000, 6000000, 8000000]   # None = automatica
+GANHOS = [None, 1, 2, 4, 8]                                                     # None = automatico
+
+
+def texto_exposicao(exposicao_ns, ganho):
+    return "exposicao %s  ganho %s" % ("auto" if not exposicao_ns else "%.0f ms" % (exposicao_ns / 1e6),
+                                       "auto" if not ganho else ganho)
+
+
+def proximo(lista, atual):
+    """Proximo valor da lista (circular); se 'atual' nao esta na lista, volta para o primeiro."""
+    return lista[(lista.index(atual) + 1) % len(lista)] if atual in lista else lista[0]
 
 
 def regiao(cinza, modo, inicio_roi):
@@ -59,7 +74,7 @@ def calibrar_quadros(rois, min_validos=0.5):
             len(resultados))
 
 
-def calibrar_automatico(cam, cfg, quadros=30, descartar=30):
+def calibrar_automatico(cam, cfg, cfg_cam=None, quadros=30, descartar=30):
     """Modo --auto (sem janela): espera a exposicao estabilizar, calibra e salva uma foto em dados/capturas/."""
     rois, ultimo = [], None
     for i in range(descartar + quadros):
@@ -78,8 +93,10 @@ def calibrar_automatico(cam, cfg, quadros=30, descartar=30):
         print("Automatico falhou: a LINHA e o CHAO precisam aparecer na parte de baixo da imagem. Foto: %s" % foto)
         return 1
     branco, preto, n = r
-    dados = configuracao.salvar_calibracao(branco, preto, extras={"regiao": "inferior", "camera": cam.descricao,
-                                                                  "modo": "auto (%d quadros)" % n})
+    cfg_cam = cfg_cam or cfg["camera"]
+    dados = configuracao.salvar_calibracao(branco, preto, extras={
+        "regiao": "inferior", "camera": cam.descricao, "modo": "auto (%d quadros)" % n,
+        "exposicao_ns": cfg_cam.get("exposicao_ns"), "ganho": cfg_cam.get("ganho")})
     _, mascara = cv2.threshold(ultimo, dados["limiar"], 255, cv2.THRESH_BINARY_INV)
     cv2.imwrite(foto, np.hstack([ultimo, mascara]))
     print("Salvo em %s: branco=%.1f preto=%.1f limiar=%.1f razao=%.2f" % (
@@ -94,7 +111,7 @@ def calibrar_automatico(cam, cfg, quadros=30, descartar=30):
     return 0
 
 
-def desenhar(cinza, ret, intensidade, branco, preto, modo):
+def desenhar(cinza, ret, intensidade, branco, preto, modo, linhas_extra=()):
     frame = cv2.resize(cv2.cvtColor(cinza, cv2.COLOR_GRAY2BGR), None, fx=ESCALA, fy=ESCALA,
                        interpolation=cv2.INTER_NEAREST)
     altura, largura = frame.shape[:2]
@@ -118,8 +135,10 @@ def desenhar(cinza, ret, intensidade, branco, preto, modo):
         cv2.putText(frame, resultado, (largura // 2 - 70, 140), cv2.FONT_HERSHEY_SIMPLEX, 1.2,
                     (255, 255, 255) if resultado == "BRANCO" else (0, 0, 255), 3)
     else:
-        texto("Calibre: B = branco | P = preto | A = automatico", altura - 45, (0, 255, 255))
-    texto("Q sair | R recalibrar | S salvar | C regiao", altura - 15, (0, 255, 0), 0.55)
+        texto("Calibre: B = branco | P = preto | A = automatico", altura - 95, (0, 255, 255))
+    for k, (t, cor) in enumerate(linhas_extra[:2]):       # rodape, acima da linha das teclas
+        texto(t, altura - 65 + 25 * k, cor, 0.55)
+    texto("Q sair | A auto | S salvar | E exposicao | G ganho | R | C regiao", altura - 15, (0, 255, 0), 0.5)
     return frame
 
 
@@ -140,30 +159,46 @@ def main():
 
 
 def calibrar(cfg, args):
-    cam = Camera(cfg["camera"], args.fonte)
+    anterior = configuracao.carregar_calibracao()
+    cfg_cam, texto_cam = configuracao.camera_com_calibracao(cfg["camera"], anterior)
+    if texto_cam:
+        print("Camera:", texto_cam)
+    cam = Camera(cfg_cam, args.fonte)
     print("Fonte:", cam.descricao)
     if args.auto:
         try:
-            return calibrar_automatico(cam, cfg)
+            return calibrar_automatico(cam, cfg, cfg_cam)
         finally:
             cam.liberar()
-    anterior = configuracao.carregar_calibracao()
     branco = anterior["branco"] if anterior else None
     preto = anterior["preto"] if anterior else None
     if anterior:
         print("Calibracao anterior: branco=%.1f preto=%.1f" % (branco, preto))
     modo = "inferior"
+    exposicao, ganho = cfg_cam.get("exposicao_ns"), cfg_cam.get("ganho")
+    ao_vivo, n = None, 0
 
     while True:
         ok, cinza = cam.ler()
         if not ok:
             print("ERRO: Nao foi possivel receber o frame.")
             break
+        n += 1
         ret = regiao(cinza, modo, cfg["visao"]["inicio_roi"])
         roi = cinza[ret[1]:ret[3], ret[0]:ret[2]]
         intensidade = float(np.median(roi))
+        if n % 15 == 0:                     # contraste ao vivo (Otsu), para comparar exposicoes
+            ao_vivo = calibrar_otsu(roi)
+        extra = [("Camera: %s  (E/G trocam)" % texto_exposicao(exposicao, ganho), (255, 200, 0))]
+        if ao_vivo:
+            extra.append(("Ao vivo: branco %.0f  preto %.0f  contraste %.0f%s" % (
+                ao_vivo[0], ao_vivo[1], ao_vivo[0] - ao_vivo[1],
+                "  (BAIXO)" if ao_vivo[0] - ao_vivo[1] < CONTRASTE_MIN else "  (bom)"),
+                (0, 0, 255) if ao_vivo[0] - ao_vivo[1] < CONTRASTE_MIN else (0, 255, 0)))
+        else:
+            extra.append(("Ao vivo: linha E chao precisam aparecer no retangulo", (0, 165, 255)))
 
-        cv2.imshow("Deteccao Preto e Branco", desenhar(cinza, ret, intensidade, branco, preto, modo))
+        cv2.imshow("Deteccao Preto e Branco", desenhar(cinza, ret, intensidade, branco, preto, modo, extra))
         if branco is not None and preto is not None:
             _, mascara = cv2.threshold(cinza, (branco + preto) / 2.0, 255, cv2.THRESH_BINARY_INV)
             cv2.imshow("Mascara (linha = branco)", cv2.resize(mascara, None, fx=ESCALA, fy=ESCALA,
@@ -188,13 +223,23 @@ def calibrar(cfg, args):
             print("Calibracao apagada.")
         elif tecla == ord("c"):
             modo = "central" if modo == "inferior" else "inferior"
+        elif tecla in (ord("e"), ord("g")) and cam.descricao.startswith("CSI"):
+            if tecla == ord("e"):
+                exposicao = proximo(EXPOSICOES_NS, exposicao)
+            else:
+                ganho = proximo(GANHOS, ganho)
+            cam.liberar()
+            cfg_cam = dict(cfg_cam, exposicao_ns=exposicao, ganho=ganho, trava_balanco_branco=bool(exposicao))
+            cam = Camera(cfg_cam, args.fonte)
+            ao_vivo, n = None, 0
+            print("Camera: %s -> %s" % (texto_exposicao(exposicao, ganho), cam.descricao))
         elif tecla == ord("q"):
             break
 
         if tecla in (ord("b"), ord("p"), ord("a"), ord("s")) and branco is not None and preto is not None:
             try:
-                dados = configuracao.salvar_calibracao(branco, preto,
-                                                       extras={"regiao": modo, "camera": cam.descricao})
+                dados = configuracao.salvar_calibracao(branco, preto, extras={
+                    "regiao": modo, "camera": cam.descricao, "exposicao_ns": exposicao, "ganho": ganho})
                 print("Salvo em %s: %s" % (configuracao.ARQ_CALIBRACAO, dados))
                 if branco - preto < CONTRASTE_MIN:
                     print("AVISO: contraste baixo; melhore a iluminacao ou a exposicao da camera.")

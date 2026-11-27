@@ -3,6 +3,9 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Adicionado (27/11/2026, calibrar com monitor na Jetson)
+- `make calibrar` (janela): **E** troca a exposição (auto, 1–8 ms) e **G** o ganho, reabrindo a câmera; o rodapé mostra o contraste **ao vivo** (Otsu) para comparar. A exposição e o ganho escolhidos vão para a `calibracao.json` (também no `--auto`) e o `seguir_linha.py` passa a usá-los (`configuracao.camera_com_calibracao`; o `config.json` tem prioridade). 4 testes novos.
+- Aviso dos LEDs do J41 reescrito (não é erro: o painel do J41 não é usado, D-039). Roteiro: seção "Com monitor na Jetson".
 ### Alterado (27/11/2026, desligar pelo botão de largada, D-039)
 - Firmware: depois do pedido de desligar (largada segurada 3 s), a ESP32 espera a Jetson sumir e mais `ESPERA_DESLIGAR_MS` (25 s) e o LED passa a dar **2 piscadas por segundo = pode desligar a chave**; cancela se a Jetson voltar ou não parar em 8 s. Sem mudança no protocolo. Simulação 31/31 (5 novas).
 - `make preparar-jetson` instala a regra do sudo do shutdown; `seguir_linha.py` avisa se ela faltar. `instalar.sh` só instala o serviço do botão do J41 com `--botao-j41` (e desliga um instalado antes).

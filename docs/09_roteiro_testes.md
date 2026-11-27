@@ -29,6 +29,26 @@ Em cada etapa: rode os comandos, confira o **critério**, e me mande o que está
 * Antes de qualquer teste com a câmera ou a ESP32: `sudo systemctl stop robocar` (se o serviço estiver instalado).
 * Mude **um parâmetro por vez** no `jetson/config/config.json` (`nano jetson/config/config.json`).
 
+## Com monitor na Jetson (etapas 1 a 3 sem precisar de outra pessoa)
+
+Para câmera, calibração e detecção dá para trabalhar **direto na Jetson**, ao lado do robô: monitor HDMI, teclado e
+mouse, abrir o Terminal (**Ctrl+Alt+T**) e rodar os comandos com janela. Nenhum deles abre a porta da ESP32: o robô
+**não anda**.
+
+1. `cd ~/Robocar && git pull`
+2. **Câmera e distância cega:** `make visao`. A janela mostra a imagem ao vivo com a região analisada (linha
+   azul-clara). Ponha a tira de fita atravessada à frente do robô e vá puxando até ela sumir pela borda de baixo;
+   meça da tira até o eixo das rodas. `q` fecha.
+3. **Calibração com escolha da exposição:** robô sobre a linha (linha e chão dentro do retângulo verde), depois
+   `make calibrar`:
+   * olhe "**Ao vivo: ... contraste**" no rodapé (verde = bom, ≥ 60; vermelho = baixo);
+   * aperte **E** para trocar a exposição (auto, 1, 2, 3, 4, 6, 8 ms; a imagem some ~2 s) e **G** para o ganho;
+     fique com a combinação de **maior contraste** em que o chão não fica estourado (branco abaixo de ~230);
+   * aperte **A**: calibra e **salva** (branco, preto e a exposição/ganho escolhidos). `q` fecha.
+   * O `seguir_linha.py` passa a usar a mesma exposição sozinho (aparece "Camera: exposicao ... (da calibracao)").
+4. **Detecção empurrando o robô:** `make visao OPCOES="--log"` e empurre sobre reta, curva, cruzamento, X e fim de
+   linha, olhando a janela; depois `make metricas`.
+
 ## Etapa 0 — Preparar (uma vez)
 
 1. Atualizar o código na Jetson. Precisa de internet (Wi-Fi):
