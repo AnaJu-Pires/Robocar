@@ -6,12 +6,12 @@
 | v3 (`mecanica/chassi_v3/`) | 240 mm | a 10 mm do limite de 250; só referência |
 | **v4 (este)** | **176 mm** (162 com a câmera em 45°) | 3 andares, todas as placas novas, luz da câmera, 51 verificações |
 
-**Por que o v4:** é o único que tem lugar para tudo o que existe hoje (placa de distribuição, placa de interface,
+**Por que o v4:** é o único que tem lugar para tudo o que existe hoje (placa de distribuição, botão de desligar,
 luz da câmera) e passa em todas as verificações. É 64 mm mais curto que o v3 e, no desempate (§4.8), robô menor
 ganha. O preço é o centro de massa mais alto: tomba com 0,77 g, por isso a curva é limitada no software a 0,65 g
 (D-032).
 
-**Furos:** os furos de fixação das peças compradas (Jetson, ESP32, XL4016, placas de interface e de distribuição,
+**Furos:** os furos de fixação das peças compradas (Jetson, ESP32, XL4016, placa de distribuição, botão de desligar,
 câmera, esfera, suportes dos motores) **não são cortados**. O laser só grava um círculo do tamanho do furo e uma
 cruz no centro, e vocês furam com a parafusadeira conferindo com a peça (D-037). O laser continua cortando o que
 tem de alinhar entre duas chapas (parafusos com porca presa, pivô e arco da câmera, pino da bateria), os encaixes,
@@ -45,7 +45,7 @@ Não são fotos: é o desenho que o chassi usa para cada peça, com as medidas e
 
 ```
  z (mm)
- 99-102   ANDAR 3  placa da ESP32 (largada, USB, LED e EN/BOOT por cima) + placa de interface + mastro curto da câmera
+ 99-102   ANDAR 3  placa da ESP32 (largada, USB, LED e EN/BOOT por cima) + botão de desligar + mastro curto da câmera
  50-53    ANDAR 2  Jetson de través (100 mm na largura), portas para TRÁS; atrás dela: placa de distribuição (fusível)
  12-18    ANDAR 1  motores no eixo · 2 XL4016 à frente do eixo · bateria atravessada atrás (sai pela direita) + chave
           trás ◄── x = −56 ─────── 0 (eixo) ─────────────────────────── 106 ──► frente
@@ -55,7 +55,7 @@ Não são fotos: é o desenho que o chassi usa para cada peça, com as medidas e
 |---|---|
 | 1: XL4016 + bateria | são ~160 g: o mais baixo possível. Os XL4016 ficam à frente do eixo, com os bornes virados para ele e os trimpots para a frente, onde o andar 2 tem furos de 7 mm para a chave de fenda. A bateria fica atravessada atrás da roda e sai pela direita em segundos |
 | 2: Jetson | é a peça mais pesada (141 g): no meio, não em cima. Com 100 mm na largura e as portas para trás, os plugues P4 e USB ficam **dentro do comprimento** e o carro não alarga |
-| 3: ESP32 | é a mais leve (40 g) e a que se usa na corrida: largada, LED, USB de gravação e EN/BOOT ficam por cima, sem tirar nada. Os cabos para a Jetson, os motores e a placa de interface são curtos |
+| 3: ESP32 | é a mais leve (40 g) e a que se usa na corrida: largada, LED, USB de gravação e EN/BOOT ficam por cima, sem tirar nada. Os cabos para a Jetson, os motores e o botão de desligar são curtos |
 
 Comparação das ordens possíveis, com as mesmas peças ([analise.md](analise.md)):
 
@@ -76,14 +76,14 @@ parte da altura e a largura total (143 mm) continua dentro dos 150.
 Ficam as de 42 mm ([D-027](../../docs/decisoes.md)): a análise da v4 dá o mesmo resultado
 (seção 2 de [analise.md](analise.md)). Na v4 a curva é limitada pelo software (0,80 m/s) e não pelo motor.
 
-## 3. Placa de interface (botão de desligar, LEDs e luz da câmera)
+## 3. Botão de desligar e luz da câmera (sem placa)
 
-[hardware/placa_desligar/](../../hardware/placa_desligar/) ([D-028](../../docs/decisoes.md) e D-033). Na v4 a
-plaquinha (**40 × 18 mm** desde 27/11) fica no **andar 3, à direita da placa da ESP32**: botão, LED vermelho
-("Jetson ligada / apagou = pode desligar a chave") e LED amarelo ("código rodando") ficam por cima, e o J41 da
-Jetson fica logo abaixo (8 jumpers de 15 cm). A posição da placa, dos 2 furos e das peças vem de
-`hardware/placa_desligar/layout.json` (D-034). **Falta no modelo:** a luz e o módulo da luz no mastro, que entram
-quando soubermos qual luz foi comprada.
+[hardware/placa_desligar/](../../hardware/placa_desligar/) ([D-028](../../docs/decisoes.md), D-040). Um **botão de
+pulso de painel de 12 mm** fica preso com a porca no **andar 3, lado direito** (furo gravado em (40, −50), furar à mão);
+o corpo fica embaixo do andar, e 3 jumpers vão direto ao J41 (pinos 17, 18 e 20; 68 mm de rota). O 10k e o 1k vão
+soldados no botão. Sem LEDs. A **luz** (fita COB na placa da luz, em cima da câmera) vai no **USB da Jetson**, sem o
+controle de toque; o cabo sobe por trás da câmera, preso nos passa-fios do VM e do motor esquerdos e na travessa do
+mastro (~40 cm).
 
 ## 4. Temperatura
 
@@ -101,7 +101,7 @@ quando soubermos qual luz foi comprada.
 | **Trocar a bateria** | chave OFF → separar o par XT60 (em pé, na ponta direita da bateria) → puxar o pino de trava por trás → deslizar a bateria para a direita | lado direito, atrás da roda |
 | Chave geral | gangorra na parede de trás do berço | traseira, à esquerda |
 | Largada | botão do J14, por cima | andar 3 |
-| Desligar a Jetson | botão da placa de interface, 2 s; esperar o LED vermelho **apagar**; só então a chave geral | andar 3, direita |
+| Desligar a Jetson | botão de painel, 2 s; esperar a luz e o LED de energia da ESP32 apagarem (ou 30 s depois do LED de estado; T15); só então a chave geral | andar 3, direita |
 | Trimpots dos XL4016 | chave de fenda **curta** (≤ 40 mm) pelos 4 furos de 7 mm do andar 2, na frente da Jetson | frente, entre os andares 2 e 3 |
 | Ângulo da câmera (25–65°) | soltar as 2 porcas borboleta, girar, ler o número gravado em cima do pivô, apertar | topo do mastro |
 | Gravar a ESP32 | USB-C na traseira da placa | andar 3, trás |
@@ -137,7 +137,7 @@ Mesma organização do v3 (ver [o README do v3](../chassi_v3/README.md#arquivos)
 | parede_frente | 2 | laterais do andar 1; porcas presas do andar 2 |
 | andar2 | 1 | Jetson, placa de distribuição, furos dos trimpots e passa-fios |
 | pilar_tras / pilar_frente | 2 + 2 | sustentam o andar 3; porcas presas |
-| andar3 | 1 | placa da ESP32, placa de interface, mastro |
+| andar3 | 1 | placa da ESP32, botão de desligar, mastro |
 | poste_mastro, travessa_mastro | 2 + 1 | mastro curto da câmera |
 | orelha_camera, placa_camera | 2 + 1 | giro da câmera |
 

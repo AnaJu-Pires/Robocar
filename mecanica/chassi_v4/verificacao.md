@@ -14,7 +14,7 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (52 ok, 0 falhas).
 | ok | regulamento | 2 rodas tracionadas tocam o chao | z minimo das rodas: 0.00, 0.00 mm |
 | ok | regulamento | esfera no chao (carro nivelado) | fundo da esfera a +0.00 mm do chao (piso dianteiro a 15.0 mm, esfera de 15 mm) |
 | ok | regulamento | vao livre >= 8 mm (emendas do tapete) | 12.0 mm |
-| ok | interferencia | nenhuma sobreposicao | 105 solidos (13 volumes de acesso) |
+| ok | interferencia | nenhuma sobreposicao | 101 solidos (13 volumes de acesso) |
 | ok | camera | camera livre em toda a faixa | 25 a 65 graus, de 5 em 5 |
 | ok | camera | a camera nao ve o proprio carro no angulo nominal | 45 graus; livre ate 45 graus (campo vertical estimado 56 graus) |
 | ok | material | piso_traseiro | 13 furos, teia >= 2.0 mm, 1 peca |
@@ -26,16 +26,16 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (52 ok, 0 falhas).
 | ok | material | andar2 | 36 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | pilar_tras | 0 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | pilar_frente | 0 furos, teia >= 2.0 mm, 1 peca |
-| ok | material | andar3 | 23 furos, teia >= 2.0 mm, 1 peca |
+| ok | material | andar3 | 21 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | poste_mastro | 3 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | travessa_mastro | 0 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | orelha_camera | 4 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | placa_camera | 5 furos, teia >= 2.0 mm, 1 peca |
 | ok | material | placa_luz | 1 furos, teia >= 2.0 mm, 1 peca |
-| ok | cg | massa total estimada | 667 g; CG x 21.4 / y -1.5 / z 50.5 mm |
-| ok | cg | CG centrado (|y| <= 3 mm) | -1.5 mm |
+| ok | cg | massa total estimada | 669 g; CG x 21.5 / y -1.6 / z 50.6 mm |
+| ok | cg | CG centrado (|y| <= 3 mm) | -1.6 mm |
 | ok | cg | peso nas rodas entre 70 e 92 % | 77 % |
-| ok | cg | tomba so acima de 1.15 x a aceleracao lateral permitida | tomba com 0.77 g; permitido 0.65 g (curva R100 a ate 0.80 m/s; atrito 0.90) |
+| ok | cg | tomba so acima de 1.15 x a aceleracao lateral permitida | tomba com 0.76 g; permitido 0.65 g (curva R100 a ate 0.80 m/s; atrito 0.90) |
 | ok | cg | empina so acima de 0.40 g | 0.42 g -> rampa do firmware deve limitar a aceleracao abaixo disso |
 | ok | cabos | pigtail_xt60_fusivel | rota 102 mm, corte 132 mm |
 | ok | cabos | fusivel_chave | rota 66 mm, corte 92 mm |
@@ -49,8 +49,8 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (52 ok, 0 falhas).
 | ok | cabos | motor_esq | rota 126 mm, corte 139 mm (tem 150) |
 | ok | cabos | motor_dir | rota 129 mm, corte 141 mm (tem 150) |
 | ok | cabos | usb_jetson_esp32 | rota 64 mm, corte 70 mm (tem 300) |
-| ok | cabos | j41_desligar | rota 91 mm, corte 100 mm (tem 150) |
-| ok | cabos | luz | rota 130 mm, corte 173 mm |
+| ok | cabos | j41_desligar | rota 62 mm, corte 68 mm (tem 150) |
+| ok | cabos | luz | rota 311 mm, corte 402 mm |
 | ok | cabos | ffc_camera | rota 123 mm, corte 135 mm (tem 150) |
 | ok | medidas | conferir antes de cortar: cam_lente | diametro e comprimento da lente a partir da face da placa |
 | ok | medidas | conferir antes de cortar: cam_suporte_lente | base quadrada do suporte da lente (passa no furo da placa da camera) |
@@ -82,8 +82,8 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | motor_esq | cabo de 6 vias do motor | conector branco do encoder (esq) | J12 + J10 | 126 | cabo pronto | 150 | 84 | cabo original do motor; o comprimento disponivel e estimado |
 | motor_dir | cabo de 6 vias do motor | conector branco do encoder (dir) | J13 + J11 | 129 | cabo pronto | 150 | 84 | cabo original do motor; o comprimento disponivel e estimado |
 | usb_jetson_esp32 | cabo USB-A / USB-C de dados | USB-C da ESP32 (andar 3, tras) | USB-A da Jetson (andar 2, tras) | 64 | cabo pronto | 300 | 64 | cabo curto: 15-20 cm bastam |
-| j41_desligar | 8 fios Dupont femea | J41 pinos 15 a 20, 2 (5 V) e 6 (GND) | placa de interface (andar 3) | 91 | cabo pronto | 150 | 60 | jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 (D-033) |
-| luz | 3 fios finos (5V, LUZ, GND) com Dupont femea | J2 da placa de interface | modulo da luz (atras da placa da luz) | 130 | 173 | do rolo | 84 | passa entre os postes, por cima da travessa; folga para girar a camera |
+| j41_desligar | 3 fios Dupont femea | J41 pinos 17 (3V3), 18 (botao) e 20 (GND) | botao de desligar (embaixo do andar 3) | 62 | cabo pronto | 150 | 62 | resistor de 10k soldado no botao, entre o 3V3 e o pino 18 (D-040) |
+| luz | cabo USB da propria fita (sem o controle de toque) | porta USB da Jetson (tras) | fita COB (atras da placa da luz) | 311 | 402 | do rolo | 101 | tirar o controle de toque (PWM faz faixas na imagem) e emendar a fita direto no cabo USB (D-040) |
 | ffc_camera | flat 15 vias | CSI da Jetson | camera | 123 | cabo pronto | 150 | 123 | pior angulo: 65 graus |
 
 ## Massas (para refazer o CG depois de pesar)
@@ -97,7 +97,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | xl4016_2_motores | 45.0 | 62 | -26 | 34 | E (PESAR) |
 | placa_esp32 | 40.0 | 13 | -0 | 108 | E (PESAR) |
 | andar2 | 39.8 | 25 | -0 | 52 | calculada |
-| andar3 | 26.0 | 23 | 0 | 100 | calculada |
+| andar3 | 25.8 | 23 | 1 | 100 | calculada |
 | piso_dianteiro | 23.4 | 59 | -0 | 16 | calculada |
 | motor_esq | 20.0 | 0 | 34 | 21 | V |
 | motor_dir | 20.0 | 0 | -34 | 21 | V |
@@ -113,11 +113,11 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | jetson_usb | 7.1 | 7 | -22 | 68 | M |
 | jetson_rj45 | 7.1 | 7 | -41 | 67 | M |
 | jetson_hdmi_dp | 7.1 | 7 | 7 | 64 | M |
+| botao_desligar | 6.0 | 40 | -50 | 89 | E |
 | esfera_base | 6.0 | 94 | -0 | 12 | E |
 | parede_frente_1 | 4.9 | 59 | 56 | 33 | calculada |
 | parede_frente_2 | 4.9 | 59 | -56 | 33 | calculada |
 | chave_geral | 4.0 | -39 | 28 | 41 | E |
-| placa_desligar | 4.0 | 28 | -50 | 106 | E |
 | cola_e_abracadeiras | 4.0 | 20 | 0 | 50 | calculada |
 | fio_vm_e | 3.2 | -2 | 29 | 72 | calculada |
 | poste_mastro_1 | 3.0 | 76 | 18 | 128 | calculada |
@@ -138,6 +138,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | fio_xl1_p4_jetson | 1.6 | -5 | 35 | 49 | calculada |
 | placa_camera | 1.6 | 76 | -0 | 132 | calculada |
 | placa_luz | 1.3 | 105 | 0 | 161 | calculada |
+| fio_luz | 1.2 | 27 | 13 | 114 | calculada |
 | pino_trava | 1.0 | -40 | -55 | 19 | calculada |
 | espacador_jetson_1 | 1.0 | 11 | 43 | 56 | calculada |
 | espacador_jetson_2 | 1.0 | 69 | 43 | 56 | calculada |
@@ -158,7 +159,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | espacador_xl2_4_44 | 0.5 | 34 | -6 | 20 | calculada |
 | espacador_dist_14_4 | 0.5 | -37 | 27 | 58 | calculada |
 | espacador_dist_15_39 | 0.5 | -37 | -8 | 58 | calculada |
-| **total** | **667** | **21.4** | **-1.5** | **50.5** | |
+| **total** | **669** | **21.5** | **-1.6** | **50.6** | |
 
 ## Fixadores (contados pelos furos)
 
@@ -168,7 +169,6 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | Parafuso M2 x 16 + porca (vem com o suporte do N20) | 4 |
 | Parafuso M2 x 8 + porca + arruela fina (camera) | 4 |
 | Parafuso M2.5 x 8 + porca (esfera) | 2 |
-| Parafuso M3 x 10 + espacador M3 x 3 mm + porca (placa/painel de interface) | 2 |
 | Parafuso M3 x 10 + espacador nylon M3 x 5 mm + porca | 4 |
 | Parafuso M3 x 10 + porca (pivo da camera, um de cada lado) | 2 |
 | Parafuso M3 x 10 + porca (une os 2 pisos) | 2 |

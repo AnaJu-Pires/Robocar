@@ -412,3 +412,21 @@ distribuição, a luz e o painel. **Por que não fazer os 2:** dobra corte e mon
 mudar de um para o outro. O que importa (o tombamento real) se mede no v4 em 5 min com uma rampa (T21).
 **Consequências:** R100 a no máximo ~0,80 m/s, igual à D-032, agora de verdade. 3 testes novos no controle.
 
+### D-040 — Montagem final da interface: só um botão de painel; luz no USB; sem LEDs
+*27/11/2026 · aceita (substitui a parte de montagem da D-033 e da D-038)*
+**Contexto:** a equipe achou que o LED vermelho solto ficaria estranho, perguntou se o botão ficaria solto no MDF e
+propôs ligar a luz pelo USB.
+**Decisão:**
+* **Luz no USB** de uma porta da Jetson, com o controle de toque cortado fora (PWM faz faixas na imagem). Sem
+  MOSFET, sem módulo, sem os pinos 15 e 2 do J41. A luz acende com a Jetson. Perde-se o liga/desliga por software, que
+  não era usado para nada essencial.
+* **Botão de desligar = botão de pulso de painel de 12 mm** preso com a porca num furo do andar 3 (gravado, furar à
+  mão). 10k e 1k soldados no botão. 3 jumpers até o J41 (17, 18, 20). Nada solto.
+* **Sem LED vermelho e sem amarelo.** "Programa rodando" = LED de estado da ESP32. "Pode desligar" = testar se a luz
+  e o LED de energia da ESP32 apagam quando a Jetson termina (se a porta USB corta os 5 V). Se não cortarem: esperar
+  30 s depois de o LED de estado da ESP32 apagar.
+* Sai o desenho em placa perfurada (`layout.py`), sai o passa-fio do J41 no andar 3; o cabo do J41 vai direto ao
+  corpo do botão, embaixo do andar 3 (68 mm; os jumpers têm 150).
+**Consequências:** chassi 669 g, tomba com 0,76 g (limite de software 0,65 g). Cabo USB da luz: ~40 cm, preso no
+passa-fio do VM esquerdo, no do motor esquerdo e na travessa do mastro.
+

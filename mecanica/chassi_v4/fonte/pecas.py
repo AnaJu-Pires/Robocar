@@ -81,7 +81,7 @@ M = {
     # Placa do fusivel (ja feita) e placa extra de desligar
     'fus_placa':        med((32.0, 44.0, 22.0), 'V', 'placa de distribuicao (hardware/placa_distribuicao): 32 x 44; altura com espacador de 10 mm e fusivel'),
     'fus_massa':        med(12.0, 'E', 'placa + fusivel + diodo + 2 espacadores'),
-    'desl_placa':       med((40.0, 18.0, 14.0), 'V', 'placa de interface: medidas e posicoes em hardware/placa_desligar/layout.json'),
+    'botao_painel':     med((12.0, 10.0, 8.0, 20.0), 'E', 'botao de pulso de painel 12 mm (NA): furo, capa, altura da capa, corpo embaixo; furar a mao'),
     # Chave, plugues, cabos
     'chave_recorte':    med((19.0, 13.0), 'E', 'KCD1-101: recorte 19 x 13; conferir a sua', afeta_corte=True),
     'chave_corpo':      med((21.0, 15.0, 18.0), 'E', 'moldura x profundidade atras do painel'),
@@ -111,7 +111,7 @@ MASSAS = {
     'xl4016': (v('xl_massa'), 'E', True),
     'placa_esp32': (v('esp_massa'), 'E', True),
     'placa_fusivel': (v('fus_massa'), 'E', False),
-    'placa_desligar': (4.0, 'E', False),
+    'botao_desligar': (6.0, 'E', False),
     'chave': (4.0, 'E', False),
     'xt60_chassi': (4.0, 'E', False),
     'cabo_usb': (12.0, 'E', True),

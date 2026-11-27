@@ -43,7 +43,8 @@ No DXF/PDF os furos das peças compradas vêm **gravados**: círculo do tamanho 
 | vbat | 0,2 mm² | terminal 2 da chave → J1 | **206 mm** | passa-fio da chave → passa-fio do VM esquerdo no andar 3 (sobe antes de passar por cima da placa); **Dupont de 1 via** no meio |
 | motor_esq / _dir | cabo de 6 vias original | encoder → J12 + J10 / J13 + J11 | precisa ≥ 141 mm (assumi 150) | passa-fio atrás da Jetson (andar 2) → passa-fio do andar 3, **na frente da placa da ESP32** (junto dos conectores dos motores) |
 | usb_jetson_esp32 | USB-A ↔ USB-C | ESP32 (andar 3, trás) → Jetson (andar 2, trás) | precisa ≥ 70 mm | cabo de 15–20 cm |
-| j41_desligar | 8 Dupont fêmea-fêmea 15 cm | J41 15–20, 2 e 6 → J1 da placa de interface | precisa ≥ 101 mm | sobe pelo passa-fio da direita do andar 3, na frente da placa; ver [pinos do J1](../../hardware/placa_desligar/README.md#montagem-furo-a-furo) |
+| j41_desligar | 3 Dupont fêmea 15 cm (ponta do botão soldada) | J41 17 (3V3), 18, 20 (GND) → botão de painel | precisa ≥ 68 mm | direto, embaixo do andar 3; 10k e 1k soldados no botão ([ligação](../../hardware/placa_desligar/README.md#ligação-do-botão-3-jumpers-dupont-fêmea-até-o-j41)) |
+| luz | cabo USB da fita COB (sem o controle de toque) | USB da Jetson → placa da luz | precisa ≥ 311 mm (corte ~40 cm) | sobe por trás da câmera; abraçadeira nos passa-fios do VM e do motor esquerdos e na travessa do mastro |
 | ffc_camera | flat 15 vias | CSI → câmera | precisa de 135 mm a 65° (temos 150) | contorna a frente do andar 3; folga para girar a câmera |
 
 Regras conferidas pela verificação: nada a menos de 3 mm de roda ou redutor; nenhum cabo atravessa MDF sem
@@ -80,9 +81,9 @@ conferir o nivelamento.
 3. Encaixar o andar 2 nas abas das paredes e fechar com 4 parafusos M3 (porcas presas).
 4. P4 na Jetson; flat no CSI (Jetson desligada).
 
-**5. Andar 3:** placa da ESP32 (espaçadores de 5 mm) e placa de interface (3 mm); cabos dos motores, VM e VBAT pelos
+**5. Andar 3:** placa da ESP32 (espaçadores de 5 mm) e botão de desligar (porca); cabos dos motores, VM e VBAT pelos
 passa-fios; encaixar nos pilares e fechar com 4 M3; USB; Dupont do J41; câmera no mastro em 45°.
 
 **6. Conferência (T10/T18):** `make chassi-verificar` com as massas pesadas; medir com régua (≤ 250 × 150);
 girar as rodas e a câmera (25°–65°) à mão; trocar a bateria cronometrando; regular um trimpot e tirar o microSD
-com o carro montado; ligar, ver o LED vermelho acender, `tegrastats`, desligar pelo botão e esperar o LED apagar.
+com o carro montado; ligar, ver a luz acender, `tegrastats`, desligar pelo botão (2 s) e anotar se a luz e o LED de energia da ESP32 apagam (T15).

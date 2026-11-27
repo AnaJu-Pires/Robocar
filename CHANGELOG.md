@@ -3,6 +3,9 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (27/11/2026, rodada 2k: interface final)
+- Interface da Jetson (D-040): só um botão de pulso de painel de 12 mm (furo gravado no andar 3, corpo embaixo, 10k/1k soldados nele) e 3 jumpers ao J41; sem LEDs; luz da câmera no USB da Jetson, sem o controle de toque. Sai o desenho em placa perfurada (`layout.py`, `make placa-interface`) e o passa-fio do J41. Chassi: cabo do J41 direto ao botão (68 mm) e cabo USB da luz (~40 cm) com 3 pontos de amarração.
+- Placa de distribuição: o `.kicad_pcb` gravado estava vazio (a placa era criada com `NewBoard` no próprio arquivo e os testes negativos a apagavam); agora nasce num arquivo temporário e o programa confere a placa gravada. Modelos 3D na variável do KiCad 10; imagem 3D.
 ### Alterado (27/11/2026, rodada 2h)
 - **Controle: limite de curva de verdade** (D-039): `a_lat_max_g` = 0,65 estima a = v·ω pelos comandos das rodas e reduz as 2 rodas pelo mesmo fator (mesmo raio, menos velocidade). O limite da D-032 só existia no papel. 3 testes novos; simulação do firmware 26/26.
 - Placa de distribuição: esquemático do KiCad gerado e conferido pelo próprio KiCad (`kicad-cli`) contra o circuito e a placa, PDF do esquemático, STEP 3D; 8 testes negativos (novo: esquemático com o diodo invertido). Gerador de esquemático em `hardware/ferramentas/kicad_sch.py`.

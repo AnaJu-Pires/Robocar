@@ -25,17 +25,17 @@ Cada linha planta um defeito de proposito e confere que a verificacao FALHA (peg
 | material: aba de 1,5 mm (parte fina) | material | sim | teste_aba_fina: parte do contorno mais fina que 2.0 mm perto de (20.8, 35.0) |
 | material: gravacao em cima de furo | material | sim | teste_gravacao: gravacao "TEXTO" cai em furo ou fora da peca |
 | cg: 120 g no alto (tomba antes do limite de curva) | cg | sim | tomba so acima de 1.15 x a aceleracao lateral permitida: tomba com 0.61 g; permitido 0.65 g (curva R100 a ate 0.80 m/s; atrito 0.90) |
-| cg: sem limite de curva por software (tomba antes de escorregar) | cg | sim | tomba so acima de 1.15 x a aceleracao lateral permitida: tomba com 0.77 g; permitido 0.90 g (curva R100 a ate 0.94 m/s; atrito 0.90) |
-| cg: 80 g de lastro de lado (CG fora do centro) | cg | sim | CG centrado (/y/ <= 3 mm): +4.6 mm |
+| cg: sem limite de curva por software (tomba antes de escorregar) | cg | sim | tomba so acima de 1.15 x a aceleracao lateral permitida: tomba com 0.76 g; permitido 0.90 g (curva R100 a ate 0.94 m/s; atrito 0.90) |
+| cg: 80 g de lastro de lado (CG fora do centro) | cg | sim | CG centrado (/y/ <= 3 mm): +4.5 mm |
 | cg: 150 g de lastro atras (empina) | cg | sim | empina so acima de 0.40 g: 0.14 g -> rampa do firmware deve limitar a aceleracao abaixo disso |
 | cabos: cabo do motor de 90 mm (curto) | cabos | sim | motor_esq: precisa de 139 mm e tem 90 mm |
 | cabos: bitola de 86 mm (fios passam a menos de 3 mm da roda) | cabos | sim | alim_xl1: a menos de 3 mm de roda_esq |
 | cabos: passa-fio do P4 apagado (fio atravessa o andar 2) | cabos | sim | xl1_p4_jetson: atravessa a chapa andar2 |
 | cabos: passa-fio apagado da lista de apoios | cabos | sim | xl1_p4_jetson: apoio "pf_p4" nao existe nas chapas |
-| cabos: passa-fio do motor de volta embaixo da placa de interface (cabo atravessa a placa) | cabos | sim | motor_dir: atravessa a placa_desligar |
+| cabos: passa-fio do motor embaixo da placa da ESP32 (cabo atravessa a placa) | cabos | sim | luz: atravessa a placa_esp32 |
 | cabos: cabo USB de 50 mm | cabos | sim | usb_jetson_esp32: precisa de 70 mm e tem 50 mm |
 | medidas: --para-cortar com medidas estimadas | medidas | sim | conferir antes de cortar: cam_lente: diametro e comprimento da lente a partir da face da placa |
 | dxf: DXF gravado com a Jetson 1 mm diferente da medida | dxf | sim | furos da Jetson no DXF: 86.30 x 57.30 mm (1 esperado) |
 | dxf: furos das pecas compradas cortados em vez de gravados (equipe fura a mao) | dxf_cortados | sim | furos de fixacao das pecas compradas so gravados (furar a mao): 10 cortados (Jetson 2,9 / camera 2,2 / esfera 2,8 mm); esperado 0 |
 
-Tempo: 164 s.
+Tempo: 157 s.

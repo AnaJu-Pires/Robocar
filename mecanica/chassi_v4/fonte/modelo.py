@@ -285,32 +285,16 @@ def construir(P=None, verif=False):
     acesso('dedo_en_boot_esp32', cilindro((xu + 6, yu, zt + 11), (xu + 6, yu, zt + 60), 12),
            'botoes EN/BOOT da ESP32 (gravacao)', ignora=('esp32_devkit', 'barras_esp32'))
     m.esp_usb = (xu, yu, zu)
-    # placa de interface (D-028/D-033): andar 3, faixa direita ao lado da ESP32. Posicao de cada peca e dos furos vem do
-    # desenho furo a furo (hardware/placa_desligar/layout.json, gerado e verificado por layout.py)
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'hardware', 'placa_desligar',
-                           'layout.json')) as f_:
-        LY = json.load(f_)
-    dw, dl, _ = LY['placa']
-    DX0, DY1 = 8.0, -(EW / 2 + 1.0)                      # canto de tras / de dentro
-    lp = lambda uw: (DX0 + uw[0], DY1 - uw[1])           # (u, w) do layout -> (x, y) no carro
-    comprada('placa_desligar', caixa(DX0, DX0 + dw, DY1 - dl, DY1, ZA3t + 3, ZA3t + 4.6), 4.0, 'eletronica', (0.15, 0.4, 0.55))
-    zbd = ZA3t + 4.6
-    bx, by = lp(LY['botao'])
-    m.desl_botao = (bx, by, zbd)
-    comprada('botao_desligar', caixa(bx - 3, bx + 3, by - 3, by + 3, zbd, zbd + 13), 0, 'eletronica', (0.1, 0.1, 0.1),
-             'placa_desligar')
-    for nome_, chave_, cor_ in (('led_pode_desligar', 'led_vermelho', (0.9, 0.1, 0.1)),
-                                ('led_codigo_rodando', 'led_amarelo', (0.95, 0.75, 0.1))):
-        lx, ly_ = lp(LY[chave_])
-        comprada(nome_, cilindro((lx, ly_, zbd), (lx, ly_, zbd + 8), 3), 0, 'eletronica', cor_, 'placa_desligar')
-    for nome_, chave_, cor_ in (('j1_interface', 'j1', (0.1, 0.1, 0.1)), ('j2_luz', 'j2', (0.9, 0.9, 0.9))):
-        jj = LY[chave_]; jx, jy = lp(jj['centro'])
-        comprada(nome_, caixa(jx - jj['lu'] / 2, jx + jj['lu'] / 2, jy - jj['lw'] / 2, jy + jj['lw'] / 2, zbd,
-                              zbd + jj['altura']), 0, 'eletronica', cor_, 'placa_desligar')
-    jx, jy = lp(LY['j1']['centro'])
-    m.desl_j1 = (jx, jy, zbd + LY['j1']['altura'] + 3.0)
-    acesso('dedo_botao_desligar', cilindro((bx, by, zbd + 13), (bx, by, zbd + 50), 12), 'apertar o botao de desligar a Jetson')
-    m.desl_furos = [lp(LY['furos_m3'][k]) for k in ('MH1', 'MH2')]
+    # botao de desligar a Jetson (D-040): botao de PULSO de painel (12 mm), preso com a porca no andar 3, lado direito,
+    # perto do J41 da Jetson; o corpo fica embaixo do andar 3. Sem placa e sem LED.
+    bd, bcap, bh, bcorpo = v('botao_painel')
+    BTN = (40.0, -(EW / 2 + 10.0))
+    m.desl_botao = (BTN[0], BTN[1], ZA3t)
+    comprada('botao_desligar', cilindro((*BTN, ZA3 - bcorpo), (*BTN, ZA3), bd + 1.0), 6.0, 'eletronica', (0.1, 0.1, 0.1))
+    comprada('botao_capa', cilindro((*BTN, ZA3t), (*BTN, ZA3t + bh), bcap), 0, 'eletronica', (0.8, 0.1, 0.1), 'botao_desligar')
+    comprada('botao_porca', cilindro((*BTN, ZA3t), (*BTN, ZA3t + 2.0), 16.0), 0, 'eletronica', (0.6, 0.6, 0.6), 'botao_desligar')
+    acesso('dedo_botao_desligar', cilindro((*BTN, ZA3t + bh), (*BTN, ZA3t + bh + 40), 12),
+           'apertar o botao de desligar a Jetson', ignora=('botao_desligar',))
 
     # ---------------------------------------------------------------------------- esfera
     ex_, ey_ = v('esfera_corpo'); EH = v('esfera_altura'); EXX = P['ESFERA_X']
@@ -469,8 +453,8 @@ def construir(P=None, verif=False):
     f3 = []
     for (u, vv) in v('esp_furos'):
         f3.append(circ(*esp_pt(u, vv), 3.4, 'esp32', 'parafuso M3 da placa da ESP32'))
-    for (x, y) in m.desl_furos:
-        f3.append(circ(x, y, 3.4, 'desligar', 'parafuso M3 da placa de desligar'))
+    f3.append(circ(m.desl_botao[0], m.desl_botao[1], v('botao_painel')[0] + 0.2, 'botao_desligar',
+                   'botao de desligar a Jetson (pulso, painel)'))
     for sy_ in (1, -1):
         for k in range(2):
             f3.append(rasgo(pil_aba(k), sy_ * (Y_PIL + T / 2), 6, S, 'pilar'))
@@ -484,9 +468,6 @@ def construir(P=None, verif=False):
     for nome_, (x, y) in (('pf3_motor_e', PF3_MOTOR[0]), ('pf3_motor_d', PF3_MOTOR[1]), ('pf3_vm_e', PF3_VM[0]),
                           ('pf3_vm_d', PF3_VM[1])):
         apoios[nome_] = (x, y, ZA3 + T / 2)
-    PF3_J41 = (52.0, -EW / 2 - 9.0)                   # na frente da placa de interface, ao lado do J1
-    f3.append(circ(*PF3_J41, 7.0, 'passa_fio_j41', 'jumpers do J41 sobem para a placa de desligar'))
-    apoios['pf3_j41'] = (PF3_J41[0], PF3_J41[1], ZA3 + T / 2)
     PY = 17.0
     for sy_ in (1, -1):
         for xc in (PX0 + 3.5, PX1 - 3.5):
@@ -549,7 +530,7 @@ def construir(P=None, verif=False):
     base_pl = ret(-YO, LUZ_Y0, YO, LUZ_Y1)
     abas_pl = [ret(YO, LUZ_Y0 + 4, YO + T, LUZ_Y1 - 4), ret(-YO - T, LUZ_Y0 + 4, -YO, LUZ_Y1 - 4)]
     placa_luz = Chapa('placa_luz', base_pl, [circ(-YO + 4.0, LUZ_Y0 + 4.0, 3.0, 'fio_luz', 'fios da fita passam para tras')],
-                      abas_pl, frames=[], textos=[('LUZ', 4.0, LUZ_Y0 + 3.2, 2.0)], descricao='fita de LED na frente, modulo atras')
+                      abas_pl, frames=[], textos=[('LUZ', 4.0, LUZ_Y0 + 3.2, 2.0)], descricao='fita de LED na frente, cabo USB atras')
     placa_luz.qtd = 1
     chapas.append(placa_luz)
     m.LUZ_Y = (LUZ_Y0, LUZ_Y1)
@@ -563,8 +544,7 @@ def construir(P=None, verif=False):
         out.append(('placa_camera', placa_cam.solido(T).moved(loc(frp)), 'chapa'))
         out.append(('placa_luz', placa_luz.solido(T).moved(loc(frp)), 'chapa'))
         out.append(('luz_cob', caixa_local(frp, -YO + 1.0, YO - 1.0, LUZ_Y0 + 1.0, LUZ_Y1 - 1.0, T, T + 2.0), 'camera'))
-        out.append(('modulo_luz', caixa_local(frp, -10.0, 10.0, LUZ_Y0 + 1.0, LUZ_Y1 - 1.0, -16.0, 0.0), 'camera'))
-        m.luz_modulo_pt = aplicar(frp, 0, LUZ_Y0 + 2.0, -8.0)
+        m.luz_modulo_pt = aplicar(frp, -YO + 4.0, LUZ_Y0 + 4.0, -4.0)   # emenda dos fios da fita, atras da placa
         pw_, ph_, pt_ = v('cam_placa')
         out.append(('camera_placa', caixa_local(frp, -pw_ / 2, pw_ / 2, CC - ph_ / 2, CC + ph_ / 2, -1.5 - pt_, -1.5), 'camera'))
         ld, ll = v('cam_lente')
@@ -639,22 +619,24 @@ def construir(P=None, verif=False):
          4.0, 'cabo USB-A / USB-C de dados', 'USB-C da ESP32 (andar 3, tras)', 'USB-A da Jetson (andar 2, tras)',
          apoio=[], disponivel=v('usb_cabo'), extra=0.0, obs='cabo curto: 15-20 cm bastam')
     xj41, yj41 = jet_pt(v('jet_j41_u')[0] + 10, JD - 4)
-    pj = apoios['pf3_j41']
-    cabo('j41_desligar', [(xj41, yj41, ZJ + JT + 10), (pj[0], pj[1], ZA3 - 4), (pj[0], pj[1], ZA3t + 4),
-                          (pj[0], pj[1], m.desl_j1[2] + 4), (m.desl_j1[0], m.desl_j1[1], m.desl_j1[2])],
-         3.5, '8 fios Dupont femea', 'J41 pinos 15 a 20, 2 (5 V) e 6 (GND)', 'placa de interface (andar 3)',
-         apoio=['pf3_j41'], disponivel=150.0, extra=0.0,
-         obs='jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 (D-033)')
+    bb = m.desl_botao
+    cabo('j41_desligar', [(xj41, yj41, ZJ + JT + 10), (bb[0], bb[1], ZA3 - v('botao_painel')[3] - 6),
+                          (bb[0], bb[1], ZA3 - v('botao_painel')[3])],
+         2.5, '3 fios Dupont femea', 'J41 pinos 17 (3V3), 18 (botao) e 20 (GND)', 'botao de desligar (embaixo do andar 3)',
+         disponivel=150.0, extra=0.0, obs='resistor de 10k soldado no botao, entre o 3V3 e o pino 18 (D-040)')
     partes_camera(P['CAM_ANG_NOMINAL'])
-    lj2 = (8.0 + LY['j2']['centro'][0], -(EW / 2 + 1.0) - LY['j2']['centro'][1], zbd + LY['j2']['altura'] + 3.0)
     lm = m.luz_modulo_pt
     exc, eyc, _, oc = F_cam(P['CAM_ANG_NOMINAL'], 0)
     atras = lambda yl, t: tuple(np.array(oc) + CA * np.array(exc) + yl * np.array(eyc) - t * np.array(exc))   # t > 0: atras da placa
     apoios['travessa_mastro'] = (TRVx, -6.0, ZTR + 4.0 + 1.5)
-    cabo('luz', [lj2, (45.0, -30.0, lj2[2] + 1), (TRVx, -6.0, ZTR + 4.0 + 1.5), atras(-12.0, 24.0), atras(LUZ_Y0 + 2.0, 24.0),
-                 tuple(lm)],
-         2.0, '3 fios finos (5V, LUZ, GND) com Dupont femea', 'J2 da placa de interface', 'modulo da luz (atras da placa da luz)',
-         apoio=['travessa_mastro'], extra=30.0, obs='passa entre os postes, por cima da travessa; folga para girar a camera')
+    usb_luz = (uf[0] - 2, uf[1], uf[2] + 7.0)          # porta USB de cima, na mesma pilha da ESP32
+    pv3, pm3 = apoios['pf3_vm_e'], apoios['pf3_motor_e']
+    cabo('luz', [usb_luz, (usb_luz[0] - 6, usb_luz[1], usb_luz[2]), (-30.0, 40.0, 92.0), (-28.0, pv3[1], ZA3t + 4),
+                 (pv3[0], pv3[1], ZA3t + 4), (52.0, 44.0, ZA3t + 4), (pm3[0], pm3[1], ZA3t + 4), (54.0, 10.0, ZA3t + 6), (TRVx, -6.0, ZTR + 4.0 + 3.0),
+                 atras(-12.0, 24.0), atras(LUZ_Y0 + 2.0, 24.0), tuple(lm)],
+         3.5, 'cabo USB da propria fita (sem o controle de toque)', 'porta USB da Jetson (tras)', 'fita COB (atras da placa da luz)',
+         apoio=['pf3_vm_e', 'pf3_motor_e', 'travessa_mastro'], extra=60.0,
+         obs='tirar o controle de toque (PWM faz faixas na imagem) e emendar a fita direto no cabo USB (D-040)')
     m.cabos_ffc = (jet_pt(np.mean(v('jet_csi_u')), 58) + (ZJ + JT + 4,))
     def ffc_rota(ang):
         partes_camera(ang)
