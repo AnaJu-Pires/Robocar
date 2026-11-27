@@ -264,7 +264,8 @@ def construir(P=None, verif=False):
     upl, upw, uph = v('esp_usb_plugue')
     comprada('plugue_usb_esp32', caixa(xu - upl, xu, yu - upw / 2, yu + upw / 2, zu - uph / 2, zu + uph / 2), 0, 'plugue',
              (0.3, 0.3, 0.3), 'placa_esp32')
-    m.esp_j14 = esp_pt(60.0, 45.0)                     # J14 (largada): 2 fios Dupont ate o J3 do painel
+    acesso('dedo_botao_largada', cilindro((*esp_pt(60, 48), zt + 6), (*esp_pt(60, 48), zt + 60), 14),
+           'apertar o botao de largada (J14) por cima', ignora=('placa_esp32',))
     acesso('dedo_en_boot_esp32', cilindro((xu + 6, yu, zt + 11), (xu + 6, yu, zt + 60), 12),
            'botoes EN/BOOT da ESP32 (gravacao)', ignora=('esp32_devkit', 'barras_esp32'))
     m.esp_usb = (xu, yu, zu)
@@ -274,7 +275,7 @@ def construir(P=None, verif=False):
                            'layout.json')) as f_:
         LY = json.load(f_)
     dw, dl, _ = LY['placa']
-    DX0, DY1 = 48.0 - dw, -(EW / 2 + 1.0)               # canto de tras / de dentro (frente fixa em x = 48)
+    DX0, DY1 = 8.0, -(EW / 2 + 1.0)                      # canto de tras / de dentro
     lp = lambda uw: (DX0 + uw[0], DY1 - uw[1])           # (u, w) do layout -> (x, y) no carro
     comprada('placa_desligar', caixa(DX0, DX0 + dw, DY1 - dl, DY1, ZA3t + 3, ZA3t + 4.6), 4.0, 'eletronica', (0.15, 0.4, 0.55))
     zbd = ZA3t + 4.6
@@ -293,16 +294,6 @@ def construir(P=None, verif=False):
     jx, jy = lp(LY['j1']['centro'])
     m.desl_j1 = (jx, jy, zbd + LY['j1']['altura'] + 3.0)
     acesso('dedo_botao_desligar', cilindro((bx, by, zbd + 13), (bx, by, zbd + 50), 12), 'apertar o botao de desligar a Jetson')
-    # botao de LARGADA no painel (no lugar do jumper J14 da ESP32; 2 fios do J3 ate o J14)
-    lx_, ly2 = lp(LY['botao_largada'])
-    m.largada_botao = (lx_, ly2, zbd)
-    comprada('botao_largada', caixa(lx_ - 3, lx_ + 3, ly2 - 3, ly2 + 3, zbd, zbd + 13), 0, 'eletronica', (0.1, 0.5, 0.3),
-             'placa_desligar')
-    acesso('dedo_botao_largada', cilindro((lx_, ly2, zbd + 13), (lx_, ly2, zbd + 50), 12), 'apertar o botao de largada por cima')
-    jj = LY['j3']; jx3, jy3 = lp(jj['centro'])
-    comprada('j3_largada', caixa(jx3 - jj['lu'] / 2, jx3 + jj['lu'] / 2, jy3 - jj['lw'] / 2, jy3 + jj['lw'] / 2, zbd,
-                                 zbd + jj['altura']), 0, 'eletronica', (0.1, 0.1, 0.1), 'placa_desligar')
-    m.desl_j3 = (jx3, jy3, zbd + jj['altura'] + 3.0)
     m.desl_furos = [lp(LY['furos_m3'][k]) for k in ('MH1', 'MH2')]
 
     # ---------------------------------------------------------------------------- esfera
@@ -614,10 +605,6 @@ def construir(P=None, verif=False):
          3.5, '8 fios Dupont femea', 'J41 pinos 15 a 20, 2 (5 V) e 6 (GND)', 'placa de interface (andar 3)',
          apoio=['pf3_j41'], disponivel=150.0, extra=0.0,
          obs='jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 (D-033)')
-    cabo('largada_j14', [(m.desl_j3[0], m.desl_j3[1], m.desl_j3[2]), (m.desl_j3[0], m.desl_j3[1] + 6, m.desl_j3[2] + 4),
-                         (m.esp_j14[0], m.esp_j14[1], zt + 8.5 + 3)],
-         2.0, '2 fios Dupont femea-femea', 'J3 do painel (botao de largada)', 'J14 da placa da ESP32', disponivel=100.0,
-         extra=0.0, obs='jumpers de 10 cm; o botao de largada fica no painel, ao lado do de desligar')
     m.cabos_ffc = (jet_pt(np.mean(v('jet_csi_u')), 58) + (ZJ + JT + 4,))
     def ffc_rota(ang):
         partes_camera(ang)

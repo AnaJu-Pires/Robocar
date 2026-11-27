@@ -20,7 +20,7 @@
  ],
  "peso_nas_rodas": 0.769,
  "tomba_g": 0.77,
- "empina_g": 0.43,
+ "empina_g": 0.44,
  "z": {
   "piso_traseiro": [
    12.0,
@@ -42,7 +42,7 @@
   "esp32_placa": 107.0
  },
  "verificacoes": {
-  "total": 56,
+  "total": 55,
   "falhas": 0
  },
  "pecas": [

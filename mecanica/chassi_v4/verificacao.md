@@ -1,6 +1,6 @@
 # Verificacao automatica do chassi v4 (gerada por `fonte/gerar.py`)
 
-Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (56 ok, 0 falhas).
+Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (55 ok, 0 falhas).
 
 | | grupo | verificacao | detalhe |
 |---|---|---|---|
@@ -14,7 +14,7 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (56 ok, 0 falhas).
 | ok | regulamento | 2 rodas tracionadas tocam o chao | z minimo das rodas: 0.00, 0.00 mm |
 | ok | regulamento | esfera no chao (carro nivelado) | fundo da esfera a +0.00 mm do chao (piso dianteiro a 15.0 mm, esfera de 15 mm) |
 | ok | regulamento | vao livre >= 8 mm (emendas do tapete) | 12.0 mm |
-| ok | interferencia | nenhuma sobreposicao | 100 solidos (13 volumes de acesso) |
+| ok | interferencia | nenhuma sobreposicao | 98 solidos (13 volumes de acesso) |
 | ok | camera | camera livre em toda a faixa | 25 a 65 graus, de 5 em 5 |
 | ok | camera | a camera nao ve o proprio carro no angulo nominal | 45 graus; livre ate 45 graus (campo vertical estimado 56 graus) |
 | ok | material | piso_traseiro | 13 furos, teia >= 2.0 mm, 1 peca |
@@ -35,7 +35,7 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (56 ok, 0 falhas).
 | ok | cg | CG centrado (|y| <= 3 mm) | -1.6 mm |
 | ok | cg | peso nas rodas entre 70 e 92 % | 77 % |
 | ok | cg | tomba so acima de 1.15 x a aceleracao lateral permitida | tomba com 0.77 g; permitido 0.65 g (curva R100 a ate 0.80 m/s; atrito 0.90) |
-| ok | cg | empina so acima de 0.40 g | 0.43 g -> rampa do firmware deve limitar a aceleracao abaixo disso |
+| ok | cg | empina so acima de 0.40 g | 0.44 g -> rampa do firmware deve limitar a aceleracao abaixo disso |
 | ok | cabos | pigtail_xt60_fusivel | rota 93 mm, corte 122 mm |
 | ok | cabos | fusivel_chave | rota 54 mm, corte 80 mm |
 | ok | cabos | chave_xl | rota 96 mm, corte 126 mm |
@@ -48,7 +48,6 @@ Espessura T = 3.0 mm, rasgo = 2.90 mm. Resultado: **tudo ok** (56 ok, 0 falhas).
 | ok | cabos | motor_dir | rota 129 mm, corte 141 mm (tem 150) |
 | ok | cabos | usb_jetson_esp32 | rota 64 mm, corte 70 mm (tem 300) |
 | ok | cabos | j41_desligar | rota 91 mm, corte 100 mm (tem 150) |
-| ok | cabos | largada_j14 | rota 31 mm, corte 35 mm (tem 100) |
 | ok | cabos | ffc_camera | rota 123 mm, corte 135 mm (tem 150) |
 | ok | medidas | conferir antes de cortar: jet_furo_d | diametro do furo (M2.5); define centros = borda - d |
 | ok | medidas | conferir antes de cortar: jet_furo_u0 | distancia da ponta do P4 ao centro do 1o furo; None = furos centrados |
@@ -85,7 +84,6 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | motor_dir | cabo de 6 vias do motor | conector branco do encoder (dir) | J13 + J11 | 129 | cabo pronto | 150 | 84 | cabo original do motor; o comprimento disponivel e estimado |
 | usb_jetson_esp32 | cabo USB-A / USB-C de dados | USB-C da ESP32 (andar 3, tras) | USB-A da Jetson (andar 2, tras) | 64 | cabo pronto | 300 | 64 | cabo curto: 15-20 cm bastam |
 | j41_desligar | 8 fios Dupont femea | J41 pinos 15 a 20, 2 (5 V) e 6 (GND) | placa de interface (andar 3) | 91 | cabo pronto | 150 | 60 | jumpers Dupont de 15 cm; sobem pela borda direita do andar 3 (D-033) |
-| largada_j14 | 2 fios Dupont femea-femea | J3 do painel (botao de largada) | J14 da placa da ESP32 | 31 | cabo pronto | 100 | 31 | jumpers de 10 cm; o botao de largada fica no painel, ao lado do de desligar |
 | ffc_camera | flat 15 vias | CSI da Jetson | camera | 123 | cabo pronto | 150 | 123 | pior angulo: 65 graus |
 
 ## Massas (para refazer o CG depois de pesar)
@@ -119,7 +117,7 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 | parede_frente_1 | 4.9 | 59 | 56 | 33 | calculada |
 | parede_frente_2 | 4.9 | 59 | -56 | 33 | calculada |
 | chave_geral | 4.0 | -39 | 28 | 41 | E |
-| placa_desligar | 4.0 | 26 | -50 | 106 | E |
+| placa_desligar | 4.0 | 28 | -50 | 106 | E |
 | cola_e_abracadeiras | 4.0 | 20 | 0 | 50 | calculada |
 | fio_vm_e | 3.2 | -2 | 29 | 72 | calculada |
 | poste_mastro_1 | 3.0 | 76 | 18 | 128 | calculada |

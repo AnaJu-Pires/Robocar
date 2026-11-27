@@ -62,7 +62,7 @@ Ficam as de 42 mm ([D-027](../../docs/decisoes.md)): a análise da v4 dá o mesm
 ## 3. Placa de interface (botão de desligar, LEDs e luz da câmera)
 
 [hardware/placa_desligar/](../../hardware/placa_desligar/) ([D-028](../../docs/decisoes.md) e D-033). Na v4 a
-painel do operador (**43 × 18 mm** desde 27/11, D-035) fica no **andar 3, à direita da placa da ESP32**: botão, LED vermelho
+plaquinha (**40 × 18 mm** desde 27/11) fica no **andar 3, à direita da placa da ESP32**: botão, LED vermelho
 ("Jetson ligada / apagou = pode desligar a chave") e LED amarelo ("código rodando") ficam por cima, e o J41 da
 Jetson fica logo abaixo (8 jumpers de 15 cm). A posição da placa, dos 2 furos e das peças vem de
 `hardware/placa_desligar/layout.json` (D-034). **Falta no modelo:** a luz e o módulo da luz no mastro, que entram
@@ -83,7 +83,7 @@ quando soubermos qual luz foi comprada.
 |---|---|---|
 | **Trocar a bateria** | chave OFF → separar o par XT60 (em pé, na ponta direita da bateria) → puxar o pino de trava por trás → deslizar a bateria para a direita | lado direito, atrás da roda |
 | Chave geral | gangorra na parede de trás do berço | traseira, à esquerda |
-| Largada | botão LARGADA do painel do operador (S3, fita colorida), por cima | andar 3, direita |
+| Largada | botão do J14, por cima | andar 3 |
 | Desligar a Jetson | botão da placa de interface, 2 s; esperar o LED vermelho **apagar**; só então a chave geral | andar 3, direita |
 | Trimpots dos XL4016 | chave de fenda **curta** (≤ 40 mm) pelos 4 furos de 7 mm do andar 2, na frente da Jetson | frente, entre os andares 2 e 3 |
 | Ângulo da câmera (25–65°) | soltar as 2 porcas borboleta, girar, ler o número gravado em cima do pivô, apertar | topo do mastro |
