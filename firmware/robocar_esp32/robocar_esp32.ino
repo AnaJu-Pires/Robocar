@@ -13,6 +13,8 @@
  *   SEM_JETSON --(comando $M valido)--> PRONTO --(botao: apertar e soltar, ou $A)--> ARMADO
  *   ARMADO --(botao: ao apertar, ou $S)--> PRONTO
  *   PRONTO/SEM_JETSON --(botao segurado BOTAO_DESLIGAR_MS)--> flag DESLIGAR (a Jetson faz shutdown)
+ *     -> a Jetson some (SEM_JETSON) -> ESPERA_DESLIGAR_MS -> LED 2 piscadas/s = "pode desligar a chave"
+ *     (a Jetson voltou a mandar comandos, ou nao parou em DESLIGAR_SEM_RESPOSTA_MS: cancela)
  *   ARMADO --(sem comando > 250 ms)--> freia (flag WATCHDOG) --(> 1000 ms)--> SEM_JETSON
  *   qualquer --(bateria < corte por 2 s)--> FALHA_BATERIA (trava ate reiniciar a placa)
  * Motores so recebem PWM em ARMADO; nos demais estados o driver dorme (nSLEEP baixo).
@@ -63,6 +65,7 @@ int alvoE = 0, alvoD = 0;     // -1000..1000 vindos da Jetson
 int atualE = 0, atualD = 0;   // apos a rampa
 uint32_t ultimoComando = 0, ultimaTelemetria = 0, ultimoTick = 0, inicioVbatBaixa = 0;
 uint32_t pedidoDesligar = 0;  // millis() do pedido de desligar (0 = nenhum)
+uint32_t jetsonSumiu = 0;     // millis() em que a Jetson parou de mandar comandos depois do pedido (0 = ainda nao)
 bool recebeuComando = false;
 int vbat_mV = 0;
 
@@ -225,6 +228,27 @@ static void verificarWatchdog() {
   if (estado != SEM_JETSON && !linkRecente(WATCHDOG_DESARME_MS)) mudarEstado(SEM_JETSON);
 }
 
+// ------------------------------------------------------------------ desligar a Jetson (D-039)
+// Devolve true quando ja pode desligar a chave: a Jetson pediu/aceitou desligar, sumiu (sem comandos) e
+// passou ESPERA_DESLIGAR_MS. Cancela se a Jetson voltar a mandar comandos ou se nunca parar de mandar.
+static bool acompanharDesligamento(uint32_t agora) {
+  if (!pedidoDesligar) return false;
+  if (!jetsonSumiu) {
+    if (estado == SEM_JETSON) {
+      jetsonSumiu = agora ? agora : 1;
+    } else if (agora - pedidoDesligar > DESLIGAR_AVISO_MS + DESLIGAR_SEM_RESPOSTA_MS) {
+      pedidoDesligar = 0;               // a Jetson nao desligou (programa antigo, sem a regra do sudo...)
+      return false;
+    }
+    return false;
+  }
+  if (estado != SEM_JETSON) {           // a Jetson voltou (ex.: o servico reiniciou o programa): cancela
+    pedidoDesligar = jetsonSumiu = 0;
+    return false;
+  }
+  return agora - jetsonSumiu >= ESPERA_DESLIGAR_MS;
+}
+
 // ------------------------------------------------------------------ setup / loop
 void setup() {
   Serial.begin(115200);
@@ -270,6 +294,7 @@ void loop() {
     lerBateria();
     bool desligando = pedidoDesligar && agora - pedidoDesligar < DESLIGAR_AVISO_MS;
     if (desligando) flags |= FLAG_DESLIGAR; else flags &= ~FLAG_DESLIGAR;
+    bool podeDesligar = acompanharDesligamento(agora);
     char corpo[72];
     snprintf(corpo, sizeof(corpo), "T,%lu,%ld,%ld,%d,%d,%d", (unsigned long)agora,
              (long)encE, (long)encD, vbat_mV, (int)estado, flags);
@@ -277,8 +302,10 @@ void loop() {
     if (PIN_BUZZER >= 0)
       digitalWrite(PIN_BUZZER, ((flags & FLAG_BATERIA_BAIXA) && (agora / 250) % 2) ? HIGH : LOW);
     // LED: aceso = armado | piscando lento = pronto | piscando rapido = falha | apagado = sem Jetson
-    // desligando: pisca muito rapido enquanto a flag DESLIGAR esta ligada
-    bool led = desligando ? (agora / 50) % 2 :
+    // desligando: pisca muito rapido do pedido ate poder desligar; pode desligar: 2 piscadas por segundo
+    uint32_t fase = agora % 1000;
+    bool led = podeDesligar ? (fase < 100 || (fase >= 200 && fase < 300)) :
+               pedidoDesligar ? (agora / 50) % 2 :
                estado == ARMADO || (estado == PRONTO && (agora / 500) % 2) ||
                (estado == FALHA_BATERIA && (agora / 100) % 2);
     digitalWrite(PIN_LED, led ? HIGH : LOW);

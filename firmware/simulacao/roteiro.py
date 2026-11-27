@@ -55,6 +55,9 @@ def ultimo_pwm():
     for e in eventos():
         if e[1] == 'PWM': v[int(e[2])] = int(e[3])
     return v
+def subidas(pino, desde_ms):
+    """Quantas vezes o pino foi para 1 a partir de 'desde_ms' (tempo do firmware)."""
+    return sum(1 for e in eventos() if e[1] == 'DW' and int(e[2]) == pino and int(e[3]) == 1 and int(e[0]) >= desde_ms)
 def nivel(pino):
     v = None
     for e in eventos():
@@ -115,6 +118,21 @@ setf('botao', 1); t = rodar(0.3, (0, 0))
 check('soltar depois do pedido de desligar nao arma', t['estado'] == protocolo.PRONTO)
 t = rodar(3.2, (0, 0))
 check('flag DESLIGAR some depois de 3 s', not t['desligar'], t['flags'])
+# sequencia completa de desligar (D-039): LED da ESP32 (GPIO2) diz quando pode cortar a chave
+t = rodar(5.0, (0, 0))       # a Jetson continuou mandando (8 s apos o pedido): nao desligou -> cancela
+m0 = t['ms']; t = rodar(2.0, (0, 0))
+check('Jetson nao obedeceu ao desligar: LED volta ao normal (PRONTO, 1 piscada/s)', subidas(2, m0) <= 3, subidas(2, m0))
+setf('botao', 0); t = rodar(3.3, (0, 0)); setf('botao', 1)
+check('novo pedido de desligar', t['desligar'], t['flags'])
+rodar(1.3)                   # a Jetson fechou o programa: sem comandos
+m0 = link.telemetria['ms']; t = rodar(0.5)
+check('Jetson sumiu: SEM_JETSON e LED pisca muito rapido (ainda NAO desligar)', t['estado'] == protocolo.SEM_JETSON and subidas(2, m0) >= 4, subidas(2, m0))
+rodar(1.6)                   # ESPERA_DESLIGAR_MS = 2 s na simulacao (25 s na placa)
+m0 = link.telemetria['ms']; t = rodar(2.0)
+n = subidas(2, m0)
+check('depois da espera: 2 piscadas por segundo = pode desligar a chave', 3 <= n <= 5, n)
+t = rodar(0.3, (0, 0)); m0 = t['ms']; t = rodar(2.0, (0, 0))
+check('Jetson voltou a mandar comandos: cancela e volta a PRONTO (1 piscada/s)', t['estado'] == protocolo.PRONTO and subidas(2, m0) <= 3, subidas(2, m0))
 # bateria baixa
 link.armar(); rodar(0.2, (0.3, 0.3))
 setf('pino36_mv', round(9300 * 47 / 267)); t = rodar(4.5, (0.3, 0.3))

@@ -92,6 +92,17 @@ def textos_debug(direcao, erro, det, ctrl, info, esq, dir_, fps, proc_ms):
     ]
 
 
+def pode_desligar_sem_senha():
+    """A regra do sudo do 'make preparar-jetson' esta instalada? (sudo -n -l nao pede senha)"""
+    import subprocess
+    try:
+        with open(os.devnull, "w") as nada:
+            return subprocess.call(["sudo", "-n", "-l", "/sbin/shutdown", "-h", "now"],
+                                   stdout=nada, stderr=nada) == 0
+    except OSError:
+        return False
+
+
 def salvar_quadro(cinza, n):
     caminho = configuracao.arquivo_de_dados("capturas", "png", time.strftime("%Y%m%d_%H%M%S_") + str(n))
     cv2.imwrite(caminho, cinza)
@@ -139,6 +150,9 @@ def main():
         link = LinkESP32(abrir_porta(cfg["esp32"]["porta"], cfg["esp32"]["baud"]))
         link.pedir_versao()
         print("ESP32 em %s - aperte o botao de largada para armar." % cfg["esp32"]["porta"])
+        if not pode_desligar_sem_senha():
+            print("AVISO: segurar a largada 3 s NAO vai desligar a Jetson (falta a regra do sudo). "
+                  "Rode uma vez: make preparar-jetson")
     else:
         print("Sem ESP32: modo somente visao (comandos calculados, nao enviados).")
         ctrl.iniciar(time.time())

@@ -8,7 +8,9 @@
 #     ("gpsd_control(action=add, arg=/dev/ttyUSB0)") e o ModemManager testava a porta. O gpsd abre a
 #     porta, troca a velocidade para procurar um GPS e le os bytes da telemetria: e a causa provavel da
 #     "telemetria embaralhada" ao abrir a porta. Nenhum dos dois serve para o robo: ficam mascarados.
-#  2. O journal so existia na memoria: cada corte de energia apagava o historico. Fica persistente, e
+#  2. Desligar pelo botao de largada (segurar 3 s com o robo parado, D-039): o seguir_linha.py chama
+#     "sudo -n /sbin/shutdown -h now", que precisa de uma regra do sudo sem senha (so esse comando).
+#  3. O journal so existia na memoria: cada corte de energia apagava o historico. Fica persistente, e
 #     gravando a cada 15 s (o padrao e 5 min: um corte perderia justamente os ultimos minutos).
 set -euo pipefail
 
@@ -24,13 +26,13 @@ existe() { systemctl list-unit-files "$1" 2>/dev/null | grep -q "^$1"; }
 
 if [ "${1:-}" = "--desfazer" ]; then
   for s in $SERVICOS; do existe "$s" && systemctl unmask "$s" && systemctl enable "$s" 2>/dev/null || true; done
-  rm -f "$RAIZ/etc/systemd/journald.conf.d/robocar.conf"
+  rm -f "$RAIZ/etc/systemd/journald.conf.d/robocar.conf" "$RAIZ/etc/sudoers.d/robocar-desligar"
   systemctl restart systemd-journald || true
-  echo "Desfeito: gpsd/ModemManager liberados; journal volta ao padrao do sistema."
+  echo "Desfeito: gpsd/ModemManager liberados; journal volta ao padrao; regra do shutdown removida."
   exit 0
 fi
 
-echo "== 1/3 Tirando o gpsd e o ModemManager da porta da ESP32"
+echo "== 1/4 Tirando o gpsd e o ModemManager da porta da ESP32"
 for s in $SERVICOS; do
   if existe "$s"; then
     systemctl disable --now "$s" >/dev/null 2>&1 || true
@@ -41,7 +43,24 @@ for s in $SERVICOS; do
   fi
 done
 
-echo "== 2/3 Journal persistente (sobrevive ao desligar), gravando a cada 15 s"
+echo "== 2/4 Desligar pelo botao de largada (segurar 3 s): shutdown sem senha, so este comando"
+USUARIO=${SUDO_USER:-}
+if [ -n "$USUARIO" ] && [ "$USUARIO" != "root" ]; then
+  REGRA=$(mktemp)
+  echo "$USUARIO ALL=(root) NOPASSWD: /sbin/shutdown -h now" > "$REGRA"
+  if visudo -cf "$REGRA" >/dev/null; then
+    mkdir -p "$RAIZ/etc/sudoers.d"
+    install -m 0440 "$REGRA" "$RAIZ/etc/sudoers.d/robocar-desligar"
+    echo "   ok: $USUARIO pode rodar 'sudo shutdown -h now' sem senha"
+  else
+    echo "   AVISO: regra do sudo invalida; o desligamento pelo botao nao vai funcionar"
+  fi
+  rm -f "$REGRA"
+else
+  echo "   AVISO: rode com sudo a partir do seu usuario (ex.: blitz) para instalar a regra"
+fi
+
+echo "== 3/4 Journal persistente (sobrevive ao desligar), gravando a cada 15 s"
 mkdir -p "$RAIZ/var/log/journal" "$RAIZ/etc/systemd/journald.conf.d"
 cat > "$RAIZ/etc/systemd/journald.conf.d/robocar.conf" <<'EOF'
 # Robocar (jetson/servico/preparar_jetson.sh): historico entre boots, sem perder os ultimos minutos num corte
@@ -57,8 +76,7 @@ if [ -z "$RAIZ" ]; then
 fi
 echo "   ok: /var/log/journal (ver boots anteriores: journalctl --list-boots)"
 
-echo "== 3/3 Conferencias"
-USUARIO=${SUDO_USER:-}
+echo "== 4/4 Conferencias"
 if [ -n "$USUARIO" ] && ! id -nG "$USUARIO" | grep -qw dialout; then
   usermod -aG dialout "$USUARIO"
   echo "   $USUARIO entrou no grupo dialout (acesso a ESP32): saia e entre de novo no SSH"

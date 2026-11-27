@@ -104,7 +104,7 @@ Consequências:
 | Bateria (ADC1) | 36 | 2 | divisor 220 k / 47 k (R1/R2) |
 | Largada | **4** | 26 | **botão** para o GND (INPUT_PULLUP). Apertar e soltar = largada; apertar armado = para; segurar 3 s parado = desliga a Jetson. Não usar jumper fixo |
 | Buzzer | — | — | fora da placa (`PIN_BUZZER = -1`); o aviso de bateria baixa vai na telemetria |
-| LED | 2 | 27 | LED da própria DevKit: aceso = armado; pisca devagar = pronto; pisca rápido = falha; pisca muito rápido = desligando a Jetson |
+| LED | 2 | 27 | LED da própria DevKit: aceso = armado; pisca devagar = pronto; pisca rápido = falha; pisca muito rápido = desligando a Jetson (**não** corte a chave); **2 piscadas por segundo = pode desligar a chave** ([D-039](decisoes.md)) |
 
 Por que a pinagem mudou na v0.8 ([D-024](decisoes.md)): a placa ficou **espelhada** — a coluna esquerda da ESP32
 atende só o motor esquerdo e a direita só o direito, para que cada cabo de motor (6 fios) e cada par de VM chegue no

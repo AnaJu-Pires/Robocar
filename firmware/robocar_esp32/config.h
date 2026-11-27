@@ -44,6 +44,15 @@ const uint32_t WATCHDOG_DESARME_MS = 1000;  // sem comando: desarma (exige novo 
 const uint32_t TELEMETRIA_MS = 20;          // 50 Hz
 const uint32_t BOTAO_DESLIGAR_MS = 3000;    // botao segurado (com o robo parado): pede a Jetson para desligar
 const uint32_t DESLIGAR_AVISO_MS = 3000;    // por quanto tempo a flag DESLIGAR fica ligada na telemetria
+// Depois do pedido, a Jetson fecha o programa (a ESP32 fica sem comandos e vai para SEM_JETSON) e o Linux desliga.
+// ESPERA_DESLIGAR_MS depois de a Jetson sumir, o LED faz 2 piscadas por segundo = "pode desligar a chave".
+// Medir no T15 quanto o desligamento demora e deixar uma folga (D-039). Se os comandos voltarem, cancela.
+#ifndef ESPERA_DESLIGAR_MS_SIM
+const uint32_t ESPERA_DESLIGAR_MS = 25000;
+#else
+const uint32_t ESPERA_DESLIGAR_MS = ESPERA_DESLIGAR_MS_SIM;   // simulacao no PC (firmware/simulacao): mais curto
+#endif
+const uint32_t DESLIGAR_SEM_RESPOSTA_MS = 5000;  // a Jetson continuou mandando comandos: nao desligou, cancela
 
 // ----- Bateria 3S -------------------------------------------------------------------
 const float DIVISOR_VBAT = (220.0f + 47.0f) / 47.0f;   // 12,6 V -> 2,22 V no pino

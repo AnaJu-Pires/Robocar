@@ -156,7 +156,9 @@ nas curvas fechadas ([D-032](decisoes.md)). Meta: 20 voltas seguidas sem falha (
 
 ## Depois de cada sessão
 
-* Desligue a Jetson **antes** da chave: `sudo shutdown -h now` pelo SSH (ou o botão de desligar, quando montado).
+* Desligue a Jetson **antes** da chave: `sudo shutdown -h now` pelo SSH. Sem SSH (na prova), com o robô parado e
+  o programa rodando, **segure a largada 3 s**: o LED da ESP32 pisca muito rápido e, quando fizer **2 piscadas por
+  segundo** (ou apagar), pode desligar a chave. Faça o teste T15 uma vez para medir o tempo.
   A conexão SSH cai; espere mais **20 s** e só então desligue a chave. O LED verde da Jetson **não** apaga (ele fica
   no 5 V): não espere por ele.
 * Anote em [06_testes.md](06_testes.md) (ou me mande que eu anoto).

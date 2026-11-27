@@ -24,7 +24,7 @@ Os estados estão em [docs/02_arquitetura.md](../docs/02_arquitetura.md#3-estado
 
 **Protocolo v2 (24/11/2026):** grave este firmware **junto** com a atualização da Jetson (`git pull`). Com versões diferentes, a Jetson avisa `ERRO: firmware usa protocolo v1`.
 
-**Botão de largada (J14):** apertar e soltar = largada; apertar com o robô armado = para na hora; segurar 3 s com o robô parado = pede à Jetson para desligar (LED pisca muito rápido). Não deixe um jumper fixo no J14.
+**Botão de largada (J14):** apertar e soltar = largada; apertar com o robô armado = para na hora; segurar 3 s com o robô parado = pede à Jetson para desligar. LED: pisca muito rápido enquanto a Jetson desliga (não corte a chave); **2 piscadas por segundo = pode desligar a chave** (25 s depois de a Jetson parar de mandar comandos, `ESPERA_DESLIGAR_MS`; se ela voltar, cancela). Não deixe um jumper fixo no J14 ([D-039](../docs/decisoes.md)).
 
 ## Primeiro teste, sem motores
 1. Só a ESP32 ligada ao PC: LED apagado = SEM_JETSON (sem comandos).

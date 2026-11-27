@@ -3,6 +3,9 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões no formato MAIOR.MENOR.CORREÇÃO.
 
 ## [Não lançado]
+### Alterado (27/11/2026, desligar pelo botão de largada, D-039)
+- Firmware: depois do pedido de desligar (largada segurada 3 s), a ESP32 espera a Jetson sumir e mais `ESPERA_DESLIGAR_MS` (25 s) e o LED passa a dar **2 piscadas por segundo = pode desligar a chave**; cancela se a Jetson voltar ou não parar em 8 s. Sem mudança no protocolo. Simulação 31/31 (5 novas).
+- `make preparar-jetson` instala a regra do sudo do shutdown; `seguir_linha.py` avisa se ela faltar. `instalar.sh` só instala o serviço do botão do J41 com `--botao-j41` (e desliga um instalado antes).
 ### Adicionado (27/11/2026, logs do cartão da Jetson)
 - `docs/09_roteiro_testes.md`: roteiro no hardware **todo pelo SSH**, em 7 etapas (preparar → câmera e distância cega → calibração e exposição → detecção empurrando → serial e watchdog → motores e encoders → pista e box → velocidade), com comando, critério e o que mandar de volta.
 - `docs/06_testes.md`: resultado da pista de 22/11 e tabela "Achados dos logs do cartão"; `docs/03_hardware.md`: Jetson B01, JetPack 4.6.1, câmera na CAM1.

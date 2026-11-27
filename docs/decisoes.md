@@ -397,3 +397,24 @@ o tempo funciona já. Quando os encoders forem validados (T06/T07), dá para tro
 testes). Uma perda de linha numa reta no meio da pista agora termina em parada depois de `avanco_s`, em vez de girar;
 `avanco_s` = 0 volta ao comportamento antigo. Sem mudança no protocolo nem no firmware.
 
+### D-039 — Desligar a Jetson pelo botão de largada (segurar 3 s) e LED da ESP32 "pode desligar a chave"
+*27/11/2026 · aceita* (a D-028, botão no J41, fica como opção não montada)
+**Contexto:** a equipe desligava cortando a energia: os 9 boots de novembro terminaram assim (logs do cartão). Foram
+avaliados: (a) botão no J41 + serviço próprio + LED pelo GPIO (D-028); (b) segurar o botão de largada 3 s com o robô
+parado: a ESP32 liga a flag DESLIGAR (protocolo v2) e o `seguir_linha.py` chama o `shutdown`; (c) o botão de power do
+header da Jetson (pinagem do B01 não confirmada, sem indicador). **A equipe escolheu a (b)**: nenhum hardware novo
+(o botão já existe no J14) e a placa única fica só no lado da ESP32.
+**O que faltava na (b) e foi feito:**
+* **Sinal de "pode desligar a chave":** a ESP32 acompanha a sequência sem mudar o protocolo: depois do pedido, quando a
+  Jetson para de mandar comandos (SEM_JETSON), conta `ESPERA_DESLIGAR_MS` (25 s) e passa a dar **2 piscadas por
+  segundo**. Antes disso pisca muito rápido (não cortar). Se os comandos voltarem (o serviço reiniciou o programa, o
+  shutdown falhou), cancela; se a Jetson não parar de mandar em 8 s, cancela. Se a ESP32 apagar junto (alimentada pelo
+  USB da Jetson), LED apagado também quer dizer "pode".
+* **Regra do sudo** sem senha (só `/sbin/shutdown -h now`) no `make preparar-jetson`, não só no `make servico`; o
+  programa avisa ao abrir se ela faltar.
+* O serviço do botão do J41 só é instalado com `instalar.sh --botao-j41`: sem a placa, o pino 18 fica solto.
+**Limites (aceitos):** só funciona com o programa do robô rodando (na prova, o `robocar.service`, que reinicia se o
+programa cair); pelo SSH, usar `sudo shutdown -h now`. A espera de 25 s é estimativa: medir no T15.
+**Motores durante o desligamento:** o pedido só é aceito com o robô parado; quando a Jetson some, o watchdog desarma
+em 1 s e os drivers dormem (nSLEEP baixo; com a ESP32 sem energia, os pull-downs de 10 k fazem o mesmo).
+
