@@ -184,16 +184,16 @@ Corte = rota x 1,10 + 20 mm (descascar, terminal, termorretratil). Cabos prontos
 
 | item | qtd |
 |---|---|
-| Espacador M2.5 x 5 mm + parafuso M2.5 x 12 + porca (Jetson no andar 2) | 4 |
+| Espacador nylon M2.5 x 5 mm + parafuso M2.5 x 12 (NAO mais comprido: 2 deles ficam a 4 mm do XL4016) + porca (Jetson no andar 2) | 4 |
+| Espacador nylon M3 x 10 mm femea-femea + 2 parafusos M3 x 6 (um por cima, um por baixo). O de tras fica 2,8 mm acima da chave: por baixo, cabeca chata escareada ou cola | 2 |
 | Parafuso M2 x 12 + espacador nylon M2.5 x 5 mm (sobra do pacote da Jetson) + porca (camera na frente da placa) | 4 |
 | Parafuso M2 x 16 + porca (vem com o suporte do N20) | 4 |
-| Parafuso M2.5 x 8 + porca (esfera) | 2 |
-| Parafuso M3 x 10 + espacador nylon M3 x 5 mm + porca | 4 |
+| Parafuso M2.5 x 10 + porca (esfera) | 2 |
 | Parafuso M3 x 10 + porca (pivo da camera, um de cada lado) | 2 |
-| Parafuso M3 x 10 + porca (une os 2 pisos) | 2 |
-| Parafuso M3 x 10 + porca borboleta (trava do angulo, um de cada lado) | 2 |
-| Parafuso M3 x 12 + porca + espacador nylon M3 x 4 mm (ou 2 porcas) | 8 |
+| Parafuso M3 x 10 + porca (une os 2 pisos) [3 + 3 + porca 2,4 = 8,4] | 2 |
+| Parafuso M3 x 12 + porca + espacador nylon M3 x 4 mm (ou 2 porcas) [placa 1,6 + 4 + MDF 3 + porca 2,4 = 11] | 8 |
 | Parafuso M3 x 12 + porca M3 presa no bolso da parede (andar 2) | 4 |
 | Parafuso M3 x 12 + porca M3 presa no bolso do pilar (andar 3) | 4 |
-| Parafuso M3 x 16 + espacador nylon M3 x 10 mm + porca (placa de distribuicao) | 2 |
+| Parafuso M3 x 12 + porca borboleta (trava do angulo, um de cada lado) | 2 |
+| Parafuso M3 x 14 + espacador nylon M3 x 5 mm + porca [1,6 + 5 + 3 + porca 2,4 = 12] | 4 |
 | Pino de trava: arame/prego de 3 mm x 35 mm dobrado em L | 1 |

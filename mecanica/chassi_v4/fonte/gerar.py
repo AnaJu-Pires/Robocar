@@ -313,17 +313,19 @@ def figura_camera(m, arq):
 
 # ------------------------------------------------------------------------------------------- fixadores (de cada furo)
 FIXADORES = {
+    # comprimentos somando tudo o que o parafuso atravessa + a porca inteira (conferido com o vao embaixo de cada andar)
     'parafuso M2 do suporte': ('Parafuso M2 x 16 + porca (vem com o suporte do N20)', 1),
-    'parafuso M3 do XL4016': ('Parafuso M3 x 12 + porca + espacador nylon M3 x 4 mm (ou 2 porcas)', 1),
-    'parafuso M3 que une os pisos': ('Parafuso M3 x 10 + porca (une os 2 pisos)', 1),
-    'parafuso M2.5 do espacador da Jetson': ('Espacador M2.5 x 5 mm + parafuso M2.5 x 12 + porca (Jetson no andar 2)', 1),
-    'parafuso M2.5 da esfera': ('Parafuso M2.5 x 8 + porca (esfera)', 1),
-    'parafuso M3 da placa da ESP32': ('Parafuso M3 x 10 + espacador nylon M3 x 5 mm + porca', 1),
-    'parafuso M3 da placa de distribuicao (espacador de 10 mm)': ('Parafuso M3 x 16 + espacador nylon M3 x 10 mm + porca (placa de distribuicao)', 1),
+    'parafuso M3 do XL4016': ('Parafuso M3 x 12 + porca + espacador nylon M3 x 4 mm (ou 2 porcas) [placa 1,6 + 4 + MDF 3 + porca 2,4 = 11]', 1),
+    'parafuso M3 que une os pisos': ('Parafuso M3 x 10 + porca (une os 2 pisos) [3 + 3 + porca 2,4 = 8,4]', 1),
+    'parafuso M2.5 do espacador da Jetson': ('Espacador nylon M2.5 x 5 mm + parafuso M2.5 x 12 (NAO mais comprido: 2 deles ficam a 4 mm do XL4016) + porca (Jetson no andar 2)', 1),
+    'parafuso M2.5 da esfera': ('Parafuso M2.5 x 10 + porca (esfera)', 1),
+    'parafuso M3 da placa da ESP32': ('Parafuso M3 x 14 + espacador nylon M3 x 5 mm + porca [1,6 + 5 + 3 + porca 2,4 = 12]', 1),
+    'parafuso M3 da placa de distribuicao (espacador de 10 mm)': ('Espacador nylon M3 x 10 mm femea-femea + 2 parafusos M3 x 6 (um por cima, um por baixo). '
+                                                                  'O de tras fica 2,8 mm acima da chave: por baixo, cabeca chata escareada ou cola', 1),
     'parafuso M3 do andar 2 (porca presa na parede)': ('Parafuso M3 x 12 + porca M3 presa no bolso da parede (andar 2)', 1),
     'parafuso M3 do andar 3 (porca presa no pilar)': ('Parafuso M3 x 12 + porca M3 presa no bolso do pilar (andar 3)', 1),
     'pivo da camera (M3)': ('Parafuso M3 x 10 + porca (pivo da camera, um de cada lado)', 1),
-    'trava do angulo (M3)': ('Parafuso M3 x 10 + porca borboleta (trava do angulo, um de cada lado)', 1),
+    'trava do angulo (M3)': ('Parafuso M3 x 12 + porca borboleta (trava do angulo, um de cada lado)', 1),
     'parafuso M2 da camera': ('Parafuso M2 x 12 + espacador nylon M2.5 x 5 mm (sobra do pacote da Jetson) + porca (camera na frente da placa)', 1),
     'pino que trava a bateria (tirar com a mao)': ('Pino de trava: arame/prego de 3 mm x 35 mm dobrado em L', 0.5),
 }
